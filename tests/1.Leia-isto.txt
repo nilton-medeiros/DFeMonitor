@@ -1,0 +1,11 @@
+Nota:
+Esta pasta "tests" e os programas de testes não precisam ser deletados quando em produção!
+Basta apenas desvincular os programas de testes da compilação removendo-os do arquivo
+DFeMonitor.hbp que os vincula a compilação e adicionar os fontes de produção que irão
+substituir estes arquivos de testes que deverão ter as mesmas funções e/ou procedures dos
+arquivos de testes, não impactando nas chamandas das rotinas.
+
+Arquivos com final "_test.prg": Estão sendo testados
+Arquivos com final "_test1.prg, _test2.prg, _testn.prg ...": Testes concluídos com sucesso!
+Não havendo mais arquivos com final "_test.prg", significam que estão em produção na sua
+respectiva pasta em /core.

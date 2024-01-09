@@ -1,0 +1,667 @@
+Código|Descrição
+100|Autorizado o uso do CT-e
+101|Cancelamento de CT-e homologado
+102|Inutilização de número homologado
+103|Lote recebido com sucesso
+
+104|Lote processado
+
+105|Lote em processamento
+
+106|Lote não localizado
+
+107|Serviço em Operação
+
+108|Serviço Paralisado Momentaneamente (curto prazo)
+
+109|Serviço Paralisado sem Previsão
+
+110|Uso Denegado
+
+111|Consulta cadastro com uma ocorrência
+
+112|Consulta cadastro com mais de uma ocorrência
+
+113|Serviço SVC em operação. Desativação prevista para a UF em dd/mm/aa, às hh:mm horas
+
+114|SVC-[SP/RS] desabilitada pela SEFAZ de Origem
+
+134|Evento registrado e vinculado ao CT-e com alerta para situação do documento.[Alerta Situação do CT-e: XXXXXXXXXX]
+
+135|Evento registrado e vinculado a CT-e
+
+136|Evento registrado, mas não vinculado a CT-e
+
+201|Rejeição: O número máximo de numeração de CT-e a inutilizar ultrapassou o limite
+
+202|Rejeição: Falha no reconhecimento da autoria ou integridade do arquivo digital
+
+203|Rejeição: Emissor não habilitado para emissão do CT-e
+
+204|Rejeição: Duplicidade de CT-e [nRec:999999999999999]
+
+205|Rejeição: CT-e está denegado na base de dados da SEFAZ
+
+206|Rejeição: Número de CT-e já está inutilizado na Base de dados da SEFAZ
+
+207|Rejeição: CNPJ do emitente inválido
+
+208|Rejeição: CNPJ do destinatário inválido
+
+209|Rejeição: IE do emitente inválida
+
+210|Rejeição: IE do destinatário inválida
+
+211|Rejeição: IE do substituto inválida
+
+212|Rejeição: Data de emissão CT-e posterior a data de recebimento
+
+213|Rejeição: CNPJ-Base do Emitente difere do CNPJ-Base do Certificado Digital
+
+214|Rejeição: Tamanho da mensagem excedeu o limite estabelecido
+
+215|Rejeição: Falha no schema XML
+
+216|Rejeição: Chave de Acesso difere da cadastrada
+
+217|Rejeição: CT-e não consta na base de dados da SEFAZ
+
+218|Rejeição: CT-e já está cancelado na base de dados da SEFAZ
+
+219|Rejeição: Circulação do CT-e verificada
+
+220|Rejeição: CT-e autorizado há mais de 7 dias (168 horas)
+
+221|Rejeição: Confirmado a prestação do serviço do CT-e pelo destinatário
+
+222|Rejeição: Protocolo de Autorização de Uso difere do cadastrado
+
+223|Rejeição: CNPJ do transmissor do lote difere do CNPJ do transmissor da consulta
+
+224|Rejeição: A faixa inicial é maior que a faixa final
+
+225|Rejeição: Falha no Schema XML do CT-e
+
+226|Rejeição: Código da UF do Emitente diverge da UF autorizadora
+
+227|Rejeição: Erro na composição do Campo ID
+
+228|Rejeição: Data de Emissão muito atrasada
+
+229|Rejeição: IE do emitente não informada
+
+230|Rejeição: IE do emitente não cadastrada
+
+231|Rejeição: IE do emitente não vinculada ao CNPJ
+
+232|Rejeição: IE do destinatário não informada
+
+233|Rejeição: IE do destinatário não cadastrada
+
+235|Rejeição: Inscrição SUFRAMA inválida
+
+236|Rejeição: Chave de Acesso com dígito verificador inválido
+
+237|Rejeição: CPF do destinatário inválido
+
+238|Rejeição: Cabeçalho – Versão do arquivo XML superior a Versão vigente
+
+239|Rejeição: Cabeçalho – Versão do arquivo XML não suportada
+
+240|Rejeição: Cancelamento/Inutilização – Irregularidade Fiscal do Emitente
+
+241|Rejeição: Um número da faixa já foi utilizado
+
+242|Rejeição: Elemento cteCabecMsg inexistente no SOAP Header
+
+243|Rejeição: XML Mal Formado
+
+245|Rejeição: CNPJ Emitente não cadastrado
+
+246|Rejeição: CNPJ Destinatário não cadastrado
+
+247|Rejeição: Sigla da UF do Emitente diverge da UF autorizadora
+
+248|Rejeição: UF do Recibo diverge da UF autorizadora
+
+249|Rejeição: UF da Chave de Acesso diverge da UF autorizadora
+
+250|Rejeição: UF diverge da UF autorizadora
+
+251|Rejeição: UF/Município destinatário não pertence a SUFRAMA
+
+252|Rejeição: Ambiente informado diverge do Ambiente de recebimento
+
+253|Rejeição: Dígito Verificador da chave de acesso composta inválido
+
+254|Rejeição: CT-e a ser complementado não informado para CT-e complementar
+
+256|Rejeição: Um número de CT-e da faixa está inutilizado na Base de dados da SEFAZ
+
+257|Rejeição: Solicitante não habilitado para emissão do CT-e
+
+258|Rejeição: CNPJ da consulta inválido
+
+259|Rejeição: CNPJ da consulta não cadastrado como contribuinte na UF
+
+260|Rejeição: IE da consulta inválida
+
+261|Rejeição: IE da consulta não cadastrada como contribuinte na UF
+
+262|Rejeição: UF não fornece consulta por CPF
+
+263|Rejeição: CPF da consulta inválido
+
+264|Rejeição: CPF da consulta não cadastrado como contribuinte na UF
+
+265|Rejeição: Sigla da UF da consulta difere da UF do Web Service
+
+266|Rejeição: Série utilizada não permitida no Web Service
+
+267|Rejeição: CT-e Complementar referencia um CT-e inexistente
+
+268|Rejeição: CT-e Complementar referencia outro CT-e Complementar
+
+269|Rejeição: CNPJ Emitente do CT-e Complementar difere do CNPJ do CT complementado
+
+270|Rejeição: Código Município do Fato Gerador: dígito inválido
+
+271|Rejeição: Código Município do Fato Gerador: difere da UF do emitente
+
+272|Rejeição: Código Município do Emitente: dígito inválido
+
+273|Rejeição: Código Município do Emitente: difere da UF do emitente
+
+274|Rejeição: Código Município do Destinatário: dígito inválido
+
+275|Rejeição: Código Município do Destinatário: difere da UF do Destinatário
+
+276|Rejeição: Código Município do Local de Retirada: dígito inválido
+
+277|Rejeição: Código Município do Local de Retirada: difere da UF do Local de Retirada
+
+278|Rejeição: Código Município do Local de Entrega: dígito inválido
+
+279|Rejeição: Código Município do Local de Entrega: difere da UF do Local de Entrega
+
+280|Rejeição: Certificado Transmissor inválido
+
+281|Rejeição: Certificado Transmissor Data Validade
+
+282|Rejeição: Certificado Transmissor sem CNPJ
+
+283|Rejeição: Certificado Transmissor – erro Cadeia de Certificação
+
+284|Rejeição: Certificado Transmissor revogado
+
+285|Rejeição: Certificado Transmissor difere ICP-Brasil
+
+286|Rejeição: Certificado Transmissor erro no acesso a LCR
+
+289|Rejeição: Código da UF informada diverge da UF solicitada
+
+290|Rejeição: Certificado Assinatura inválido
+
+291|Rejeição: Certificado Assinatura Data Validade
+
+292|Rejeição: Certificado Assinatura sem CNPJ
+
+293|Rejeição: Certificado Assinatura – erro Cadeia de Certificação
+
+294|Rejeição: Certificado Assinatura revogado
+
+295|Rejeição: Certificado Assinatura difere ICP-Brasil
+
+296|Rejeição: Certificado Assinatura erro no acesso a LCR
+
+297|Rejeição: Assinatura difere do calculado
+
+298|Rejeição: Assinatura difere do padrão do Projeto
+
+299|Rejeição: XML da área de cabeçalho com codificação diferente de UTF-8
+
+301|Uso Denegado : Irregularidade fiscal do emitente
+
+401|Rejeição: CPF do remetente inválido
+
+402|Rejeição: XML da área de dados com codificação diferente de UTF-8
+
+404|Rejeição: Uso de prefixo de namespace não permitido
+
+405|Rejeição: Código do país do emitente: dígito inválido
+
+406|Rejeição: Código do país do destinatário: dígito inválido
+
+407|Rejeição: O CPF só pode ser informado no campo emitente para o CT-e avulso
+
+408|Rejeição: Lote com CT-e de diferentes UF
+
+409|Rejeição: Campo cUF inexistente no elemento cteCabecMsg do SOAP Header
+
+410|Rejeição: UF informada no campo cUF não é atendida pelo WebService
+
+411|Rejeição: Campo versaoDados inexistente no elemento cteCabecMsg do SOAP Header
+
+413|Rejeição: Código de Município de término da prestação: dígito inválido
+
+414|Rejeição: Código de Município diverge da UF de término da prestação
+
+415|Rejeição: CNPJ do remetente inválido
+
+416|Rejeição: CPF do remetente inválido
+
+417|Rejeição: Código de Município de localização remetente: dígito inválido
+
+418|Rejeição: Código de Município diverge da UF de localização remetente
+
+419|Rejeição: IE do remetente inválida
+
+420|Rejeição: CNPJ remetente não cadastrado
+
+421|Rejeição: IE do remetente não cadastrada
+
+422|Rejeição: IE do remetente não vinculada ao CNPJ
+
+423|Rejeição: Código de Município de localização destinatário: dígito inválido
+
+424|Rejeição: Código de Município diverge da UF de localização destinatário
+
+425|Rejeição: CNPJ destinatário não cadastrado
+
+426|Rejeição: IE do destinatário não cadastrada
+
+427|Rejeição: IE do destinatário não vinculada ao CNPJ
+
+428|Rejeição: CNPJ do expedidor inválido
+
+429|Rejeição: CPF do expedidor inválido
+
+430|Rejeição: Código de Município de localização expedidor: dígito inválido
+
+431|Rejeição: Código de Município diverge da UF de localização expedidor
+
+432|Rejeição: IE do expedidor inválida
+
+433|Rejeição: CNPJ expedidor não cadastrado
+
+434|Rejeição: IE do expedidor não cadastrada
+
+435|Rejeição: IE do expedidor não vinculada ao CNPJ
+
+436|Rejeição: CNPJ do recebedor inválido
+
+437|Rejeição: CPF do recebedor inválido
+
+438|Rejeição: Código de Município de localização do recebedor: dígito inválido
+
+439|Rejeição: Código de Município diverge da UF de localização recebedor
+
+440|Rejeição: IE do recebedor inválida
+
+441|Rejeição: CNPJ recebedor não cadastrado
+
+442|Rejeição: IE do recebedor não cadastrada
+
+443|Rejeição: IE do recebedor não vinculada ao CNPJ
+
+444|Rejeição: CNPJ do tomador inválido
+
+445|Rejeição: CPF do tomador inválido
+
+446|Rejeição: Código de Município de localização tomador: dígito inválido
+
+447|Rejeição: Código de Município diverge da UF de localização tomador
+
+448|Rejeição: IE do tomador inválida
+
+449|Rejeição: CNPJ tomador não cadastrado
+
+455|Rejeição: Código de Município de início da prestação: dígito inválido
+
+456|Rejeição: Código de Município diverge da UF de início da prestação
+
+457|Rejeição: O lote contém CT-e de mais de um estabelecimento emissor
+
+458|Rejeição: Grupo de CT-e normal não informado para CT-e normal
+
+459|Rejeição: Grupo de CT-e complementar não informado para CT-e complementar
+
+460|Rejeição: Não informado os dados do remetente indicado como tomador do serviço
+
+461|Rejeição: Não informado os dados do expedidor indicado como tomador do serviço
+
+462|Rejeição: Não informado os dados do recebedor indicado como tomador do serviço
+
+463|Rejeição: Não informado os dados do destinatário indicado como tomador do serviço
+
+469|Rejeição: Remetente deve ser informado para tipo de serviço diferente de redespacho intermediário ou Serviço vinculado a multimodal
+
+470|Rejeição: Destinatário deve ser informado para tipo de serviço diferente de redespacho intermediário ou serviço vinculado a multimodal
+
+471|Rejeição: Ano de inutilização não pode ser superior ao Ano atual
+
+472|Rejeição: Ano de inutilização não pode ser inferior a 2008
+
+473|Rejeição: Tipo Autorizador do Recibo diverge do Órgão Autorizador
+
+474|Rejeição: Expedidor deve ser informado para tipo de serviço de redespacho intermediário e serviço vinculado a multimodal
+
+475|Rejeição: Recebedor deve ser informado para tipo de serviço de redespacho intermediário e serviço vinculado a multimodal
+
+489|Rejeição: IE do tomador não cadastrada
+
+490|Rejeição: IE do tomador não vinculada ao CNPJ
+
+491|Rejeição: CT-e referenciado é CT-e complementar
+
+492|Rejeição: Código de Município de envio: dígito inválido
+
+493|Rejeição: Código de Município diverge da UF de envio
+
+494|Rejeição: Processo de emissão informado inválido
+
+495|Rejeição: Solicitante não autorizado para consulta
+
+496|Rejeição: Grupo CT-e de Anulação não informado para o CT-e de Anulação
+
+497|Rejeição: CT-e objeto da anulação inexistente
+
+498|Rejeição: CT-e objeto da anulação deve estar com a situação autorizada (não pode estar cancelado ou denegado)
+
+499|Rejeição: CT-e de anulação deve ter tipo de emissão = normal
+
+500|Rejeição: CT-e objeto da anulação deve ter Tipo = 0 (normal) ou 3 (Substituição)
+
+501|Rejeição: Data de emissão do CT-e de Anulação deve ocorrer em até 60 dias
+
+502|Rejeição: CT-e de anulação deve ter o valor do ICMS e de prestação iguais ao CT-e original
+
+503|Rejeição: CT-e substituto deve ter tipo de emissão = normal
+
+505|Rejeição: Grupo CT-e de Substituição não informado para o CT-e de Substituição
+
+510|Rejeição: CNPJ do emitente do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+511|Rejeição: CNPJ/CPF do remetente do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+512|Rejeição: CNPJ/CPF do destinatário do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+513|Rejeicao: UF nao atendida pela SVC-[SP/RS]
+
+514|Rejeição: versão da mensagem não suportada na SVC
+
+515|Rejeição: O tpEmis informado só é válido na contingência SVC
+
+516|Rejeição: O tpEmis informado é incompatível com SVC-[SP/RS]
+
+517|Rejeição: CT-e informado em SVC deve ser Normal
+
+518|Rejeição: Serviço indisponível na SVC
+
+539|Rejeicao: Duplicidade de CT-e, com diferença na Chave de Acesso [chCTe:99999999999999999999999999999999999999999999][nRec:999999999999999]
+
+540|Rejeição: Grupo de documentos informado inválido para remetente que emite NF-e
+
+550|Rejeição: O CNPJ/CPF do expedidor do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+551|Rejeição: O CNPJ/CPF do recebedor do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+552|Rejeição: O CNPJ/CPF do tomador do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+553|Rejeição: A IE do emitente do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+554|Rejeição: A IE do remetente do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+555|Rejeição: A IE do destinatário do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+556|Rejeição: A IE do expedidor do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+557|Rejeição: A IE do recebedor do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+558|Rejeição: A IE do tomador do CT-e substituto deve ser igual ao informado no CT-e substituído
+
+559|Rejeição: A UF de início da prestação deve ser igual ao informado no CT-e substituído
+
+560|Rejeição: A UF de fim da prestação deve ser igual ao informado no CT-e substituído
+
+561|Rejeição: O valor da prestação do serviço deve ser menor ou igual ao informado no CT-e substituído
+
+562|Rejeição: O valor do ICMS do CT-e substituto deve ser menor ou igual ao informado no CT-e substituído
+
+563|Rejeição: A substituição de um CT-e deve ocorrer no prazo máximo de 90 dias contados da data de emissão do CT-e objeto de Substituição
+
+564|Rejeição: O CT-e de anulação não pode ser cancelado
+
+565|Rejeição: O CT-e só pode ser anulado pelo emitente
+
+566|Rejeição: CT-e objeto da anulação não pode ter sido anulado anteriormente
+
+567|Rejeição: CT-e objeto da anulação não pode ter sido substituído anteriormente
+
+568|Rejeição: CT-e a ser substituído inexistente
+
+569|Rejeição: CT-e a ser substituído deve estar com a situação autorizada (não pode estar cancelado ou denegado)
+
+570|Rejeição: CT-e a ser substituído não pode ter sido substituído anteriormente
+
+571|Rejeição: CT-e a ser substituído deve ter Tipo = 0 (normal) ou 3 (Substituição)
+
+572|Rejeição: CT-e de anulação informado no grupo “Tomador não é contribuinte do ICMS” inexistente
+
+573|Rejeição: CT-e de anulação informado no grupo “Tomador não é contribuinte do ICMS” deve ter Tipo=2(Anulação)
+
+574|Rejeição: Vedado o cancelamento de CT-e do tipo substituto (tipo=3)
+
+575|Rejeição: Vedado o cancelamento se possuir CT-e de Anulação associado
+
+576|Rejeição: Vedado o cancelamento se possuir CT-e de Substituição associado
+
+577|Rejeição: CT-e a ser substituído não pode ter sido anulado anteriormente
+
+578|Rejeição: Chave de acesso do CT-e anulado deve ser igual ao substituído
+
+579|Rejeição: Versão informada para o modal não suportada
+
+580|Rejeição: Falha no Schema XML específico para o modal
+
+581|Rejeição: Campo Valor da Carga deve ser informado para o modal
+
+582|Rejeição: Grupo Tráfego Mútuo deve ser informado
+
+583|Rejeição: Ferrovia emitente deve ser a de origem quando respFat=1
+
+584|Rejeição: Referenciar o CT-e que foi emitido pela ferrovia de origem
+
+585|Rejeição: IE Emitente não autorizada a emitir CT-e para o modal informado
+
+586|Rejeição: Data e Justificativa de entrada em contingência não devem ser informadas para tipo de emissão normal.
+
+587|Rejeição: Data e Justificativa de entrada em contingência devem ser informadas
+
+588|Rejeição: Data de entrada em contingência posterior a data de emissão.
+
+589|Rejeição: O lote contém CT-e de mais de um modal
+
+590|Rejeição: O lote contém CT-e de mais de uma versão de modal
+
+591|Rejeição: Dígito Verificador inválido na Chave de acesso de NF-e transportada
+
+592|Rejeição: Chave de acesso inválida (Ano < 2009 ou Ano maior que Ano corrente)
+
+593|Rejeição: Chave de acesso inválida (Mês = 0 ou Mês > 12)
+
+594|Rejeição: Chave de acesso inválida (CNPJ zerado ou digito inválido)
+
+595|Rejeição: Chave de acesso inválida (modelo diferente de 57)
+
+596|Rejeição: Chave de acesso inválida (numero CT = 0)
+
+598|Rejeicao: Usar somente o namespace padrao do CT-e
+
+599|Rejeicao: Nao eh permitida a presenca de caracteres de edicao no inicio/fim da mensagem ou entre as tags da mensagem
+
+600|Rejeicao: Chave de Acesso difere da existente em BD
+
+601|Rejeição: Quantidade de documentos informados no remetente excede limite de 2000
+
+602|Rejeição: Chave de acesso de NF-e inválida (Ano < 2005 ou Ano maior que Ano corrente)
+
+603|Rejeição: Chave de acesso de NF-e inválida (Mês = 0 ou Mês > 12)
+
+604|Rejeição: Chave de acesso de NF-e inválida (CNPJ zerado ou digito inválido)
+
+605|Rejeição: Chave de acesso de NF-e inválida (modelo diferente de 55)
+
+606|Rejeição: Chave de acesso de NF-e inválida (numero NF = 0)
+
+627|Rejeição: CNPJ do autor do evento inválido
+
+628|Rejeição: Erro Atributo ID do evento não corresponde a concatenação dos campos (“ID” + tpEvento + chCTe + nSeqEvento)
+
+629|Rejeição: O tpEvento informado inválido
+
+630|Rejeição: Falha no Schema XML específico para o evento
+
+631|Rejeição: Duplicidade de evento
+
+632|Rejeição: O autor do evento diverge do emissor do CT-e
+
+633|Rejeição: O autor do evento não é um órgão autorizado a gerar o evento
+
+634|Rejeição: A data do evento não pode ser menor que a data de emissão do CT-e
+
+635|Rejeição: A data do evento não pode ser maior que a data do processamento
+
+636|Rejeição: O numero sequencial do evento é maior que o permitido
+
+637|Rejeição: A data do evento não pode ser menor que a data de autorização do CT-e
+
+638|Rejeição: Já existe CT-e autorizado com esta numeração
+
+639|Rejeição: Existe EPEC emitido há mais de 7 dias (168h) sem a emissão do CT-e no ambiente normal de autorização
+
+640|Rejeição: Tipo de emissão do CT-e difere de EPEC com EPEC autorizado na SVC-XX para este documento.
+
+641|Rejeição: O evento prévio deste CT-e não foi autorizado na SVC ou ainda não foi sincronizado.[OBS: Em caso de atraso na sincronização, favor aguardar alguns instantes para nova tentativa de transmissão]
+
+642|Rejeição: Os valores de ICMS, Prestação e Total da Carga do CT-e devem ser iguais aos informados no EPEC.
+
+643|Rejeição: As informações do tomador de serviço do CT-e devem ser iguais as informadas no EPEC
+
+644|Rejeição: A informação do modal do CT-e deve ser igual a informada no EPEC
+
+645|Rejeição: A UF de inicio e fim de prestação do CT-e devem ser iguais as informadas no EPEC.
+
+646|Rejeição: CT-e emitido em ambiente de homologação com Razão Social do remetente diferente de CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO – SEM VALOR FISCAL
+
+647|Rejeição: CT-e emitido em ambiente de homologação com Razão Social do expedidor diferente de CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO – SEM VALOR FISCAL
+
+648|Rejeição: CT-e emitido em ambiente de homologação com Razão Social do recebedor diferente de CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO – SEM VALOR FISCAL
+
+649|Rejeição: CT-e emitido em ambiente de homologação com Razão Social do destinatário diferente de CT-E EMITIDO EM AMBIENTE DE HOMOLOGACAO – SEM VALOR FISCAL
+
+650|Rejeição: Valor total do serviço superior ao limite permitido (R$ 9.999.999,99)
+
+651|Rejeição: Referenciar o CT-e Multimodal que foi emitido pelo OTM
+
+652|Rejeição: NF-e não pode estar cancelada ou denegada
+
+653|Rejeição: Tipo de evento não é permitido em ambiente de autorização Normal
+
+654|Rejeição: Tipo de evento não é permitido em ambiente de autorização SVC
+
+655|Rejeição: CT-e complementado deve estar com a situação autorizada (não pode estar cancelado ou denegado)
+
+656|Rejeição: CT-e complementado não pode ter sido anulado
+
+657|Rejeição: CT-e complementado não pode ter sido substituído
+
+658|Rejeição: CT-e objeto da anulação não pode ter sido complementado
+
+659|Rejeição: CT-e substituído não pode ter sido complementado
+
+660|Rejeição: Vedado o cancelamento se possuir CT-e Complementar associado
+
+661|Rejeição: NF-e inexistente na base de dados da SEFAZ
+
+662|Rejeição: NF-e com diferença de Chave de Acesso
+
+663|Rejeição: CT-e autorizado há mais de 30 dias
+
+664|Rejeição: Evento não permitido para CT-e Substituido/Anulado
+
+665|Rejeição: As informações do seguro da carga devem ser preenchidas para o modal rodoviário
+
+666|Rejeição: O responsável pelo seguro da carga indicado não foi relacionado no CT-e
+
+667|Rejeição: CNPJ do Tomador deve ser igual ao CNPJ do Emitente do CT-e Multimodal
+
+668|Rejeição: CPF do funcionário do registro de passagem inválido
+
+669|Rejeição: Segundo código de barras deve ser informado para CT-e emitido em contingência FS-DA
+
+670|Rejeição: Série utilizada não permitida no webservice
+
+671|Rejeição: CT-e referenciado no CT-e Complementar com diferença de Chave de Acesso [chCTe: 99999999999999999999999999999999999999999999][nRec:999999999999999]
+
+672|Rejeição: CT-e de Anulação com diferença de Chave de Acesso [chCTe: 99999999999999999999999999999999999999999999][nRec:999999999999999]
+
+673|Rejeição: CT-e Substituído com diferença de Chave de Acesso [chCTe: 99999999999999999999999999999999999999999999][nRec]
+
+674|Rejeição: CT-e Objeto de Anulação com diferença de Chave de Acesso [chCTe: 99999999999999999999999999999999999999999999][nRec]
+
+675|Rejeição: Valor do imposto não corresponde a base de calculo X aliquota
+
+676|Rejeição: CFOP informado inválido
+
+677|Rejeição: Órgão de recepção do evento inválido
+
+678|Rejeição: Consumo Indevido [Descrição: XXXXXXXXXXXXXXXXXXXXXXXXXXXX]
+
+679|Rejeição: O modal do CT-e deve ser Multimodal para Evento Registros do Multimodal
+
+680|Rejeição: Tipo de Emissão diferente de EPEC
+
+681|Rejeição: Informação não pode ser alterada por carta de correção
+
+682|Rejeição: Já existe pedido de inutilização com a mesma faixa de inutilização
+
+683|Rejeição: Chave de acesso de MDF-e inválida (Ano < 2012 ou Ano maior que Ano corrente)
+
+684|Rejeição: Chave de acesso de MDF-e inválida (Mês = 0 ou Mês > 12)
+
+685|Rejeição: Chave de acesso de MDF-e inválida (CNPJ zerado ou digito inválido)
+
+686|Rejeição: Chave de acesso de MDF-e inválida (modelo diferente de 58)
+
+687|Rejeição: Chave de acesso de MDF-e inválida (numero MDF = 0)
+
+688|Rejeição: Grupo de informações do veiculo deve ser informado para Carga Lotação
+
+689|Rejeição: CT-e de anulação não é permitido para CT-e cujo tomador é Contribuinte de ICMS.
+
+690|Rejeição: CT-e Multimodal referenciado inexistente na base de dados da SEFAZ
+
+691|Rejeição: CT-e Multimodal referenciado existe com diferença de chave de acesso
+
+692|Rejeição: CT-e Multimodal referenciado não pode estar cancelado ou denegado
+
+693|Rejeição: Grupo Documentos Transportados deve ser informado para tipo de serviço diferente de redespacho intermediário e serviço vinculado a multimodal
+
+694|Rejeição: Grupo Documentos Transportados não pode ser informado para tipo de serviço redespacho intermediário e serviço vinculado a multimodal
+
+695|Rejeição: CT-e com emissão anterior ao evento prévio (EPEC)
+
+696|Rejeição:Existe EPEC aguardando CT-e nessa faixa de numeração
+
+697|Rejeição: Data de emissão do CT-e deve ser igual a data de autorização da EPEC
+
+698|Rejeição: Evento Prévio autorizado há mais de 7 dias (168 horas)
+
+699|Rejeição: CNPJ autorizado para download inválido
+
+700|Rejeição: CPF autorizado para download inválido
+
+998|Rejeição: CT-e Multimodal e Serviço Vinculado a Multimodal não estão liberados no ambiente de produção. *** Regra provisória
+
+999|Rejeição: Erro não catalogado (informar a mensagem de erro capturado no tratamento da exceção)

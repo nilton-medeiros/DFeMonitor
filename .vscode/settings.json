@@ -1,0 +1,19 @@
+{
+    "material-icon-theme.folders.associations": {
+      "mysql": "database",
+      "ftp": "ci",
+      "adaptadores": "connection",
+      "empresa": "client",
+      "empresas": "client",
+      "usuario": "admin",
+      "usuarios": "admin",
+      "user": "admin",
+      "cte": "docs",
+      "ctes": "docs",
+      "mdfe": "docs",
+      "mdfes": "docs",
+      "monitoramento": "wakatime",
+      "monitoramentos": "wakatime",
+      "nuvemFiscal": "aws"
+    }
+  }

@@ -1,0 +1,35 @@
+Cadastrar empresa:
+
+// Forçando CNPJ inválido
+400 Bad Request
+
+{
+	"error": {
+		"code": "ValidationFailed",
+		"message": "Validation failed",
+		"errors": [
+			{
+				"code": "ValidationError",
+				"message": "O campo 'cpf_cnpj' deve ser um CPF ou CNPJ válido"
+			},
+			{
+				"code": "InvalidFormat",
+				"message": "O campo 'cpf_cnpj' não corresponde ao formato esperado ^(\\d{11}|\\d{14})$"
+			}
+		]
+	}
+}
+
+--------------------------------------
+
+// Tentando recadastrar o mesmo CNPJ
+400 Bad Request
+
+{
+	"error": {
+		"code": "EmpresaAlreadyExists",
+		"message": "Já existe uma empresa com o CPF/CNPJ informado"
+	}
+}
+
+------------------------------------
