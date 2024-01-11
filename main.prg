@@ -22,7 +22,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 
 procedure main
-    public appData := TAppData():new("4.0.84")
+    public appData := TAppData():new("4.0.85")
     public appDataSource
     public appFTP
     public appEmpresas

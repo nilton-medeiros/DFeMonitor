@@ -1178,7 +1178,7 @@ method defineBody() class TApiCTe
 
                     tarifa := ::cte:comp_calc[1]
                     tpTar := Upper(desacentuar(tarifa["CL"]))
-                    CL := "M"   // Left(tpTar, 1)   Forçando tarifa Mínima, até descobrir pq a sefaz/nuvem fiscal só aceita M
+                    CL := Left(tpTar, 1)    // Testando, Nuvem fiscal fez as correções - Forçando tarifa Mínima, até descobrir pq a sefaz/nuvem fiscal só aceita M
 
                     if !(CL $ "MGE")
                         do case
