@@ -1,5 +1,6 @@
+
 #require "hbwin"
-#include "hmg.ch"
+#include <hmg.ch>
 #include <fileio.ch>
 
 REQUEST HB_CODEPAGE_UTF8
@@ -20,8 +21,8 @@ REQUEST HB_CODEPAGE_UTF8
         appNuvemFiscal: Faz a autenticação e disponibiliza integração com a RestAPI da Nuvem Fiscal
         links: sistrom.com.br, nuvemfiscal.com.br
 */
+Function Main
 
-procedure main
     public appData := TAppData():new("4.0.85")
     public appDataSource
     public appFTP
@@ -45,9 +46,9 @@ procedure main
 
     appData:registerSystem()
 
-    LOAD WINDOW main
-    main.CENTER
-    main.ACTIVATE
+    Load Window Main
+    Main.Center
+    Main.Activate
 
 return
 

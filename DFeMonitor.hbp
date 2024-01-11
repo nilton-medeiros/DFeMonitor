@@ -1,4 +1,4 @@
-main.prg
+Main.Prg
 setup.prg
 src\components\ComboBox.prg
 src\components\textBoxFocus.prg
