@@ -5,9 +5,9 @@
 REQUEST HB_CODEPAGE_UTF8
 
 /*
-    DFe_Monitor: Roda como um serviço minimizado na taskbar do Windows, monitora os DFes de um grupo de empresas
-                 transportadoras para emitir CTes (4.00) e MDFes, faz Autorização, Cancelamento, Carta de Correção e
-                 obtem XMLs/PDFs junto a Rest API da Nuvem Fiscal. Gera DACTE em PDF com layout mais apresentável.
+    DFeMonitor: Roda como um serviço minimizado na taskbar do Windows, monitora os DFes de um grupo de empresas
+                transportadoras para emitir CTes (4.00) e MDFes, faz Autorização, Cancelamento, Carta de Correção e
+                obtem XMLs/PDFs junto a Rest API da Nuvem Fiscal. Gera DACTE em PDF com layout mais apresentável.
     main: Inicializa o programa, mas é na main_form_oninit() que realmente faz toda a configuração inicial.
         * Nesta aplicação: Todos os objetos públicos começam com "app", são utilizados em toda a aplicação
         appData:        Contém configurações gerais e iniciais da aplicação, cria e atualiza o RegEdit do Windows.
