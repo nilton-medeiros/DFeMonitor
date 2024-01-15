@@ -528,19 +528,21 @@ method ListarCTes() class TApiCTe
 
             ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
             ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
-            ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
 
-            if hb_HGetRef(hAutorizacao, 'codigo_status')
-                ::codigo_status := hAutorizacao['codigo_status']
-                ::motivo_status := hAutorizacao['motivo_status']
-            else
-                if hb_HGetRef(hAutorizacao, 'codigo_mensagem')
+            if !(::status == "pendente")
+                if hb_HGetRef(hAutorizacao, 'data_recebimento')
+                    ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
+                endif
+                if hb_HGetRef(hAutorizacao, 'codigo_status')
+                    ::codigo_status := hAutorizacao['codigo_status']
+                    ::motivo_status := hAutorizacao['motivo_status']
+                elseif hb_HGetRef(hAutorizacao, 'codigo_mensagem')
                     ::codigo_status := hAutorizacao['codigo_mensagem']
                     ::motivo_status := hAutorizacao['mensagem']
                 endif
-            endif
-            if hb_HGetRef(hAutorizacao, "digest_value")
-                ::digest_value := hAutorizacao['digest_value']
+                if hb_HGetRef(hAutorizacao, "digest_value")
+                    ::digest_value := hAutorizacao['digest_value']
+                endif
             endif
 
             // Na API Listar CTe/MDFe, mesmo que o status seja cancelado ou encerrado, o codigo_status vem 100 e motivo_status de autorização
