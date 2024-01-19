@@ -171,8 +171,12 @@ method Emitir() class TApiMDFe
             endif
         endif
 
-        ::tipo_evento := hAutorizacao['tipo_evento']
-        ::digest_value := hAutorizacao['digest_value']
+        if hb_HGetRef(hAutorizacao, 'tipo_evento')
+            ::tipo_evento := hAutorizacao['tipo_evento']
+        endif
+        if hb_HGetRef(hAutorizacao, 'digest_value')
+            ::digest_value := hAutorizacao['digest_value']
+        endif
 
         switch ::codigo_status
             case 100
@@ -183,7 +187,7 @@ method Emitir() class TApiMDFe
                 exit
             otherwise
                 motivo := Lower(Left(desacentuar(::motivo_status), 8))
-                if (motivo == "rejeicao")
+                if (motivo == "rejeicao") .or. (::status == "rejeitado")
                     ::status := "REJEITADO"
                 endif
         endswitch
