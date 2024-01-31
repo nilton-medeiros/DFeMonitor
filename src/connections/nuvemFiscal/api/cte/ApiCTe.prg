@@ -655,8 +655,10 @@ method defineBody() class TApiCTe
         toma["enderToma"] := ender
         ender := nil
 
-        toma["email"] := ::cte:tom_email
-
+        if !Empty(::cte:tom_email)
+            toma["email"] := ::cte:tom_email
+        endif
+        
         ide["toma4"] := toma
         toma := nil
 
