@@ -82,6 +82,16 @@ method new(hMDFe) class TMDFe
     ::aVerb := hMDFe["aVerb"]
     ::prodPred := hMDFe["prodPred"]
     ::autXML := hMDFe["autXML"]
+
+    // Obrigatoriedade CNPJ ANTT - Tag autXML | MDF-e
+    // Adiciona o CNPJ da ANTT na tag autXML, artigo 22 da  Resolução ANTT nº 4.799/2015
+    AAdd(::autXML, {"CNPJ" => "04898488000177"})
+
+    // Incluir o CNPJ da Contabilidade se houver
+    if !Empty(::emitente:cnpj_contabil)
+        AAdd(::autXML, {"CNPJ" => ::emitente:cnpj_contabil})
+    endif
+
     ::qCTe := mdfe["qCTe"]
     ::vCarga := mdfe["vCarga"]
     ::cUnid := PadL(mdfe["cUnid"], 2, "0")

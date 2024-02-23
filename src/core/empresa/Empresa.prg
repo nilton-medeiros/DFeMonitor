@@ -7,6 +7,7 @@ class TEmpresa
     data xNome readonly
     data xFant readonly
     data CNPJ
+    data cnpj_contabil readonly
     data IE readonly
     data IM readonly
     data xLgr readonly
@@ -54,6 +55,7 @@ method new(empresa) class TEmpresa
     ::xNome := empresa['xNome']
     ::xFant := empresa['xFant']
     ::CNPJ := getNumbers(empresa['CNPJ'])
+    ::cnpj_contabil := getNumbers(empresa['cnpj_contabil'])
     ::IE := empresa['IE']
     ::IM := empresa['IM']
     ::xLgr := empresa['xLgr']

@@ -177,6 +177,7 @@ class TCTe
     data aereo readonly
     data updateCTe readonly
     data updateEventos readonly
+    data autXML readonly
 
     method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) constructor
     method infIndGlobalizado()
@@ -374,6 +375,16 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::tpAmb := ::emitente:tpAmb
     ::obs_contr := {}
     ::obs_fisco := {}
+    ::autXML := {}
+
+    // Obrigatoriedade CNPJ ANTT - Tag autXML | CT-e/MDF-e
+    // Adiciona o CNPJ da ANTT na tag autXML, artigo 22 da  Resolução ANTT nº 4.799/2015
+    AAdd(::autXML, {"CNPJ" => "04898488000177"})
+
+    // Incluir o CNPJ da Contabilidade se houver
+    if !Empty(::emitente:cnpj_contabil)
+        AAdd(::autXML, {"CNPJ" => ::emitente:cnpj_contabil})
+    endif
 
     // Adiciona o Emissor a tag ObsCont "Uso Exclusivo do Emissor de CT-e"
     AAdd(::obs_contr, {"xCampo" => "Emissor", "xTexto" => ::xEmi})

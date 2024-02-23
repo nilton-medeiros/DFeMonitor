@@ -236,6 +236,9 @@ method Consultar() class TApiCTe
         hAutorizacao := hRes['autorizacao']
 
         ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
+        if hb_HGetRef(hAutorizacao, "digest_value")
+            ::digest_value := hAutorizacao["digest_value"]
+        endif
         ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
         ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
 
@@ -658,7 +661,7 @@ method defineBody() class TApiCTe
         if !Empty(::cte:tom_email)
             toma["email"] := ::cte:tom_email
         endif
-        
+
         ide["toma4"] := toma
         toma := nil
 
@@ -724,7 +727,7 @@ method defineBody() class TApiCTe
     compl["destCalc"] := ::cte:xMunFim
 
     if !Empty(::cte:xObs)
-        compl["xObs"] := ::cte:xObs
+        compl["xObs"] := StrTran(StrTran(::cte:xObs, "\n", " | "), hb_eol(), " | ")
     endif
 
     if !Empty(::cte:obs_contr)
@@ -1226,14 +1229,9 @@ method defineBody() class TApiCTe
       // infCteAnu | Detalhamento do CT-e do tipo Anulação
     endif
 
-    /*
-        TMS.Cloud não tem informação de autores diferentes do tom, rem, des, exp e rec
-        autXML := {}
-        if !Empty(autXML)
-            infCte["autXML"] := autXML
-        endif
-        autXML := nil
-    */
+    if !Empty(::cte:autXML)
+        infCte["autXML"] := ::cte:autXML
+    endif
 
     if !Empty(RegistryRead(appData:winRegistryPath + "Host\respTec\CNPJ"))
         infCte["infRespTec"] := {"CNPJ" => RegistryRead(appData:winRegistryPath + "Host\respTec\CNPJ"), ;
