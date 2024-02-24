@@ -35,7 +35,7 @@ method new(empresa) class TApiEmpresas
     ::token := appNuvemFiscal:token
 
     if Empty(::token)
-        saveLog("Token vazio para conexão com a Nuvem Fiscal")
+        apiLog({"type" => "Warning", "description" => "Token não definido para conexão com a Nuvem Fiscal"})
     else
         ::connection := GetMSXMLConnection()
         ::connected := !Empty(::connection)
@@ -55,7 +55,7 @@ return self
 
 
 method Cadastrar() class TApiEmpresas
-    local res
+    local log, res
 
     if !::connected
         return false
@@ -72,8 +72,12 @@ method Cadastrar() class TApiEmpresas
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao cadastrar empresa na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                 "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível cadastrar empresa na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     else
         ::putSetupCTe()
     endif
@@ -82,7 +86,7 @@ return !res['error']
 
 
 method Consultar() class TApiEmpresas
-    local res
+    local log, res
 
     if !::connected
         return false
@@ -96,15 +100,19 @@ method Consultar() class TApiEmpresas
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao consultar empresa na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                 "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível consultar empresa na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     endif
 
 return !res['error']
 
 
 method Alterar() class TApiEmpresas
-    local res, apiUrl
+    local log, res, apiUrl
 
     if !::connected
         return false
@@ -121,8 +129,12 @@ method Alterar() class TApiEmpresas
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao alterar empresa na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                 "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível alterar empresa na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     else
         ::putSetupCTe()
     endif
@@ -156,7 +168,7 @@ method defineBody() class TApiEmpresas
 return nil
 
 method putSetupCTe() class TApiEmpresas
-    local res, hBody, apiUrl := ::baseUrlCnpj + "/cte"
+    local log, res, hBody, apiUrl := ::baseUrlCnpj + "/cte"
 
     if !::connected
         return false
@@ -176,8 +188,12 @@ method putSetupCTe() class TApiEmpresas
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao alterar configuração de CT-e na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                 "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível alterar configuração de CT-e na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     endif
 
 return !res['error']

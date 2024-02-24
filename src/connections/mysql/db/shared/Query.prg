@@ -43,13 +43,13 @@ method new(cSql) class TQuery
                     SetProperty("main", "NotifyIcon", "serverON")
                 else
                     msgNotify({"notifyTooltip" => "B.D. não conectado!"})
-                    saveLog("Banco de Dados não conectado!")
+                    saveLog("Banco de Dados não conectado!", "Warning")
                     SetProperty("main", "NotifyIcon", "serverOFF")
                 endif
             endif
         else
             msgNotify({"notifyTooltip" => "B.D. não conectado!"})
-            saveLog("Banco de Dados não conectado!")
+            saveLog("Banco de Dados não conectado!", "Warning")
             SetProperty("main", "NotifyIcon", "serverOFF")
         endif
     endif
@@ -58,21 +58,20 @@ return self
 
 method runQuery() class TQuery
     local tenta as numeric
-    local msgLog, command, table, mode
+    local command, table, mode
 
     ::db := appDataSource:mysql:Query(::sql)
 
     if (::db == nil)
         if !appDataSource:connect()
             msgNotify({"notifyTooltip" => "B.D. não conectado!"})
-            saveLog("Banco de Dados não conectado!")
+            saveLog("Banco de Dados não conectado!", "Warning")
             return false
         endif
         ::db := appDataSource:mysql:Query(::sql)
         if (::db == nil)
             msgNotify({'notifyTooltip' => "Erro de SQL!"})
-            msgLog := "Erro ao executar Query! [Query is NIL]" + hb_eol() + hb_eol()
-            saveLog(msgLog)
+            saveLog("Erro ao executar Query! [Query is NIL]", "Error")
             msgDebugInfo({'Erro ao executar ::db, avise ao suporte!', hb_eol() + hb_eol(), 'Ver Log do sistema', hb_eol(), 'Erro: Query is NIL'})
             return false
         endif
@@ -105,15 +104,12 @@ method runQuery() class TQuery
 
     if ::db:NetErr() .and. !::serverBusy()
         if ("DUPLICATE ENTRY" $ hmg_upper(::db:Error()))
-            saveLog("Erro de duplicidade ao " + mode + " " + table + hb_eol() + ansi_to_unicode(::sql))
+            saveLog({"Erro de duplicidade ao " + mode + " " + table, ansi_to_unicode(::sql)}, "Error")
         elseif ("lost connection" $ hmg_lower(::db:Error()))
             // Esse erro é tratado na linha 37
-            saveLog("Erro: Conexão perdida! Sem internet")
-            consoleLog("Erro ao " + mode + iif(Empty(table), " ", " na tabela de " + table) + hb_eol() + ::db:Error() +;
-                hb_eol())
+            saveLog({"Conexão perdida! Erro ao " + mode + iif(Empty(table), " ", " na tabela de " + table), "Erro: " + ::db:Error()}, "Error")
         else
-            consoleLog("Erro ao " + mode + iif(Empty(table), " ", " na tabela de " + table) + hb_eol() + ::db:Error() +;
-                    hb_eol() + hb_eol() + ansi_to_unicode(::db:cQuery))
+            saveLog({"Erro ao " + mode + iif(Empty(table), " ", " na tabela de " + table), "Erro: " + ::db:Error(), ansi_to_unicode(::db:cQuery)}, "Error")
         endif
         ::db:Destroy()
         msgNotify({'notifyTooltip' => "Erro de conexão Database" + hb_eol() + "Ver Log do sistema"})
@@ -126,9 +122,8 @@ method runQuery() class TQuery
            Verifica se houve algum registro afetado ou não
         */
         if (mysql_affected_rows(::db:nSocket) <= 0)
-            saveLog("Não foi possível " + mode + " na tabela de " + table + hb_eol() + "Registros afetados: " +;
-                hb_ntos(mysql_affected_rows(::db:nSocket)) + hb_eol() + hb_eol() + mysql_error(::db:nSocket) + hb_eol() + hb_eol() +;
-                ansi_to_unicode(::db:cQuery))
+            saveLog({"Não foi possível " + mode + " na tabela de " + table, "Registros afetados: " +;
+                hb_ntos(mysql_affected_rows(::db:nSocket)), mysql_error(::db:nSocket), ansi_to_unicode(::db:cQuery)}, "Warning")
             msgNotify({'notifyTooltip' => "Não foi possível " + mode + " na tabela de " + table + hb_eol() + "Ver Log do sistema"})
             ::db:Destroy()
         else
@@ -141,7 +136,7 @@ return ::executed
 method serverBusy() class TQuery
     local ocupado := (::db:NetErr() .and. 'server has gone away' $ ::db:Error())
     if ocupado
-        saveLog("Servidor ocupado... Fluxo continua! Erro: " + ::db:Error())
+        saveLog({"Servidor ocupado... Fluxo continua!", "Erro: " + ::db:Error()}, "Warning")
         appDataSource:disconnect()
         appDataSource:connect()
     endif

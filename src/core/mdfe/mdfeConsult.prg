@@ -26,11 +26,11 @@ procedure mdfeConsult(mdfe)
             endif
             mdfeGetFiles(apiMDFe)
         else
-            saveLog("Erro ao consultar MDFe ref: " + mdfe:referencia_uuid)
+            saveLog({"Erro ao consultar MDFe", "Referência: " + mdfe:referencia_uuid}, "Warning")
             lError := true
         endif
     else
-        saveLog("Erro na sincronização do MDFe ref: " + mdfe:referencia_uuid)
+        saveLog({"Erro na sincronização do MDFe", "Referência: " + mdfe:referencia_uuid}, "Warning")
         lError := true
     endif
 

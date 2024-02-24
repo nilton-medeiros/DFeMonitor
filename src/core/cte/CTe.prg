@@ -400,7 +400,6 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
 
     if !Empty(::vTotTrib)
         // msgLog := MsgDebug(Valtype(::vCOFINS), ::vCOFINS, Valtype(::vICMS), ::vICMS, Valtype(::vTotTrib), ::vTotTrib)
-        // consoleLog(msgLog)
         AAdd(::obs_contr, {"xCampo" => "LEI DA TRANSPARENCIA",;
                            "xTexto" => "12741/12 O valor aproximado de tributos incidentes sobre o preco deste servico é de R$ " + ;
                             LTrim(Transform(::vTotTrib, "@E 99,999,999.99"))})
@@ -523,7 +522,7 @@ method setSituacao(cteStatus) class TCTe
         lSet := true
         ::setUpdateCte("cte_situacao", ::situacao)
     else
-        saveLog("Status do CTe " + hb_ntos(::id) + " invalido | Status: " + cteStatus)
+        saveLog({"Status do CTe " + hb_ntos(::id) + " inválido", "Status: " + cteStatus}, "Warning")
     endif
 return lSet
 

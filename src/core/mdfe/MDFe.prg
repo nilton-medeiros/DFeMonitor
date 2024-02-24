@@ -116,7 +116,7 @@ method setSituacao(mdfeStatus) class TMDFe
         lSet := true
         ::setUpdateMDFe("situacao", ::situacao)
     else
-        saveLog("Status do MDFe id " + hb_ntos(::id) + " invalido | Status: " + mdfeStatus)
+        saveLog({"Status do MDFe id " + hb_ntos(::id) + " invalido", "Status: " + mdfeStatus}, "Warning")
     endif
 return lSet
 

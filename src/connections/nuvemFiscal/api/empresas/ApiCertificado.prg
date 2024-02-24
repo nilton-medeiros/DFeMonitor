@@ -33,7 +33,7 @@ method new(empresa) class TApiCertificado
     ::token := appNuvemFiscal:token
 
     if Empty(::token)
-        saveLog("Token vazio para conexão com a Nuvem Fiscal")
+        apiLog({"type" => "Warning", "description" => "Token não definido para conexão com a Nuvem Fiscal"})
     else
         ::connection := GetMSXMLConnection()
         ::connected := !Empty(::connection)
@@ -49,7 +49,7 @@ return self
 
 
 method Consultar() class TApiCertificado
-    local res
+    local log, res
 
     if !::connected
         return false
@@ -63,14 +63,19 @@ method Consultar() class TApiCertificado
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao consultar certificado na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(), "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível consultar certificado na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     endif
 
 return !res['error']
 
 
 method Cadastrar(certificado, password) class TApiCertificado
-    local res, body
+    local log, res, body
 
     if !::connected
         return false
@@ -90,8 +95,12 @@ method Cadastrar(certificado, password) class TApiCertificado
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao cadastrar certificado na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                 "ContentType: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível cadastrar certificado na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     endif
 
 return !res['error']
@@ -108,7 +117,12 @@ method Deletar() class TApiCertificado
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao deletar certificado na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(), "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível deletar certificado na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
     endif
 
 return !res['error']

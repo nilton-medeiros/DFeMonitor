@@ -30,15 +30,15 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                 connection:Send()
             catch oError
                 if (oError:genCode == 0)
-                    saveLog("Erro em WinOle MSXML6.DLL")
+                    apiLog({"type" => "Error", "description" => "Erro em WinOle MSXML6.DLL"})
                     Break
                 else
                     if ("O tempo limite da opera" $ oError:description)
-                        saveLog("Erro: " + oError:description + " ... Tentando mais uma vez...")
+                        apiLog({"type" => "Error", "description" => oError:description + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
                         connection:Send()
                     else
-                        saveLog("Erro em Send() para API Nuvem Fiscal: " + oError:description)
+                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + oError:description})
                         Break
                     endif
                 endif
@@ -50,15 +50,15 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                 connection:Send(body)
             catch oError
                 if (oError:genCode == 0)
-                    saveLog("Erro em WinOle MSXML6.DLL")
+                    apiLog({"type" => "Error", "description" => "Erro em WinOle MSXML6.DLL"})
                     Break
                 else
                     if ("o tempo limite da opera" $ Lower(oError:description))
-                        saveLog("Erro: " + oError:description + " ... Tentando mais uma vez...")
+                        apiLog({"type" => "Error", "description" => oError:description + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
                         connection:Send(body)
                     else
-                        saveLog("Erro em Send() para API Nuvem Fiscal: " + oError:description)
+                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + oError:description})
                         Break
                     endif
                 endif

@@ -94,7 +94,7 @@ method update() class TEmpresa
         ::nuvemfiscal_alterar := false
         ::nuvemfiscal_alterar := false
     else
-        saveLog("Erro ao atualizar banco de dados tabela empresa! Sistema abortado")
+        saveLog("Erro ao atualizar banco de dados tabela empresa! Sistema abortado", "Critical")
         MsgExclamation("Erro ao atualizar empresa, avise ao suporte!", "DFeMonitor " + appData:version + ": Erro! Sistema será parado")
         turnOFF()
     endif

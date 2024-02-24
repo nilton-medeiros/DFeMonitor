@@ -12,7 +12,7 @@ procedure mdfeClose(mdfe)
             mdfeGetFiles(apiMDFe)
         else
             mdfe:setSituacao(apiMDFe:status)
-            consoleLog({"Evento de Encerramento Registrado", hb_eol(), "apiMDFe:status " + apiMDFe:status, hb_eol(), "cStat: ", iif(!Empty(apiMDFe:codigo_status), apiMDFe:codigo_status, apiMDFe:codigo_mensagem)})
+            saveLog({"Evento de Encerramento Registrado", "apiMDFe:status " + apiMDFe:status, "cStat: " + hb_ntos(piMDFe:codigo_status)})
         endif
 
         // Prepara os campos da tabela mdfes_eventos para receber os updates
@@ -23,9 +23,9 @@ procedure mdfeClose(mdfe)
             endif
         endif
         if !Empty(apiMDFe:mensagem)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_mensagem, apiMDFe:mensagem)
+            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_status, apiMDFe:mensagem)
             if !Empty(apiMDFe:tipo_evento)
-                mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_mensagem, "Tipo Evento: " + apiMDFe:tipo_evento)
+                mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_status, "Tipo Evento: " + apiMDFe:tipo_evento)
             endif
         endif
 
@@ -35,7 +35,7 @@ procedure mdfeClose(mdfe)
             mdfe:setUpdateEventos("Erro", date_as_DateTime(date(), false, false), error["code"], error["message"])
         next
         mdfe:setSituacao(apiMDFe:status)
-        consoleLog("Erro ao encerrar: apiMDFe:response" + apiMDFe:response)
+        apiLog({"type" => "Warning", "description" => "Erro ao encerrar MDFe", "response" => apiMDFe:response})
     endif
 
 return

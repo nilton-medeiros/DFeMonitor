@@ -16,7 +16,7 @@ function cteGetFiles(apiCTe)
 
     if Empty(apiCTe:chave)
         if Empty(cte:chCTe)
-            saveLog("Chave do CTe não defindo para gerar arquivo, ver consoleLog")
+            saveLog("Chave do CTe não defindo para gerar arquivo, ver Log da API", "Warning")
             return
         else
             apiCTe:chave := cte:chCTe
@@ -55,27 +55,27 @@ function cteGetFiles(apiCTe)
         if apiCTe:BaixarPDFdoDACTE()
             if hb_MemoWrit(directory + filePDF, apiCTe:pdf_dacte)
                 upload["pdf"] := directory + filePDF
-                saveLog("Arquivo PDF do DACTE salvo com sucesso: " + directory + filePDF)
+                saveLog({"Arquivo PDF do DACTE salvo com sucesso", directory + filePDF})
             else
                 cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Erro ao escrever PDF em arquivo. Ver log servidor local")
-                saveLog("Erro ao escrever pdf binary em arquivo " + filePDF + " na pasta " + directory)
+                saveLog("Erro ao escrever pdf binary em arquivo " + filePDF + " na pasta " + directory, "Warning")
             endif
         else
             cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Arquivo PDF do DACTE não retornado. Ver log servidor local")
-            saveLog("Arquivo PDF do DACTE não retornado; Chave CTe: " + apiCTe:chave)
+            saveLog({"Arquivo PDF do DACTE não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
         endif
 
         if apiCTe:BaixarXMLdoCTe()
             if hb_MemoWrit(directory + fileXML, apiCTe:xml_cte)
                 upload["xml"] := directory + fileXML
-                saveLog("Arquivo XML do CTe salvo com sucesso: " + directory + fileXML)
+                saveLog({"Arquivo XML do CTe salvo com sucesso", directory + fileXML})
             else
                 cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Erro ao escrever XML em arquivo. Ver log servidor local")
-                saveLog("Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory)
+                saveLog("Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory, "Warning")
             endif
         else
             cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Arquivo XML do CTe não retornado. Ver log servidor local")
-            saveLog("Arquivo XML do CTe não retornado; Chave CTe: " + apiCTe:chave)
+            saveLog({"Arquivo XML do CTe não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
         endif
 
     endif
@@ -85,27 +85,27 @@ function cteGetFiles(apiCTe)
         if apiCTe:BaixarPDFdoCancelamento()
             if hb_MemoWrit(directory + cancelPDF, apiCTe:pdf_cancel)
                 upload["pdfCancel"] := directory + cancelPDF
-                saveLog("Arquivo PDF do CTE CANCELADO salvo com sucesso: " + directory + cancelPDF)
+                saveLog({"Arquivo PDF do CTE CANCELADO salvo com sucesso", directory + cancelPDF})
             else
                 cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Erro ao escrever PDF do CTe CANCELADO em arquivo. Ver log servidor local")
-                saveLog("Erro ao escrever pdf binary em arquivo " + cancelPDF + " na pasta " + directory)
+                saveLog("Erro ao escrever pdf binary em arquivo " + cancelPDF + " na pasta " + directory, "Warning")
             endif
         else
             cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Arquivo PDF do CTE CANCELADO não retornado. Ver log servidor local")
-            saveLog("Arquivo PDF do CTE CANCELADO não retornado; Chave CTe: " + apiCTe:chave)
+            saveLog({"Arquivo PDF do CTE CANCELADO não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
         endif
 
         if apiCTe:BaixarXMLdoCancelamento()
             if hb_MemoWrit(directory + cancelXML, apiCTe:xml_cancel)
                 upload["xmlCancel"] := directory + cancelXML
-                saveLog("Arquivo XML do CTE CANCELADO salvo com sucesso: " + directory + cancelXML)
+                saveLog({"Arquivo XML do CTE CANCELADO salvo com sucesso", directory + cancelXML})
             else
                 cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Erro ao escrever XML do CTE CANCELADO em arquivo. Ver log servidor local")
-                saveLog("Erro ao escrever xml binary em arquivo " + cancelXML + " na pasta " + directory)
+                saveLog("Erro ao escrever xml binary em arquivo " + cancelXML + " na pasta " + directory, "Warning")
             endif
         else
             cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Arquivo XML do CTE CANCELADO não retornado. Ver log servidor local")
-            saveLog("Arquivo XML do CTE CANCELADO não retornado; Chave CTe: " + apiCTe:chave)
+            saveLog({"Arquivo XML do CTE CANCELADO não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
         endif
 
     endif

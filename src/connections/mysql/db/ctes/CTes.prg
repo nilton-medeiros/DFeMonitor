@@ -476,9 +476,6 @@ method getAereoCub3(id) class TDbCTes
         aereo["xDime"] := PadL(dim:FieldGet("cumprimento"), 4, "0") + "X" + PadL(dim:FieldGet("altura"), 4, "0") + "X" + PadL(dim:FieldGet("largura"), 4, "0")
         // aereo["cInfManu"] := {"99 - outro (especificar no campo observações)"}
         aereo["cInfManu"] := {"99"}
-    else
-        // Debug: Após testes, trocar por saveLog() e não passar o s:value
-        saveLog({"dim:count = ", dim:count, hb_eol()})
     endif
 
     dim:Destroy()
@@ -519,7 +516,7 @@ method updateCTe(cId, aFields) class TDbCTes
     updated := cte:executed
     cte:Destroy()
     if !updated
-        consoleLog(sql:value)   // Debug
+        saveLog(sql:value, "Debug")
     endif
 
 return updated
@@ -552,7 +549,7 @@ method insertEventos(aEvents) class TDbCTes
     inserted := ctes_eventos:executed
     ctes_eventos:Destroy()
     if !inserted
-        consoleLog(sql:value)   // Debug
+        saveLog(sql:value, "Debug")
     endif
 
 return inserted

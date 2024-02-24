@@ -14,13 +14,13 @@ src\connections\mysql\db\shared\Query.prg
 src\connections\mysql\db\shared\sqlString.prg
 src\connections\mysql\db\usuarios\Usuarios.prg
 src\connections\nuvemFiscal\api\apiBroadcast.prg
-src\connections\nuvemFiscal\api\apiLog.prg
 src\connections\nuvemFiscal\api\cte\ApiCTe.prg
 src\connections\nuvemFiscal\api\empresas\ApiCertificado.prg
 src\connections\nuvemFiscal\api\empresas\ApiEmpresas.prg
 src\connections\nuvemFiscal\api\empresas\ApiLogotipo.prg
 src\connections\nuvemFiscal\api\mdfe\ApiMDFe.prg
 src\connections\nuvemFiscal\auth\AuthNuvemFiscal.prg
+src\connections\nuvemFiscal\shared\apiLog.prg
 src\connections\nuvemFiscal\shared\utils.prg
 src\core\AppData.prg
 src\core\cte\cte.prg
@@ -43,7 +43,6 @@ src\core\monitoramentos\cteMonitoring.prg
 src\core\monitoramentos\mdfeMonitoring.prg
 src\core\usuario\Usuario.prg
 src\utils\capitalize.prg
-src\utils\console.prg
 src\utils\desacentuar.prg
 src\utils\fieldConversions.prg
 src\utils\firstString.prg

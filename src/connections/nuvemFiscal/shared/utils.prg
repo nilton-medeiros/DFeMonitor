@@ -8,8 +8,7 @@ function GetMSXMLConnection()
     begin sequence
         connection := win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0")
         if Empty(connection)
-            saveLog("Erro na criação do serviço: MSXML2")
-            consoleLog({'win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0") retornou type: ', ValType(connection), hb_eol()})
+			apiLog({"type" => "Error", "description" => "Erro na criação do serviço: MSXML2, win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection)})
             Break
         endif
     end sequence
@@ -37,7 +36,7 @@ function getMessageApiError(api, lAsText)
 		elseif hb_HGetRef(response, "status")
 			AAdd(aError, {"code" => response["codigo_status"], "message" => response["motivo_status"]})
 		else
-			consoleLog({"Nao encontrado a chave 'error' no objeto response, json desconhecido!", hb_eol(), "Response:=>", hb_eol(), response})
+			apiLog({"type" => "Error", "description" => "Nao encontrado a chave 'error' no objeto response, json desconhecido!", "response" => response})
 			AAdd(aError, {"code" => "sem código", "message" => "Chaves do json desconhecidas, avisar suporte (ver log do sitema)"})
 		endif
 		if lAsText

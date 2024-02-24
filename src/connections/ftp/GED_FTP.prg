@@ -29,7 +29,7 @@ return self
 method upload() class TGED_FTP
    local url, ftp, error := 'UPLOAD - Erro de FTP: '
 
-   saveLog({'Iniciando upload de arquivo: ', ::hostFile})
+   saveLog('Iniciando upload de arquivo: ' + ::hostFile)
 
    ::isUpload := false
 
@@ -48,7 +48,7 @@ method upload() class TGED_FTP
             ::isUpload := true
             saveLog('Upload de arquivo concluído com sucesso')
          else
-            saveLog({'Falha no upload de arquivo: ', hb_eol(), 'host file: ', ::hostFile, hb_eol(), 'remote file: ', ::remoteFile})
+            saveLog({'Falha no upload de arquivo', 'host file: ' + ::hostFile, 'remote file: ' + ::remoteFile}, "Error")
          endif
          ftp:close()
       else
@@ -59,10 +59,10 @@ method upload() class TGED_FTP
          else
             error += hb_inetErrorDesc(ftp:socketCon)
          endif
-         saveLog({error, hb_eol(), 'host file: ', ::hostFile, hb_eol(), 'remote file: ', ::remoteFile})
+         saveLog({error, 'host file: ' + ::hostFile, 'remote file: ', ::remoteFile}, "Error")
       endif
    else
-      saveLog({'Erro ao fazer upload! Arquivo inexistente: ', ::hostFile})
+      saveLog({'Erro ao fazer upload! Arquivo inexistente: ' + ::hostFile}, "Error")
    endif
 
 return ::isUpload
@@ -93,7 +93,7 @@ method delete() class TGED_FTP
       else
          error += hb_inetErrorDesc(ftp:socketCon)
       endif
-      saveLog({error, hb_eol(), 'remote file: ', ::remoteFile})
+      saveLog({error, 'remote file: ' + ::remoteFile}, "Error")
    endif
 
 return ::deletedStatus

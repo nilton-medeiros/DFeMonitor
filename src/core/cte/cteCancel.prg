@@ -35,7 +35,7 @@ procedure cteCancel(cte)
             cte:setUpdateEventos("Erro", date_as_DateTime(date(), false, false), error["code"], error["message"])
         next
         cte:setSituacao(apiCTe:status)
-        consoleLog("Erro ao cancelar: apiCTe:response" + apiCTe:response)
+        apiLog({"type" => "Error", "description" => "Erro ao cancelar CTe", "response" => apiCTe:response})
     endif
 
 return

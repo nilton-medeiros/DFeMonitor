@@ -1,4 +1,4 @@
-// Criação de log específico da api de DFes
+// Criação de log específico da api de DFes em JSON
 
 procedure apiLog(log)
     local path := appData:systemPath + 'log\'
@@ -15,21 +15,41 @@ procedure apiLog(log)
 
     process += ProcName(1) + '(' + hb_ntos(ProcLine(1)) + ')'
 
+    // Campos obrigatórios no log
     logSorted["version"] := appData:displayName
     logSorted["date"] := DtoC(Date()) + ' ' + Time()
     logSorted["type"] := log["type"]
     logSorted["trace"] := process
-    logSorted["method"] := log["method"]
-    logSorted["url"] := log["url"]
-    logSorted["content_type"] := log["content_type"]
-    logSorted["accept"] := log["accept"]
+
+    // Campos opcionais no log
+    if hb_HGetRef(log, "method")
+        logSorted["method"] := log["method"]
+    endif
+    if hb_HGetRef(log, "url")
+        logSorted["url"] := log["url"]
+    endif
+    if hb_HGetRef(log, "content_type")
+        logSorted["content_type"] := log["content_type"]
+    endif
+    if hb_HGetRef(log, "accept")
+        logSorted["accept"] := log["accept"]
+    endif
+
+    // Campo obrigatório
     logSorted["description"] := log["description"]
-    logSorted["response"] := log["response"]
-    logSorted["body"] := log["body"]
+
+    // Campos opcionais
+    if hb_HGetRef(log, "response")
+        logSorted["response"] := log["response"]
+    endif
+    if hb_HGetRef(log, "body")
+        logSorted["body"] := log["body"]
+    endif
+
     if hb_FileExists(path + logFile)
         hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
     else
-        hLog["name"] := "Log de Sistema " + appData:displayName + " | " + Upper(GetMonthName(Month(Date()))) + " DE " + hb_ntos(Year(Date()))
+        hLog["title"] := "Log de Sistema " + appData:displayName + " | " + Upper(GetMonthName(Month(Date()))) + " DE " + hb_ntos(Year(Date()))
         hLog["log"] := {}
     endif
 
@@ -42,8 +62,4 @@ procedure apiLog(log)
     hb_MemoWrit(path + logFile, jsonString)
     Set(_SET_DATEFORMAT, dateFormat)
 
-    log := nil
-    hLog := nil
-    logSorted := nil
-    
 return

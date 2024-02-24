@@ -23,7 +23,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 Function Main
 
-    public appData := TAppData():new("4.0.92")
+    public appData := TAppData():new("4.0.93")
     public appDataSource
     public appFTP
     public appEmpresas
@@ -108,7 +108,7 @@ procedure main_form_oninit()
         appEmpresas := TDbEmpresas():new()
 
         if !appEmpresas:ok
-            saveLog("Nenhuma empresa foi retornada do banco de dados")
+            saveLog("Nenhuma empresa foi retornada do banco de dados", "Warning")
             MessageBoxTimeout('Nenhuma empresa foi retornada do banco de dados' + hb_eol() + 'Avise ao suporte!', "DFeMonitor " + appData:version + ": Parada forçada", MB_ICONEXCLAMATION, 300000)
             turnOFF()
         endif

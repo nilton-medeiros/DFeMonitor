@@ -38,14 +38,15 @@ method getNewToken() class TAuthNuvemFiscal
     local client_id := empresa:nuvemfiscal_client_id
     local client_secret := empresa:nuvemfiscal_client_secret
     local scope := "cte mdfe cnpj empresa cep conta"
-    local hResp, objError, msgError, body
+    local hResp, objError, msgError, body, log := {=>}
 
     begin sequence
         connection := win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0")   // usa msxml6.dll (esta funciona em Win10/11)
         // connection := win_oleCreateObject("Microsoft.XMLHTTP")       // Usa msxml3.dll (não funciona Win7/10/11)
         if Empty(connection)
-            saveLog("Erro na criação do serviço: MSXML2")
-            // consoleLog({'win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0") retornou type: ', ValType(connection), hb_eol()})
+            log["type"] := "Error"
+            log["description"] := "Erro na criação do serviço: MSXML2: win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection)
+            apiLog(log)
             lError := true
             Break
         endif
@@ -75,14 +76,14 @@ method getNewToken() class TAuthNuvemFiscal
 
     recover using objError
         msgError := MsgDebug(connection)
+        log["type"] := "Error"
         if (objError:genCode == 0)
-            // consoleLog({"Erro de conexão com o site", hb_eol(), hb_eol(), msgError, hb_eol()})
-            saveLog({"Erro de conexão com o site", hb_eol(), hb_eol()})
+            log["description"] := "Erro de conexão com o site"
         else
-            // consoleLog({"Erro de conexão com o site", hb_eol(), "Error: ", objError:description, hb_eol(), msgError, hb_eol()})
-            saveLog({"Erro de conexão com o site", hb_eol(), "Error: ", objError:description, hb_eol()})
+            log["description"] := objError:description + " - Erro de conexão com o site"
         endif
-        saveLog({"Erro de conexão com o site", hb_eol(), msgError, hb_eol()})
+        log["msgDebug"] := msgError
+        apiLog(log)
         lError := true
         Break
     end sequence
@@ -92,8 +93,12 @@ method getNewToken() class TAuthNuvemFiscal
     endif
 
     response := connection:ResponseBody
-    // consoleLog(response)
     hResp := hb_jsonDecode(response)
+
+    // Coleta de informações para o Log da API
+    log["method"] := "POST"
+    log["url"] := url
+    log["content_type"] := content_type
 
     if hb_HGetRef(hResp, "access_token")
         ::token := hResp["access_token"]
@@ -103,10 +108,16 @@ method getNewToken() class TAuthNuvemFiscal
         RegistryWrite(::regPath + "nuvemFiscal\token", CharXor(::token, "SysWeb2023"))
         RegistryWrite(::regPath + "nuvemFiscal\expires_in", DtoS(::expires_in))
         lAuth := true
+        log["type"] := "Debug"
+        log["description"] := "HTTP Status: " + hb_ntos(connection:Status) + " | Novo token obtido com sucesso!"
     else
         msgError := MsgDebug(response, hResp)
-        //Teste: Passou! | consoleLog({"ResponseBody (hResp) retornou vazio", hb_eol(), msgError})
-        saveLog("Falha na autenticação com a API da NuvemFiscal, o responseBody (hResp) retornou vazio")
+        log["type"] := "Warning"
+        log["description"] := "HTTP Status: " + hb_ntos(connection:Status) + " | Falha na autenticação com a API da NuvemFiscal, o responseBody (hResp) retornou vazio"
+        log["MsgDebug"] := msgError
     endif
+
+    apiLog(log)
+    log := Nil
 
 return lAuth

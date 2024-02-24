@@ -28,11 +28,11 @@ procedure cteConsult(cte)
             endif
             cteGetFiles(apiCTe)
         else
-            saveLog("Erro ao consultar CTe ref: " + cte:referencia_uuid)
+            saveLog({"Erro ao consultar CTe", "Referência: " + cte:referencia_uuid}, "Warning")
             lError := true
         endif
     else
-        saveLog("Erro na sincronização do CTe ref: " + cte:referencia_uuid)
+        saveLog({"Erro na sincronização do CTe", "Referência: " + cte:referencia_uuid}, "Warning")
         lError := true
     endif
 

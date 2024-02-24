@@ -142,7 +142,7 @@ method updateMDFe(cId, aFields) class TDbMDFes
     mdfe:Destroy()
 
     if !updated
-        consoleLog(sql:value)   // Debug
+        saveLog(sql:value, "Debug")
     endif
 
 return updated
@@ -166,7 +166,7 @@ method insertEventos(aEvents) class TDbMDFes
             codEvent := hb_ntos(codEvent)
         elseif !(ValType(codEvent) == "C")
             codEvent := ""
-            consoleLog("Código do Evento não definido para tag evento")
+            saveLog("Código do Evento não definido para tag evento", "Warning")
         endif
 
         sql:add("'" + string_hb_to_mysql(codEvent) + "', ")
@@ -180,7 +180,7 @@ method insertEventos(aEvents) class TDbMDFes
     ctes_eventos:Destroy()
 
     if !inserted
-        consoleLog(sql:value)   // Debug
+        saveLog(sql:value, "Debug")
     endif
 
 return inserted

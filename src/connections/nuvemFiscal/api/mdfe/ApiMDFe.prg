@@ -65,7 +65,7 @@ method new(mdfe) class TApiMDFe
     ::digest_value := ""
 
     if Empty(::token)
-        saveLog("Token não defindo para conexão com a Nuvem Fiscal")
+        apiLog({"type" => "Warning", "description" => "Token não definido para conexão com a Nuvem Fiscal"})
     else
         ::connection := GetMSXMLConnection()
         ::connected := !Empty(::connection)
@@ -90,7 +90,7 @@ method new(mdfe) class TApiMDFe
 return self
 
 method Emitir() class TApiMDFe
-    local res, hRes, hAutorizacao, sefazOff, sefazStatus, motivo
+    local log, res, hRes, hAutorizacao, sefazOff, sefazStatus, motivo
 
     if !::connected
         return false
@@ -120,8 +120,12 @@ method Emitir() class TApiMDFe
                     res['error'] := ::ListarMDFes()
                 endif
             else
-                saveLog({"Erro ao emitir MDFe na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-                    "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", ::response})
+                log := {=>}
+                log["type"] := "Warning"
+                log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível emitir MDF-e na API Nuvem Fiscal"
+                log["content_type"] := ::ContentType
+                log["response"] := ::response
+                apiLog(log)
             endif
         endif
 
@@ -201,7 +205,7 @@ method Emitir() class TApiMDFe
 return !res['error']
 
 method Encerrar() class TApiMDFe
-    local res, hRes, apiUrl := ::baseUrlID + "/encerramento"
+    local log, res, hRes, apiUrl := ::baseUrlID + "/encerramento"
 
     if !::connected
         return false
@@ -217,8 +221,12 @@ method Encerrar() class TApiMDFe
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao encerrar MDFe na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível encerrar MDF-e na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -246,7 +254,7 @@ method Encerrar() class TApiMDFe
 return !res['error']
 
 method Cancelar() class TApiMDFe
-    local res, hRes, apiUrl := ::baseUrlID + "/cancelamento"
+    local log, res, hRes, apiUrl := ::baseUrlID + "/cancelamento"
 
     if !::connected
         return false
@@ -262,8 +270,12 @@ method Cancelar() class TApiMDFe
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao cancelar MDFe na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível cancelar MDF-e na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -291,7 +303,7 @@ method Cancelar() class TApiMDFe
 return !res['error']
 
 method ListarMDFes() class TApiMDFe
-    local res, hRes, aRes := {}, mdfe, hAutorizacao
+    local log, res, hRes, aRes := {}, mdfe, hAutorizacao
     local apiUrl := ::baseUrl + "?cpf_cnpj=" + ::emitente:CNPJ
 
     if !::connected
@@ -309,8 +321,12 @@ method ListarMDFes() class TApiMDFe
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao listar MDFes por referencia_uuid na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível listar MDF-e's na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -379,11 +395,11 @@ method ListarMDFes() class TApiMDFe
 return !res['error']
 
 method BaixarPDFdoDAMDFE() class TApiMDFe
-    local res, apiUrl := ::baseUrlID
+    local log, res, apiUrl := ::baseUrlID
 
     if !::connected
         ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível baixar PDF, API Nuvem Fiscal não conectado")
-        saveLog("API Nuvem Fiscal não conectado")
+        apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
 
@@ -405,8 +421,12 @@ method BaixarPDFdoDAMDFE() class TApiMDFe
     ::response := res['response']   // Response Schema: "*/*", não retorna json, somente o binário
 
     if res['error']
-        saveLog({"Erro ao baixar PDF do DAMDFE " + ::mdfe:situacao + " na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível baixar PDF do DAMDFE " + ::mdfe:situacao + " da API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -416,11 +436,11 @@ method BaixarPDFdoDAMDFE() class TApiMDFe
 return !res['error']
 
 method BaixarXMLdoMDFe() class TApiMDFe
-    local res, apiUrl := ::baseUrlID
+    local log, res, apiUrl := ::baseUrlID
 
     if !::connected
         ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível baixar XML, API Nuvem Fiscal não conectado")
-        saveLog("API Nuvem Fiscal não conectado")
+        apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
 
@@ -440,8 +460,12 @@ method BaixarXMLdoMDFe() class TApiMDFe
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao baixar XML do MDFe " + ::mdfe:situacao + " na api Nuvem Fiscal", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível baixar XML do MDF-e " + ::mdfe:situacao + " da API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -451,11 +475,11 @@ method BaixarXMLdoMDFe() class TApiMDFe
 return !res['error']
 
 method Sincronizar() class TApiMDFe
-    local res, hRes, motivo, apiUrl := ::baseUrlID + "/sincronizar"
+    local log, res, hRes, motivo, apiUrl := ::baseUrlID + "/sincronizar"
 
     if !::connected
         ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível sincroinizar MDFe, API Nuvem Fiscal não conectado")
-        saveLog("API Nuvem Fiscal não conectado")
+        apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
 
@@ -467,8 +491,12 @@ method Sincronizar() class TApiMDFe
     ::response := res['response']
 
     if res['error']
-        saveLog({"Erro ao sincronizar MDFe", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível sincronizar MDF-e na API Nuvem Fiscal"
+        log["content_type"] := ::ContentType
+        log["response"] := ::response
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -501,15 +529,19 @@ method Sincronizar() class TApiMDFe
 return !res['error']
 
 method ConsultarSVRS() class TApiMDFe
-    local res, hRes, apiUrl := ::baseUrl + "/sefaz/status?cpf_cnpj=" + ::emitente:CNPJ
+    local log, res, hRes, apiUrl := ::baseUrl + "/sefaz/status?cpf_cnpj=" + ::emitente:CNPJ
     local sefaz := {"codigo_status" => -1}
 
     // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
     res := Broadcast(::connection, "GET", ::baseUrl, ::token, "MDFe: Consultar Status Sefaz", nil, nil, "*/*")
 
     if res["error"]
-        saveLog({"MDFe: Erro ao consultar status SEFAZ, parece que SEFAZ/API-NUVEM FISCAL esta fora do ar", hb_eol(), "Http Status: ", res["http_status"], hb_eol(),;
-            "Content-Type: ", res['ContentType'], hb_eol(), "Response: ", res['response']})
+        log := {=>}
+        log["type"] := "Warning"
+        log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | MDF-e: Não foi possível consultar status SEFAZ, parece que SEFAZ/API NUVEM FISCAL estão fora do ar"
+        log["content_type"] := res['ContentType']
+        log["response"] := res['response']
+        apiLog(log)
         ::status := "erro"
         ::mensagem := res["response"]
     else

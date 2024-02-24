@@ -157,7 +157,7 @@ method registerSystem() class TAppData
     AEval(Directory("log\*.*"), {|aFile| iif(aFile[3] <= (Date()-70), hb_FileDelete("log\"+aFile[1]), NIL)})
     AEval(Directory("tmp\*.*"), {|aFile| iif(aFile[3] <= (Date()-10), hb_FileDelete("tmp\"+aFile[1]), NIL)})
     AEval(Directory("ftp-*.log"), {|aFile| iif(aFile[3] <= (Date()-30), hb_FileDelete(aFile[1]), NIL)})
-    saveLog(hb_eol() + hb_eol() + ::displayName + ' - Sistema iniciado (monitorando...)' + hb_eol())
+    saveLog('Sistema iniciado (monitorando...)')
 
 return nil
 

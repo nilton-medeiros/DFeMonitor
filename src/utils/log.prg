@@ -1,21 +1,40 @@
-#include "hmg.ch"
-#include <fileio.ch>
+#include <hmg.ch>
 
-procedure saveLog(text)
+// Criação do log do sistema em JSON
+
+procedure saveLog(text, cType)
    local path := appData:systemPath + 'log\'
    local dateFormat := Set(_SET_DATEFORMAT, "yyyy.mm.dd")
-   local logFile := 'dfe_log' + hb_ULeft(DToS(Date()),6) + '.txt'
-   local h
-   local t, msg := "", processos := ''
+   local logFile := 'dfeLog' + hb_ULeft(DToS(Date()),6) + '.json'
+   local hLog := {=>}, log := {=>}
+   local t, processos := ''
 
    if hb_FileExists(path + logFile)
-      h := FOpen(path + logFile, FO_WRITE)
-      FSeek(h, 0, FS_END)
+      hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
    else
-      h := hb_FCreate(path + logFile, FC_NORMAL)
-      FWrite(h, 'Log de Sistema ' + appData:displayName + hb_eol() + hb_eol())
+      hLog["title"] := "Log de Sistema " + appData:displayName + " | " + Upper(GetMonthName(Month(Date()))) + " DE " + hb_ntos(Year(Date()))
+      hLog["log"] := {}
    endif
+
+   default cType := "Information"
+
+   log["version"] := appData:displayName
+   log["date"] := DtoC(Date()) + ' ' + Time()
+   log["type"] := cType
+
+   if !Empty(ProcName(3))
+      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + '/'
+   endif
+   if !Empty(ProcName(2))
+      processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + '/'
+   endif
+
+   processos += ProcName(1) + '(' + hb_ntos(ProcLine(1)) + ')'
+
+   log["trace"] := processos
+
    if ValType(text) == 'A'
+      log["messages"] := {}
       for each t in text
          if !(ValType(t) == 'C')
             if (ValType(t) == 'N')
@@ -26,26 +45,15 @@ procedure saveLog(text)
                t := iif(t, 'true', 'false')
             endif
          endif
-         msg += t
+         AAdd(log["messages"], t)
       next
    else
-      msg := text
-   endif
-   if !Empty(ProcName(3))
-      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')->'
-   endif
-   if !Empty(ProcName(2))
-      processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + ')->'
+      log["message"] := text
    endif
 
-   processos += ProcName(1) + '(' + hb_ntos(ProcLine(1)) + ')'
-
-   msg := DtoC(Date()) + ' ' + Time() + ' [' + processos + ']' + hb_eol() + "    " + msg + hb_eol() + hb_eol()
-
+   AAdd(hLog["log"], log)
+   hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
    SET(_SET_DATEFORMAT, dateFormat)
-
-   FWrite(h, msg)
-   FClose(h)
 
 return
 
