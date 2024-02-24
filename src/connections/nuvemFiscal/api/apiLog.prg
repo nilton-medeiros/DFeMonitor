@@ -28,5 +28,6 @@ procedure apiLog(log)
 
     AAdd(hLog["log"], log)
     hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
+    Set(_SET_DATEFORMAT, dateFormat)
 
 return

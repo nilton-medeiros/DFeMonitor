@@ -50,7 +50,7 @@ procedure consoleLog(text)
 
    msg := DtoC(Date()) + ' ' + Time() + ' [' + processos + ']' + hb_eol() + "    " + msg + hb_eol() + hb_eol()
 
-   SET(_SET_DATEFORMAT, dateFormat)
+   Set(_SET_DATEFORMAT, dateFormat)
 
    FWrite(h, msg)
    FClose(h)
