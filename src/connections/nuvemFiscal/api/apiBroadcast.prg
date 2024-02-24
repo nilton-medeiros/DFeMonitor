@@ -77,9 +77,9 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         log["type"] := "Error"
         log["method"] := httpMethod
         log["url"] := apiUrl
-        log["content_type"] := iif(content_type == nil, "null", content_type)
-        log["accept"] := iif(accept == nil, "null", accept)
-        log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+        log["content_type"] := iif(content_type == nil, "$$null$$", content_type)
+        log["accept"] := iif(accept == nil, "$$null$$", accept)
+        log["body"] := iif(body == nil, "$$null$$", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
 
         if (oError:genCode == 0)
             log["description"] := "Erro desconhecido de conexão com o site"
@@ -132,11 +132,11 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                             log["type"] := "Error"
                             log["method"] := httpMethod
                             log["url"] := apiUrl
-                            log["content_type"] := iif(content_type == nil, "null", content_type)
-                            log["accept"] := iif(accept == nil, "null", accept)
-                            log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+                            log["content_type"] := iif(content_type == nil, "$$null$$", content_type)
+                            log["accept"] := iif(accept == nil, "$$null$$", accept)
+                            log["body"] := iif(body == nil, "$$null$$", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
                             log["description"] := "HTTP Status: 500 - Internal Server Error, " + sefazOFF["motivo_status"]
-                            log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "null", ;
+                            log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "$$null$$", ;
                                 iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"]))
                             apiLog(log)
                             MsgStop({"Erro no servidor da api de DFe", hb_eol(), "Erro: ", sefazOFF["motivo_status"]}, "DFeMonitor " + appData:version + ": Erro HTTP:500")
@@ -165,11 +165,11 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         log["type"] := "Debug"
         log["method"] := httpMethod
         log["url"] := apiUrl
-        log["content_type"] := iif(content_type == nil, "null", content_type)
-        log["accept"] := iif(accept == nil, "null", accept)
-        log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+        log["content_type"] := iif(content_type == nil, "$$null$$", content_type)
+        log["accept"] := iif(accept == nil, "$$null$$", accept)
+        log["body"] := iif(body == nil, "$$null$$", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
         log["description"] := "HTTP Status: " + hb_ntos(response["http_status"]) + " - " + operation
-        log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "null", ;
+        log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "$$null$$", ;
             iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"]))
 
         apiLog(log)

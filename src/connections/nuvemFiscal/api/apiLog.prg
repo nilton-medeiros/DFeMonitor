@@ -4,7 +4,7 @@ procedure apiLog(log)
     local path := appData:systemPath + 'log\'
     local dateFormat := Set(_SET_DATEFORMAT, "yyyy.mm.dd")
     local logFile := 'apiLog' + hb_ULeft(DToS(Date()),6) + '.json'
-    local hLog := {=>}, process := ""
+    local hLog := {=>}, logSorted := {=>}, process := "", jsonString
 
     if !Empty(ProcName(3))
         process := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
@@ -15,10 +15,17 @@ procedure apiLog(log)
 
     process += ProcName(1) + '(' + hb_ntos(ProcLine(1)) + ')'
 
-    log["version"] := appData:displayName
-    log["date"] := DtoC(Date()) + ' ' + Time()
-    log["trace"] := process
-
+    logSorted["version"] := appData:displayName
+    logSorted["date"] := DtoC(Date()) + ' ' + Time()
+    logSorted["type"] := log["type"]
+    logSorted["trace"] := process
+    logSorted["method"] := log["method"]
+    logSorted["url"] := log["url"]
+    logSorted["content_type"] := log["content_type"]
+    logSorted["accept"] := log["accept"]
+    logSorted["description"] := log["description"]
+    logSorted["response"] := log["response"]
+    logSorted["body"] := log["body"]
     if hb_FileExists(path + logFile)
         hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
     else
@@ -26,8 +33,17 @@ procedure apiLog(log)
         hLog["log"] := {}
     endif
 
-    AAdd(hLog["log"], log)
-    hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
+    AAdd(hLog["log"], logSorted)
+
+    jsonString := hb_jsonEncode(hLog, 4)
+    jsonString := StrTran(jsonString, '"$$')
+    jsonString := StrTran(jsonString, '$$"')
+
+    hb_MemoWrit(path + logFile, jsonString)
     Set(_SET_DATEFORMAT, dateFormat)
 
+    log := nil
+    hLog := nil
+    logSorted := nil
+    
 return
