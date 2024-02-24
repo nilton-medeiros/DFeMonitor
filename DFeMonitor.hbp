@@ -13,7 +13,8 @@ src\connections\mysql\db\shared\convertFieldsDb.prg
 src\connections\mysql\db\shared\Query.prg
 src\connections\mysql\db\shared\sqlString.prg
 src\connections\mysql\db\usuarios\Usuarios.prg
-src\connections\nuvemFiscal\api\ApiBroadcast.prg
+src\connections\nuvemFiscal\api\apiBroadcast.prg
+src\connections\nuvemFiscal\api\apiLog.prg
 src\connections\nuvemFiscal\api\cte\ApiCTe.prg
 src\connections\nuvemFiscal\api\empresas\ApiCertificado.prg
 src\connections\nuvemFiscal\api\empresas\ApiEmpresas.prg
@@ -46,6 +47,7 @@ src\utils\console.prg
 src\utils\desacentuar.prg
 src\utils\fieldConversions.prg
 src\utils\firstString.prg
+src\utils\getMonthName.prg
 src\utils\getNumbers.prg
 src\utils\isTrue.prg
 src\utils\log.prg

@@ -6,7 +6,7 @@
     (body) de acordo com o método http solicitado.
 */
 function Broadcast(connection, httpMethod, apiUrl, token, operation, body, content_type, accept)
-    local oError
+    local oError, log := {=>}
     local response := {"error" => false, "http_status" => 0, "ContentType" => "", "response" => "", "sefazOff" => {=>}}
     local sefazOFF
 
@@ -73,36 +73,31 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         endif
 
     catch oError
+
+        log["type"] := "Error"
+        log["method"] := httpMethod
+        log["url"] := apiUrl
+        log["content_type"] := iif(content_type == nil, "null", content_type)
+        log["accept"] := iif(accept == nil, "null", accept)
+        log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+
         if (oError:genCode == 0)
-            consoleLog({"Debug: " + operation + " | URL API (", httpMethod + "): ", apiUrl, hb_eol(), ;
-                "content_type: ", iif(content_type == nil, "NULL", content_type), hb_eol(), ;
-                "accept: ", iif(accept == nil, "NULL", accept), hb_eol(), ;
-                "Body: ", iif(body == nil, "NULL", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body)), hb_eol(), ;
-                "Erro desconhecido de conexão com o site", hb_eol(), hb_eol()})
-            saveLog({"Erro de conexão com API Nuvem Fiscal em " + operation, hb_eol(), hb_eol(), hb_eol()})
-            response["response"] := "Erro de conesão com a API Nuvem Fiscal em " + operation
+            log["description"] := "Erro desconhecido de conexão com o site"
+            log["response"] := "Erro desconhecido de conexão com o site " + operation
+            response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation
         else
-            consoleLog({"Debug: " + operation + " | URL API (", httpMethod + "): ", apiUrl, hb_eol(), ;
-                "content_type: ", iif(content_type == nil, "NULL", content_type), hb_eol(), ;
-                "accept: ", iif(accept == nil, "NULL", accept), hb_eol(), ;
-                "Body: ", iif(body == nil, "NULL", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body)), hb_eol(), ;
-                "Erro de conexão com API Nuvem Fiscal", hb_eol(), "Error: ", oError:description, hb_eol(), hb_eol()})
-            saveLog({"Erro de conexão com API Nuvem Fiscal em " + operation, hb_eol(), "Error: ", oError:description, hb_eol()})
-            response["response"] := "Erro de conesão com a API Nuvem Fiscal em " + operation + " | " + oError:description
+            log["description"] := oError:description
+            log["response"] := "Erro de conexão com API Nuvem Fiscal em " + operation
+            response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation + " | " + oError:description
         endif
+        apiLog(log)
+        log := nil
         response["error"] := true
         response["ContentType"] := "text"
         Break
     end
 
-    if response["error"]
-        // Debug: Remover esta linha e a debaixo após testes
-        if (Lower(Left(operation, 6)) == "baixar")
-            consoleLog({"Debug: " + operation + " |ContentType: " + response["ContentType"]})
-        else
-            consoleLog({"Debug: " + operation + " |ContentType: " + response["ContentType"] + " |Response: ", hb_eol(), response["response"]})
-        endif
-    else
+    if !response["error"]
 
         response["http_status"] := connection:Status
 
@@ -134,15 +129,16 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                             response["sefazOff"]["codigo_status"] := sefazOFF["codigo_status"]
                             response["sefazOff"]["motivo_status"] := sefazOFF["motivo_status"]
                         elseif response["http_status"] == 500 .and. ("internal server error" $ Lower(sefazOFF["motivo_status"]))
-                            consoleLog({"Debug: " + operation + ;
-                                " | HTTP Status: ", response["http_status"], hb_eol(), ;
-                                "URL API (", httpMethod + "): ", apiUrl, hb_eol(), ;
-                                "content_type: ", iif(content_type == nil, "NULL", content_type), hb_eol(), ;
-                                "accept: ", iif(accept == nil, "NULL", accept), hb_eol(), ;
-                                "Body: ", iif(body == nil, "NULL", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body)), hb_eol(), ;
-                                "Response: ", iif(response["response"] == nil .or. Empty(response["response"]), "NULL", ;
-                                            iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"])) ;
-                            })
+                            log["type"] := "Error"
+                            log["method"] := httpMethod
+                            log["url"] := apiUrl
+                            log["content_type"] := iif(content_type == nil, "null", content_type)
+                            log["accept"] := iif(accept == nil, "null", accept)
+                            log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+                            log["description"] := "HTTP Status: 500 - Internal Server Error, " + sefazOFF["motivo_status"]
+                            log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "null", ;
+                                iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"]))
+                            apiLog(log)
                             MsgStop({"Erro no servidor da api de DFe", hb_eol(), "Erro: ", sefazOFF["motivo_status"]}, "DFeMonitor " + appData:version + ": Erro HTTP:500")
                             turnOFF()
                         endif
@@ -166,16 +162,17 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
 
         endif
 
-        // Debug: Remover esta linha e a debaixo após testes
-        consoleLog({"Debug: " + operation + ;
-            " | HTTP Status: ", response["http_status"], hb_eol(), ;
-            "URL API (", httpMethod + "): ", apiUrl, hb_eol(), ;
-            "content_type: ", iif(content_type == nil, "NULL", content_type), hb_eol(), ;
-            "accept: ", iif(accept == nil, "NULL", accept), hb_eol(), ;
-            "Body: ", iif(body == nil, "NULL", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body)), hb_eol(), ;
-            "Response: ", iif(response["response"] == nil .or. Empty(response["response"]), "NULL", ;
-                          iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"])) ;
-        })
+        log["type"] := "Debug"
+        log["method"] := httpMethod
+        log["url"] := apiUrl
+        log["content_type"] := iif(content_type == nil, "null", content_type)
+        log["accept"] := iif(accept == nil, "null", accept)
+        log["body"] := iif(body == nil, "null", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
+        log["description"] := "HTTP Status: " + hb_ntos(response["http_status"]) + " - " + operation
+        log["response"] := iif(response["response"] == nil .or. Empty(response["response"]), "null", ;
+            iif((Lower(Left(operation, 6)) == "baixar"), "Response é um ARQUIVO BINÁRIO", response["response"]))
+
+        apiLog(log)
 
     endif
 
