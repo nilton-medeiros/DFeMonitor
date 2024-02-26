@@ -21,6 +21,7 @@ class TQuery
 end class
 
 method new(cSql) class TQuery
+    local aLog := {}
 
     ::sql := cSql
     ::executed := false
@@ -35,18 +36,24 @@ method new(cSql) class TQuery
             msgNotify()
             SetProperty("main", "NotifyIcon", "serverON")
         elseif ("lost connection" $ hmg_lower(::db:Error()))
+            AAdd(aLog, "Conexão perdida com banco de dados. Reconectando...")
             if appDataSource:connect()
+                AAdd(aLog, "Conexão Restabelecida!")
                 if ::runQuery()
                     ::count := ::db:LastRec()
                     ::db:GoTop()
                     msgNotify()
+                    AAdd(aLog, "Query executada com sucesso!")
                     SetProperty("main", "NotifyIcon", "serverON")
                 else
+                    AAdd(aLog, "Erro na execução da Query!")
                     msgNotify({"notifyTooltip" => "B.D. não conectado!"})
-                    saveLog("Banco de Dados não conectado!", "Warning")
                     SetProperty("main", "NotifyIcon", "serverOFF")
                 endif
+            else
+                AAdd(aLog, "Conexão perdida, query não executada!")
             endif
+            saveLog(aLog, "Warning")
         else
             msgNotify({"notifyTooltip" => "B.D. não conectado!"})
             saveLog("Banco de Dados não conectado!", "Warning")
@@ -60,6 +67,7 @@ method runQuery() class TQuery
     local tenta as numeric
     local command, table, mode
 
+    ::executed := false
     ::db := appDataSource:mysql:Query(::sql)
 
     if (::db == nil)
