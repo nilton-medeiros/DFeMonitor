@@ -23,10 +23,10 @@ procedure saveLog(text, cType)
    log["type"] := cType
 
    if !Empty(ProcName(3))
-      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + '/'
+      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
    endif
    if !Empty(ProcName(2))
-      processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + '/'
+      processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + ')/'
    endif
 
    processos += ProcName(1) + '(' + hb_ntos(ProcLine(1)) + ')'
@@ -45,10 +45,10 @@ procedure saveLog(text, cType)
                t := iif(t, 'true', 'false')
             endif
          endif
-         AAdd(log["messages"], t)
+         AAdd(log["messages"], StrTran(t, "\", "/"))
       next
    else
-      log["message"] := text
+      log["message"] := StrTran(text, "\", "/")
    endif
 
    AAdd(hLog["log"], log)

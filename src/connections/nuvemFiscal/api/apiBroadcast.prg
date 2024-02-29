@@ -162,7 +162,7 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
 
         endif
 
-        log["type"] := "Debug"
+        log["type"] := "Information"
         log["method"] := httpMethod
         log["url"] := apiUrl
         log["content_type"] := iif(content_type == nil, "$$null$$", content_type)
