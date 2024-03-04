@@ -49,7 +49,7 @@ procedure apiLog(log)
     if hb_FileExists(path + logFile)
         hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
     else
-        hLog["title"] := "Log de Sistema " + appData:displayName + " | " + Upper(GetMonthName(Month(Date()))) + " DE " + hb_ntos(Year(Date()))
+        hLog["title"] := "Log de Sistema " + appData:displayName + " | " + GetMonthName(Month(Date())) + " DE " + hb_ntos(Year(Date()))
         hLog["log"] := {}
     endif
 
