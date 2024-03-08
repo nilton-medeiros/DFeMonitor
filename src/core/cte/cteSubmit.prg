@@ -107,6 +107,7 @@ procedure cteSubmit(cte)
 return
 
 procedure posEmissao(api)
+    local cDate
 
     // Prepara os campos da tabela ctes para receber os updates
     api:cte:setSituacao(api:status)
@@ -120,7 +121,14 @@ procedure posEmissao(api)
         api:cte:setUpdateEventos(api:numero_protocolo, api:data_evento, api:codigo_status, api:motivo_status)
     endif
     if !Empty(api:mensagem)
-        api:cte:setUpdateEventos(api:numero_protocolo, api:data_recebimento, api:codigo_mensagem, api:mensagem)
+        cDate := api:data_recebimento
+        if Empty(cDate)
+            cDate := api:data_evento
+            if Empty(cDate)
+                cDate := date_as_DateTime(date(), false, false)
+            endif
+        endif
+        api:cte:setUpdateEventos(api:numero_protocolo, cDate, api:codigo_status, api:mensagem)
     endif
 
     if (api:codigo_status == 100) .and. (Lower(api:status) == "autorizado")

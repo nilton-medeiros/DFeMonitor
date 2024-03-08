@@ -70,6 +70,8 @@ method new(cte) class TApiCTe
     ::tipo_evento := ""
     ::digest_value := ""
     ::contingencia := false
+    ::data_evento := ""
+    ::data_recebimento := ""
 
     if Empty(::token)
         apiLog({"type" => "Warning", "description" => "Token não definido para conexão com a Nuvem Fiscal"})
@@ -122,6 +124,8 @@ method Emitir() class TApiCTe
             if hb_HGetRef(hRes, "error")
                 hRes := hRes["error"]
                 ::mensagem := hRes["message"]
+                ::data_evento := date_as_DateTime(Date(), false, false)
+                ::data_recebimento := ::data_evento
                 if ("o campo 'referencia' deve ser unico" $ desacentuar(Lower(::mensagem)))
                     if Empty(::nuvemfiscal_uuid)
                         res['error'] := ::ListarCTes()

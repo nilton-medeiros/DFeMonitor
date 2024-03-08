@@ -1,5 +1,5 @@
 1 VERSIONINFO
-  FILEVERSION 4,0,98{
+  FILEVERSION 4,1,00{
     BLOCK "StringFileInfo"
     {
         BLOCK "040904E4"
@@ -9,7 +9,7 @@
             VALUE "LegalCopyright"   , "Copyright (c) Sistrom Web"
             VALUE "OriginalFilename" , "DFeMonitor.exe"
             VALUE "ProductName"      , "DFe Monitor"
-            VALUE "ProductVersion"   , "4.0.98.Hb.MS"
+            VALUE "ProductVersion"   , "4.1.00.Hb.MS"
         }
     }
     BLOCK "VarFileInfo"
