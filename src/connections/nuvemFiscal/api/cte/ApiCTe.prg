@@ -96,10 +96,10 @@ return self
 
 method Emitir() class TApiCTe
     local res, hRes, hAutorizacao, sefazOff, sefazStatus, motivo
-    local log
+    local log, lEmitido := false
 
     if !::connected
-        return false
+        return lEmitido
     endif
 
     // Request Body
@@ -162,7 +162,6 @@ method Emitir() class TApiCTe
 
         hRes := hb_jsonDecode(::response)
         ::nuvemfiscal_uuid := hRes['id']
-        ::baseUrlID := ::baseUrl + "/" + ::nuvemfiscal_uuid
         ::ambiente := hRes['ambiente']
         ::created_at := ConvertUTCdataStampToLocal(hRes['created_at'])
         ::status := hRes['status']
@@ -191,24 +190,31 @@ method Emitir() class TApiCTe
         switch ::codigo_status
             case 100
                 ::status := "AUTORIZADO"
+                lEmitido := true
                 exit
             case 135
                 ::status := "CANCELADO"
+                lEmitido := true
                 exit
             otherwise
+                lEmitido := !res['error']
                 motivo := Lower(Left(desacentuar(::motivo_status), 8))
-                if (motivo == "rejeicao")
+                if (motivo == "rejeicao") .or. (Lower(::status) == "rejeitado")
                     ::status := "REJEITADO"
+                    ::nuvemfiscal_uuid := ""
+                    lEmitido := false
                 endif
         endswitch
 
     endif
 
-    if !Empty(::nuvemfiscal_uuid) .and. !(::nuvemfiscal_uuid $ ::baseUrlID)
+    if Empty(::nuvemfiscal_uuid)
+        ::baseUrlID := ""
+    else
         ::baseUrlID := ::baseUrl + "/" + ::nuvemfiscal_uuid
     endif
 
-return !res['error']
+return lEmitido
 
 method Consultar() class TApiCTe
     local log, res, hRes, hAutorizacao
@@ -471,11 +477,12 @@ return sefaz
 
 method Sincronizar() class TApiCTe
     local log, res, hRes, motivo, apiUrl := ::baseUrlID + "/sincronizar"
+    local lEmitido := false
 
     if !::connected
         ::cte:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível sincroinizar CTe, API Nuvem Fiscal não conectado")
         apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
-        return false
+        return lEmitido
     endif
 
     // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
@@ -503,22 +510,28 @@ method Sincronizar() class TApiCTe
         ::chave := hRes["chave"]
 
         switch ::codigo_status
-            case 135
-                ::status := "CANCELADO"
-                exit
             case 100
                 ::status := "AUTORIZADO"
+                lEmitido := true
+                exit
+            case 135
+                ::status := "CANCELADO"
+                lEmitido := true
                 exit
             otherwise
+                lEmitido := !res['error']
                 motivo := Lower(Left(desacentuar(::motivo_status), 8))
-                if (motivo == "rejeicao")
+                if (motivo == "rejeicao") .or. (Lower(::status) == "rejeitado")
                     ::status := "REJEITADO"
+                    ::nuvemfiscal_uuid := ""
+                    lEmitido := false
                 endif
+
         endswitch
 
     endif
 
-return !res['error']
+return lEmitido
 
 method ListarCTes() class TApiCTe
     local log, res, hRes, aRes := {}, hCTe, hAutorizacao

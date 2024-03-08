@@ -22,8 +22,11 @@ procedure saveLog(text, cType)
    log["date"] := DtoC(Date()) + ' ' + Time()
    log["type"] := cType
 
+   if !Empty(ProcName(4))
+      processos := ProcName(4) + '(' + hb_ntos(ProcLine(4)) + ')/'
+   endif
    if !Empty(ProcName(3))
-      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
+      processos += ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
    endif
    if !Empty(ProcName(2))
       processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + ')/'

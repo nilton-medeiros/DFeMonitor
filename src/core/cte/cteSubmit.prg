@@ -58,6 +58,8 @@ procedure cteSubmit(cte)
         endif
         posEmissao(apiCTe)
         return
+    else
+        posEmissao(apiCTe)
     endif
 
     // Não emitiu, Sefaz SP está indisponível, verifica se a Sefaz Virtual RS já está disponível
@@ -121,7 +123,7 @@ procedure posEmissao(api)
         api:cte:setUpdateEventos(api:numero_protocolo, api:data_recebimento, api:codigo_mensagem, api:mensagem)
     endif
 
-    if (api:codigo_status == 100)
+    if (api:codigo_status == 100) .and. (Lower(api:status) == "autorizado")
         cteGetFiles(api)
     endif
 

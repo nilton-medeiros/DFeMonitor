@@ -6,8 +6,11 @@ procedure apiLog(log)
     local logFile := 'apiLog' + hb_ULeft(DToS(Date()),6) + '.json'
     local hLog := {=>}, logSorted := {=>}, process := "", jsonString
 
+    if !Empty(ProcName(4))
+        process := ProcName(4) + '(' + hb_ntos(ProcLine(4)) + ')/'
+    endif
     if !Empty(ProcName(3))
-        process := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
+        process += ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
     endif
     if !Empty(ProcName(2))
         process += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + ')/'
