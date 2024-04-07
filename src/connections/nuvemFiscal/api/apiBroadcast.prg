@@ -7,7 +7,7 @@
 */
 function Broadcast(connection, httpMethod, apiUrl, token, operation, body, content_type, accept)
     local oError, log := {=>}
-    local response := {"error" => false, "http_status" => 0, "ContentType" => "", "response" => "", "sefazOff" => {=>}}
+    local response := {"error" => false, "http_status" => 0, "ContentType" => "", "response" => "", "sefazOff" => {=>}, "error_code" => 0}
     local sefazOFF
 
     try
@@ -23,6 +23,10 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         if !Empty(accept)
             connection:SetRequestHeader("Accept", accept)
         endif
+        // if (operation == "Baixar XML do CTe")
+            // Seta o Request Follow redirects = True (redirecionamento de url automático)
+            // connection:Option(WHR_EnableRedirects) := true
+        // endif
 
         if Empty(body)
 
@@ -33,8 +37,9 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                     apiLog({"type" => "Error", "description" => "Erro em WinOle MSXML6.DLL"})
                     Break
                 else
+                    response["error_code"] := oError:genCode
                     if ("O tempo limite da opera" $ oError:description)
-                        apiLog({"type" => "Error", "description" => oError:description + " ... Tentando mais uma vez..."})
+                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + oError:description + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
                         connection:Send()
                     else
@@ -53,8 +58,9 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                     apiLog({"type" => "Error", "description" => "Erro em WinOle MSXML6.DLL"})
                     Break
                 else
+                    response["error_code"] := oError:genCode
                     if ("o tempo limite da opera" $ Lower(oError:description))
-                        apiLog({"type" => "Error", "description" => oError:description + " ... Tentando mais uma vez..."})
+                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + oError:description + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
                         connection:Send(body)
                     else
@@ -86,7 +92,8 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
             log["response"] := "Erro desconhecido de conexão com o site " + operation
             response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation
         else
-            log["description"] := oError:description
+            response["error_code"] := oError:genCode
+            log["description"] := "Error " + hb_ntos(oError:genCode) + ": " + oError:description
             log["response"] := "Erro de conexão com API Nuvem Fiscal em " + operation
             response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation + " | " + oError:description
         endif
@@ -94,7 +101,7 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         log := nil
         response["error"] := true
         response["ContentType"] := "text"
-        Break
+        // Break
     end
 
     if !response["error"]

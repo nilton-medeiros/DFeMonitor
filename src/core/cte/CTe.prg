@@ -83,7 +83,7 @@ class TCTe
     data rem_cid_municipio readonly
     data rem_end_cep readonly
     data rem_cid_uf readonly
-    data rem_icms readonly
+    // data rem_icms readonly   ** Não usado
     data rem_email readonly
     data clie_destinatario_id readonly
     data des_razao_social readonly
@@ -118,7 +118,7 @@ class TCTe
     data exp_cid_municipio readonly
     data exp_end_cep readonly
     data exp_cid_uf readonly
-    data exp_icms readonly
+    // data exp_icms readonly  ** Não usado
     data exp_email readonly
     data clie_recebedor_id readonly
     data rec_razao_social readonly
@@ -135,7 +135,7 @@ class TCTe
     data rec_cid_municipio readonly
     data rec_end_cep readonly
     data rec_cid_uf readonly
-    data rec_icms readonly
+    // data rec_icms readonly
     data rec_email readonly
     data vTPrest readonly
     data vBC readonly
@@ -144,8 +144,6 @@ class TCTe
     data pRedBC readonly
     data vCred readonly
     data codigo_sit_tributaria readonly
-    data vPIS readonly
-    data vCOFINS readonly
     data vTotTrib readonly
     data infAdFisco readonly
     data vCarga readonly
@@ -290,7 +288,7 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::rem_cid_municipio := cte["rem_cid_municipio"]
     ::rem_end_cep := getNumbers(cte["rem_end_cep"])
     ::rem_cid_uf := cte["rem_cid_uf"]
-    ::rem_icms := cte["rem_icms"]
+    // ::rem_icms := cte["rem_icms"]   ** Não usado
     ::clie_destinatario_id := cte["clie_destinatario_id"]
     ::des_razao_social := cte["des_razao_social"]
     ::des_nome_fantasia := cte["des_nome_fantasia"]
@@ -323,7 +321,7 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::exp_cid_municipio := cte["exp_cid_municipio"]
     ::exp_end_cep := getNumbers(cte["exp_end_cep"])
     ::exp_cid_uf := cte["exp_cid_uf"]
-    ::exp_icms := cte["exp_icms"]
+    // ::exp_icms := cte["exp_icms"]  ** Não usado
     ::clie_recebedor_id := cte["clie_recebedor_id"]
     ::rec_razao_social := cte["rec_razao_social"]
     ::rec_nome_fantasia := cte["rec_nome_fantasia"]
@@ -339,7 +337,7 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::rec_cid_municipio := cte["rec_cid_municipio"]
     ::rec_end_cep := getNumbers(cte["rec_end_cep"])
     ::rec_cid_uf := cte["rec_cid_uf"]
-    ::rec_icms := cte["rec_icms"]
+    // ::rec_icms := cte["rec_icms"]
     ::vTPrest := cte["vTPrest"]
     ::vBC := cte["vBC"]
     ::pICMS := cte["pICMS"]
@@ -347,8 +345,6 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::pRedBC := cte["pRedBC"]
     ::vCred := cte["vCred"]
     ::codigo_sit_tributaria := cte["codigo_sit_tributaria"]
-    ::vPIS := cte["vPIS"]
-    ::vCOFINS := cte["vCOFINS"]
     ::vTotTrib := cte["vTotTrib"]
     ::infAdFisco := cte["infAdFisco"]
     ::vCarga := number_format(cte["vCarga"], 2)
@@ -399,12 +395,10 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     next
 
     if !Empty(::vTotTrib)
-        // msgLog := MsgDebug(Valtype(::vCOFINS), ::vCOFINS, Valtype(::vICMS), ::vICMS, Valtype(::vTotTrib), ::vTotTrib)
+        // msgLog := MsgDebug(Valtype(::vICMS), ::vICMS, Valtype(::vTotTrib), ::vTotTrib)
         AAdd(::obs_contr, {"xCampo" => "LEI DA TRANSPARENCIA",;
                            "xTexto" => "12741/12 O valor aproximado de tributos incidentes sobre o preco deste servico é de R$ " + ;
                             LTrim(Transform(::vTotTrib, "@E 99,999,999.99"))})
-                            // " PIS " + hb_ntos(::vPIS) +;
-                            // " COFINS " + hb_ntos(::vCOFINS) +;
                             // " ICMS " + hb_ntos(::vICMS) +;
     endif
 

@@ -6,6 +6,7 @@ class TApiCTe
     data emitente readonly
     data token
     data connection
+    data connecHttp
     data connected readonly
     data body readonly
     data response readonly
@@ -393,9 +394,12 @@ return !res['error']
 method BaixarXMLdoCTe() class TApiCTe
     local log, res, apiUrl := ::baseUrlID + "/xml"
 
+    // ::connecHttp := GetWinHttpConnection()
+    // ::connected := !Empty(::connecHttp)
+
     if !::connected
         ::cte:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível baixar XML, API Nuvem Fiscal não conectado")
-        apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
+        apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal via WinHttp.WinHttpRequest.5.1"})
         return false
     endif
 
@@ -406,7 +410,7 @@ method BaixarXMLdoCTe() class TApiCTe
     ::ContentType := res['ContentType']
     ::response := res['response']
 
-    if res['error']
+    if res['error'] .or. !(res["error_code"] == 0)
         log := {=>}
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível baixar XML do CTe na api Nuvem Fiscal"
@@ -1072,17 +1076,12 @@ method defineBody() class TApiCTe
             ICMS["ICMSSN"] := {"CST" => "90", "indSN" => 1}
             exit
         otherwise
-            if (hb_ULeft(::cte:codigo_sit_tributaria, 2) $ "40|41|51")
+            cod_sit_trib := hb_ULeft(cod_sit_trib, 2)
+            if (cod_sit_trib $ "40|41|51")
                 // 45 - ICMS Isento, não Tributado ou diferido
-                ICMS["ICMS45"] := {"CST" => hb_ULeft(::cte:codigo_sit_tributaria, 2)}
+                ICMS["ICMS45"] := {"CST" => cod_sit_trib}
             endif
     endswitch
-
-    if Empty(ICMS)
-        msgLog := MsgDebug("Código Tributário: ", cod_sit_trib)
-        saveLog(msgLog, "Debug")
-        turnOFF()
-    endif
 
     imp := {=>}
     imp["ICMS"] := ICMS

@@ -3,18 +3,36 @@
 #include "hmg.ch"
 
 function GetMSXMLConnection()
-	local connection
+	local connection, descr := {}
 
     begin sequence
         connection := win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0")
         if Empty(connection)
-			apiLog({"type" => "Error", "description" => "Erro na criação do serviço: MSXML2, win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection)})
+			AAdd(descr, win_oleErrorText())
+			AAdd(descr, "Erro na criação do serviço: MSXML2, win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection))
+			apiLog({"type" => "Error", "description" => descr})
             Break
         endif
     end sequence
 
 return connection
 
+/*
+function GetWinHttpConnection()
+	local connection, descr := {}
+
+	begin sequence
+		connection := win_oleCreateObject("WinHttp.WinHttpRequest.5.1")
+        if Empty(connection)
+			AAdd(descr, win_oleErrorText())
+			AAdd(descr, "Erro na criação do serviço: WinHTTP, win_oleCreateObject('WinHttp.WinHttpRequest.5.1') retornou type: " + ValType(connection))
+			apiLog({"type" => "Error", "description" => descr})
+            Break
+        endif
+    end sequence
+
+return connection
+*/
 
 // Função utilizada para obter resposta de erros retornados, deve ser refatorada para ler o array de errors
 function getMessageApiError(api, lAsText)

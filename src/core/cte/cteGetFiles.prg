@@ -5,7 +5,7 @@ function cteGetFiles(apiCTe)
     local upload := {=>}
     local directory, filePDF, fileXML, cancelPDF, cancelXML
     local empresa, anoMes, printPDF, printPath
-    local cte := apiCTe:cte, chave
+    local cte := apiCTe:cte, chave, aLog
 
     // As vars que começam com "app" são de nível global (Public) definidas no main.prg
     empresa := appEmpresas:getEmpresa(cte:emp_id)
@@ -65,17 +65,30 @@ function cteGetFiles(apiCTe)
             saveLog({"Arquivo PDF do DACTE não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
         endif
 
+        aLog := {}
+
         if apiCTe:BaixarXMLdoCTe()
             if hb_MemoWrit(directory + fileXML, apiCTe:xml_cte)
                 upload["xml"] := directory + fileXML
                 saveLog({"Arquivo XML do CTe salvo com sucesso", directory + fileXML})
             else
                 cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Erro ao escrever XML em arquivo. Ver log servidor local")
-                saveLog("Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory, "Warning")
+                AAdd(aLog, "Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory)
+                if !Empty(apiCTe:mensagem)
+                    cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), apiCTe:mensagem)
+                    AAdd(aLog, apiCTe:mensagem)
+                endif
+                saveLog(aLog, "Warning")
             endif
         else
+            AAdd(aLog, "Arquivo XML do CTe não retornado")
+            AAdd(aLog, "Chave CTe: " + apiCTe:chave)
             cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Arquivo XML do CTe não retornado. Ver log servidor local")
-            saveLog({"Arquivo XML do CTe não retornado", "Chave CTe: " + apiCTe:chave}, "Warning")
+            if !Empty(apiCTe:mensagem)
+                cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), apiCTe:mensagem)
+                AAdd(aLog, apiCTe:mensagem)
+            endif
+            saveLog(aLog, "Warning")
         endif
 
     endif
