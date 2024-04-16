@@ -13,7 +13,7 @@ class TGED_FTP
 
    method new(host_file, remote_path, remote_file) constructor
    method upload()
-   method delete()
+   // method delete()   // Método #1 nunca usado! Depreciado
    method getURL() inline ::urlFile
 
 end class
@@ -67,6 +67,7 @@ method upload() class TGED_FTP
 
 return ::isUpload
 
+/* Metodo delete() nunca usado! Suspendido
 method delete() class TGED_FTP
    local url := TUrl():new(appData:ftp_url)
    local ftp := TIPClientFTP():new(url)
@@ -97,3 +98,4 @@ method delete() class TGED_FTP
    endif
 
 return ::deletedStatus
+ */
