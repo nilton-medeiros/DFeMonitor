@@ -4,6 +4,7 @@
 class TEmpresa
 
     data id readonly
+    data cia readonly
     data xNome readonly
     data xFant readonly
     data CNPJ

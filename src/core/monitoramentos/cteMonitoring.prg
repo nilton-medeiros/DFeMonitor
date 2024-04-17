@@ -13,11 +13,11 @@ procedure cteMonitoring()
     for each cte in dbCTes:ctes
 
         if (idAnterior == cte:id)
-            next
+            loop
         endif
 
         idAnterior := cte:id
-        
+
         if Empty(cte:nuvemfiscal_uuid)
             cteSubmit(cte)
         else
