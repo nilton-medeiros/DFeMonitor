@@ -24,6 +24,7 @@ return self
 method getListCTes() class TDbCTes
     local hCTe, hAnexos, emails, docTransAnt, modalidade
     local dbCTes, empresa, sql := TSQLString():new()
+    local dbgEmp := appEmpresas:empresas[1]
 
     sql:setValue("SELECT cte_id AS id, ")
     sql:add("emp_id, ")
@@ -213,6 +214,10 @@ method getListCTes() class TDbCTes
         enddo
     endif
 
+    // Debug: Ocorrendo bug, parece que na view está entrado cte duplicado (apagar estas linhas de debug qdo corrigido)
+    if (dbgEmp:cia == 'LWX')
+        saveLog(sql)
+    endif
     dbCTes:Destroy()
 
 return nil

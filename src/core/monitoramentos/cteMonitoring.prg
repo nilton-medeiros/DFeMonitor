@@ -1,6 +1,7 @@
 #include "hmg.ch"
 
 procedure cteMonitoring()
+    local idAnterior := -1
     local cte, dbCTes := TDbCTes():new()
 
     dbCTes:getListCTes()
@@ -11,6 +12,12 @@ procedure cteMonitoring()
 
     for each cte in dbCTes:ctes
 
+        if (idAnterior == cte:id)
+            next
+        endif
+
+        idAnterior := cte:id
+        
         if Empty(cte:nuvemfiscal_uuid)
             cteSubmit(cte)
         else

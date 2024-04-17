@@ -15,6 +15,7 @@ method new() class TDbEmpresas
     local hRow, dbEmpresas, sql := TSQLString():new()
 
     sql:setValue("SELECT emp_id AS id, ")
+    sql:add("emp_sigla_cia AS cia, ")
     sql:add("CONCAT(emp_razao_social, '  (', emp_sigla_cia, IF(ISNULL(cid_sigla),'', CONCAT('-',cid_sigla)), ')') AS xNome, ")
     sql:add("emp_nome_fantasia AS xFant, ")
     sql:add("emp_cnpj AS CNPJ, ")

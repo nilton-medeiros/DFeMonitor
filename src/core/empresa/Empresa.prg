@@ -52,6 +52,7 @@ method new(empresa) class TEmpresa
     endif
 
     ::id := empresa['id']
+    ::cia := AllTrim(empresa['cia'])
     ::xNome := empresa['xNome']
     ::xFant := empresa['xFant']
     ::CNPJ := getNumbers(empresa['CNPJ'])
