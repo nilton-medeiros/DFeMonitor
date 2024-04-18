@@ -216,7 +216,7 @@ method getListCTes() class TDbCTes
 
     // Debug: Ocorrendo bug, parece que na view está entrado cte duplicado (apagar estas linhas de debug qdo corrigido)
     if (dbgEmp:cia == 'LWX')
-        saveLog(sql)
+        saveLog(sql:value)
     endif
     dbCTes:Destroy()
 
