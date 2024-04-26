@@ -649,61 +649,60 @@ method defineBody() class TApiMDFe
     // Veículo de Tração
     veicTracao := {=>}
 
-    if !Empty(::mdfe:veicTracao["cInt"])
+    if !Empty(::mdfe:veicTracao)
         veicTracao["cInt"] := ::mdfe:veicTracao["cInt"]
-    endif
-
-    veicTracao["placa"] := ::mdfe:veicTracao["placa"]
-
-    if !Empty(::mdfe:veicTracao["RENAVAM"])
-        veicTracao["RENAVAM"] := ::mdfe:veicTracao["RENAVAM"]
-    endif
-
-    veicTracao["tara"] := ::mdfe:veicTracao["tara"]
-
-    if !Empty(::mdfe:veicTracao["capKG"])
-        veicTracao["capKG"] := ::mdfe:veicTracao["capKG"]
-    endif
-
-    if !Empty(::mdfe:veicTracao["capM3"])
-        veicTracao["capM3"] := ::mdfe:veicTracao["capM3"]
-    endif
-
-    // Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do MDF-e
-    if (::mdfe:veicTracao["tp_propriedade"] == "T")
-        target := {=>}
-        if !Empty(::mdfe:veicTracao["CNPJ"])
-            target["CNPJ"] := ::mdfe:veicTracao["CNPJ"]
-        elseif !Empty(::mdfe:veicTracao["CPF"])
-            target["CPF"] := ::mdfe:veicTracao["CPF"]
+        veicTracao["placa"] := ::mdfe:veicTracao["placa"]
+        if !Empty(::mdfe:veicTracao["RENAVAM"])
+            veicTracao["RENAVAM"] := ::mdfe:veicTracao["RENAVAM"]
         endif
-        target["RNTRC"] := ::mdfe:veicTracao["RNTRC"]
-        target["xNome"] := ::mdfe:veicTracao["xNome"]
-        if !Empty(::mdfe:veicTracao["IE"])
-            target["IE"] := ::mdfe:veicTracao["IE"]
+        veicTracao["tara"] := ::mdfe:veicTracao["tara"]
+        if !Empty(::mdfe:veicTracao["capKG"])
+            veicTracao["capKG"] := ::mdfe:veicTracao["capKG"]
         endif
-        if !Empty(::mdfe:veicTracao["UF"])
-            target["UF"] := ::mdfe:veicTracao["UF"]
+
+        if !Empty(::mdfe:veicTracao["capM3"])
+            veicTracao["capM3"] := ::mdfe:veicTracao["capM3"]
         endif
-        if Empty(::mdfe:veicTracao["tpProp"])
-            target["tpProp"] := 0       // 0 - TAC Agregado
-        else
-            target["tpProp"] := ::mdfe:veicTracao["tpProp"]
+
+        // Proprietários do Veículo. Só preenchido quando o veículo não pertencer à empresa emitente do MDF-e
+        if (::mdfe:veicTracao["tp_propriedade"] == "T")
+            target := {=>}
+            if !Empty(::mdfe:veicTracao["CNPJ"])
+                target["CNPJ"] := ::mdfe:veicTracao["CNPJ"]
+            elseif !Empty(::mdfe:veicTracao["CPF"])
+                target["CPF"] := ::mdfe:veicTracao["CPF"]
+            endif
+            target["RNTRC"] := ::mdfe:veicTracao["RNTRC"]
+            target["xNome"] := ::mdfe:veicTracao["xNome"]
+            if !Empty(::mdfe:veicTracao["IE"])
+                target["IE"] := ::mdfe:veicTracao["IE"]
+            endif
+            if !Empty(::mdfe:veicTracao["UF"])
+                target["UF"] := ::mdfe:veicTracao["UF"]
+            endif
+            if Empty(::mdfe:veicTracao["tpProp"])
+                target["tpProp"] := 0       // 0 - TAC Agregado
+            else
+                target["tpProp"] := ::mdfe:veicTracao["tpProp"]
+            endif
         endif
+
+        veicTracao["prop"] := target
+        target := nil
+
+        veicTracao["condutor"] := ::mdfe:condutor
+        veicTracao["tpRod"] := PadL(::mdfe:veicTracao["tpRod"], 2, "0")
+        veicTracao["tpCar"] := PadL(::mdfe:veicTracao["tpCar"], 2, "0")
+
+        if !Empty(::mdfe:veicTracao["uf_licenciado"])
+            veicTracao["UF"] := ::mdfe:veicTracao["uf_licenciado"]
+        endif
+
+        rodo["veicTracao"] := veicTracao
+        veicTracao := nil
+
     endif
 
-    veicTracao["prop"] := target
-    target := nil
-    veicTracao["condutor"] := ::mdfe:condutor
-    veicTracao["tpRod"] := PadL(::mdfe:veicTracao["tpRod"], 2, "0")
-    veicTracao["tpCar"] := PadL(::mdfe:veicTracao["tpCar"], 2, "0")
-
-    if !Empty(::mdfe:veicTracao["uf_licenciado"])
-        veicTracao["UF"] := ::mdfe:veicTracao["uf_licenciado"]
-    endif
-
-    rodo["veicTracao"] := veicTracao
-    veicTracao := nil
 
     // veicReboque: Veículo de Reboque - Não usado pelos meus clientes, opcional
     // LacRod: Numero do Lacre - Não usado pelos meus clientes, opcional
