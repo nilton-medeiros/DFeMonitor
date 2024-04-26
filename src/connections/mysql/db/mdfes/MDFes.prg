@@ -297,6 +297,9 @@ method getVeicTracao(cId) class TDbMDFes
 
     veic:Destroy()
 
+    // Debug
+    // saveLog(sql:value)
+
 return hVeicTracao
 
 method getCondutor(cId) class TDbMDFes

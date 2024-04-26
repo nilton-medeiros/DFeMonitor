@@ -650,16 +650,17 @@ method defineBody() class TApiMDFe
     veicTracao := {=>}
 
     if !Empty(::mdfe:veicTracao)
-        veicTracao["cInt"] := ::mdfe:veicTracao["cInt"]
-        veicTracao["placa"] := ::mdfe:veicTracao["placa"]
+        if !Empty(::mdfe:veicTracao["cInt"])
+            veicTracao["cInt"] := ::mdfe:veicTracao["cInt"]
+        endif
+        veicTracao["placa"] := ::mdfe:veicTracao["placa"]   // Obrigatório
         if !Empty(::mdfe:veicTracao["RENAVAM"])
             veicTracao["RENAVAM"] := ::mdfe:veicTracao["RENAVAM"]
         endif
-        veicTracao["tara"] := ::mdfe:veicTracao["tara"]
+        veicTracao["tara"] := ::mdfe:veicTracao["tara"]     // Obrigatório
         if !Empty(::mdfe:veicTracao["capKG"])
             veicTracao["capKG"] := ::mdfe:veicTracao["capKG"]
         endif
-
         if !Empty(::mdfe:veicTracao["capM3"])
             veicTracao["capM3"] := ::mdfe:veicTracao["capM3"]
         endif
@@ -685,10 +686,10 @@ method defineBody() class TApiMDFe
             else
                 target["tpProp"] := ::mdfe:veicTracao["tpProp"]
             endif
+            veicTracao["prop"] := target
+            target := nil
         endif
 
-        veicTracao["prop"] := target
-        target := nil
 
         veicTracao["condutor"] := ::mdfe:condutor
         veicTracao["tpRod"] := PadL(::mdfe:veicTracao["tpRod"], 2, "0")
