@@ -172,7 +172,7 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         log["type"] := "Information"
         log["method"] := httpMethod
         log["url"] := apiUrl
-        log["content_type"] := iif(content_type == nil, "$$null$$", content_type)
+        log["content_type"] := "require: " + iif(content_type == nil, "$$null$$", content_type) + " | response: " + response["ContentType"]
         log["accept"] := iif(accept == nil, "$$null$$", accept)
         log["body"] := iif(body == nil, "$$null$$", iif("image" $ content_type, "[ ARQUIVO BINARIO DA IMAGEM ]", body))
         log["description"] := "HTTP Status: " + hb_ntos(response["http_status"]) + " - " + operation

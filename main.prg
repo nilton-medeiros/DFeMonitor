@@ -23,7 +23,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 Function Main
 
-    public appData := TAppData():new("4.1.08")
+    public appData := TAppData():new("4.1.09")
     public appDataSource
     public appFTP
     public appEmpresas
@@ -190,8 +190,13 @@ procedure main_Timer_dfe_action()
 
     // Monitoramento de CTes e MDFes conforme a frequência estabelecida em frequency
     if (Seconds() - appData:timer >= appData:frequency)
-        cteMonitoring()
-        mdfeMonitoring()
+        if appNuvemFiscal:ChecksTokenExpired()
+            cteMonitoring()
+            mdfeMonitoring()
+        else
+            saveLog("Não foi possível receber o novo token de acesso à NuvemFiscal, verifique o apiLog")
+            turnOFF()
+        endif
         appData:setTimer()
     endif
 
