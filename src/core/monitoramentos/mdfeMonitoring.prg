@@ -1,6 +1,7 @@
 #include "hmg.ch"
 
 procedure mdfeMonitoring()
+    local idAnterior := -1, log := {=>}
     local mdfe, dbMDFes := TDbMDFes():new()
 
     dbMDFes:getListMDFes()
@@ -10,6 +11,19 @@ procedure mdfeMonitoring()
     endif
 
     for each mdfe in dbMDFes:mdfes
+
+        if (idAnterior == mdfe:id)
+            if !Empty(mdfe:sql)
+                log["mdfe_id"] := mdfe:id
+                log["referencia_uid"] := mdfe:referencia_uuid
+                log["msg"] := "MDFe em duplicidade em getListMDFes()"
+                log["query"] := mdfe:sql
+                saveLog(log)
+            endif
+            loop
+        endif
+
+        idAnterior := mdfe:id
 
         if Empty(mdfe:nuvemfiscal_uuid)
             mdfeSubmit(mdfe)

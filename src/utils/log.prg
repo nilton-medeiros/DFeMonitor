@@ -6,14 +6,13 @@ procedure saveLog(text, cType)
    local path := appData:systemPath + 'log\'
    local dateFormat := Set(_SET_DATEFORMAT, "yyyy.mm.dd")
    local logFile := 'dfeLog' + hb_ULeft(DToS(Date()),6) + '.json'
-   local hLog := {=>}, log := {=>}
+   local hLog := {"log" => {}}, log := {=>}
    local t, processos := ''
 
    if hb_FileExists(path + logFile)
       hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
    else
       hLog["title"] := "Log de Sistema " + appData:displayName + " | " + GetMonthName(Month(Date())) + " DE " + hb_ntos(Year(Date()))
-      hLog["log"] := {}
    endif
 
    default cType := "Information"
@@ -50,6 +49,8 @@ procedure saveLog(text, cType)
          endif
          AAdd(log["messages"], StrTran(t, "\", "/"))
       next
+   elseif ValType(text) == "H"
+      log["message"] := text 
    else
       log["message"] := StrTran(text, "\", "/")
    endif

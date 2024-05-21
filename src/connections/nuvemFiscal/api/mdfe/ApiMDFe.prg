@@ -124,7 +124,7 @@ method Emitir() class TApiMDFe
                 log["type"] := "Warning"
                 log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível emitir MDF-e na API Nuvem Fiscal"
                 log["content_type"] := ::ContentType
-                log["response"] := ::response
+                log["response"] := hRes
                 apiLog(log)
             endif
         endif
@@ -225,8 +225,10 @@ method Encerrar() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível encerrar MDF-e na API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -274,8 +276,10 @@ method Cancelar() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível cancelar MDF-e na API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -325,8 +329,10 @@ method ListarMDFes() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível listar MDF-e's na API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -425,8 +431,10 @@ method BaixarPDFdoDAMDFE() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível baixar PDF do DAMDFE " + ::mdfe:situacao + " da API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -464,8 +472,10 @@ method BaixarXMLdoMDFe() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível baixar XML do MDF-e " + ::mdfe:situacao + " da API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -495,8 +505,10 @@ method Sincronizar() class TApiMDFe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível sincronizar MDF-e na API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -534,14 +546,17 @@ method ConsultarSVRS() class TApiMDFe
 
     // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
     res := Broadcast(::connection, "GET", ::baseUrl, ::token, "MDFe: Consultar Status Sefaz", nil, nil, "*/*")
+    ::response := res['response']
 
     if res["error"]
         log := {=>}
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | MDF-e: Não foi possível consultar status SEFAZ, parece que SEFAZ/API NUVEM FISCAL estão fora do ar"
         log["content_type"] := res['ContentType']
-        log["response"] := res['response']
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else

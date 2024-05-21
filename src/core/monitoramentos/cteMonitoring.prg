@@ -1,7 +1,7 @@
 #include "hmg.ch"
 
 procedure cteMonitoring()
-    local idAnterior := -1
+    local idAnterior := -1, log := {=>}
     local cte, dbCTes := TDbCTes():new()
 
     dbCTes:getListCTes()
@@ -13,6 +13,13 @@ procedure cteMonitoring()
     for each cte in dbCTes:ctes
 
         if (idAnterior == cte:id)
+            if !Empty(cte:sql)
+                log["cte_id"] := cte:id
+                log["referencia_uid"] := cte:referencia_uuid
+                log["msg"] := "CTe em duplicidade em getListCTes()"
+                log["query"] := cte:sql
+                saveLog(log)
+            endif
             loop
         endif
 

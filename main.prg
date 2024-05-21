@@ -23,7 +23,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 Function Main
 
-    public appData := TAppData():new("4.1.09")
+    public appData := TAppData():new("4.1.16")
     public appDataSource
     public appFTP
     public appEmpresas
@@ -151,6 +151,7 @@ procedure main_Timer_dfe_action()
     local timeHHMM := hb_ULeft(Time(), 5)
     local timerStart := appData:timerStart
     local timerEnd := appData:timerEnd
+    local nSeconds, nTimeElapsed
 
     /*
         Paraliza o Timer do form principal main para que as rotinas de monitoramento não
@@ -189,8 +190,12 @@ procedure main_Timer_dfe_action()
     endif
 
     // Monitoramento de CTes e MDFes conforme a frequência estabelecida em frequency
-    if (Seconds() - appData:timer >= appData:frequency)
+    nSeconds := Seconds()
+    nTimeElapsed := nSeconds - appData:timer
+
+    if (nTimeElapsed >= appData:frequency)
         if appNuvemFiscal:ChecksTokenExpired()
+            // saveLog("Tempo decorrido: " + hb_ntos(nTimeElapsed) + " | Frequência: " + hb_ntos(appData:frequency))
             cteMonitoring()
             mdfeMonitoring()
         else

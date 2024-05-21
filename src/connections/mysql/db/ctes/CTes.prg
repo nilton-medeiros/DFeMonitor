@@ -203,6 +203,7 @@ method getListCTes() class TDbCTes
     if dbCTes:executed
         do while !dbCTes:eof()
             hCTe := convertFieldsDb(dbCTes:GetRow())
+            hCTe["sql"] := sql:value
             hAnexos := ::getAnexosCTe(hCTe)
             emails := ::getEmails(hCTe)
             if (hb_ntos(hCTe['tpServ']) $ "123")
@@ -215,9 +216,9 @@ method getListCTes() class TDbCTes
     endif
 
     // Debug: Ocorrendo bug, parece que na view está entrado cte duplicado (apagar estas linhas de debug qdo corrigido)
-    if (dbgEmp:cia == 'LWX')
-        saveLog(sql:value)
-    endif
+    // if (dbgEmp:cia == 'LWX')
+    //     saveLog(sql:value)
+    // endif
     dbCTes:Destroy()
 
 return nil

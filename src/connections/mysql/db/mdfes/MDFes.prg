@@ -100,6 +100,7 @@ method getListMDFes() class TDbMDFes
             hMDFe["aVerb"] := ::getSegMDFe(mdfeId, PadL(hDbMDFe["nMDF"], 9, "0"))
             hMDFe["prodPred"] := ::getprodPred(mdfeId)
             hMDFe["autXML"] := ::getAutXML(hDbMDFe["lista_ctes"])
+            hMDFe["sql"] := sql:value
             AAdd(::mdfes, TMDFe():new(hMDFe))
             dbMDFes:Skip()
         enddo

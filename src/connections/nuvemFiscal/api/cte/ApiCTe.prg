@@ -129,8 +129,10 @@ method Emitir() class TApiCTe
                 ::data_recebimento := ::data_evento
                 if ("o campo 'referencia' deve ser unico" $ desacentuar(Lower(::mensagem)))
                     if Empty(::nuvemfiscal_uuid)
+                        saveLog({"Ao Emitir, retornou [o campo 'referencia' deve ser unico]", "Chamando ListarCTes() pela referência", "referencia: " + ::referencia_uuid})
                         res['error'] := ::ListarCTes()
                     else
+                        saveLog({"Ao Emitir, retornou [o campo 'referencia' deve ser unico]", "Chamando Consultar() pelo uuid da nuvemfiscal", "nuvemfiscal_uuid: " + ::nuvemfiscal_uuid})
                         res['error'] := ::Consultar()
                     endif
                 endif
@@ -139,7 +141,7 @@ method Emitir() class TApiCTe
                 log["type"] := "Warning"
                 log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível emitir CTe na api Nuvem Fiscal"
                 log["content_type"] := res['ContentType']
-                log["response"] := ::response
+                log["response"] := hRes
                 apiLog(log)
             endif
         endif
@@ -160,10 +162,12 @@ method Emitir() class TApiCTe
                 ::data_evento := ConvertUTCdataStampToLocal(sefazStatus["data_hora_consulta"])
                 appData:cte_sefaz_offline := true
             endif
-
+            res['error'] := true
         endif
 
-    else
+    endif
+
+    if !res['error']
 
         hRes := hb_jsonDecode(::response)
         ::nuvemfiscal_uuid := hRes['id']
@@ -236,15 +240,20 @@ method Consultar() class TApiCTe
     ::response := res['response']
 
     if res['error']
+
         log := {=>}
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível consultar CTe na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
+
     else
+
         hRes := hb_jsonDecode(::response)
         ::nuvemfiscal_uuid := hRes['id']
         ::ambiente := hRes['ambiente']
@@ -271,6 +280,7 @@ method Consultar() class TApiCTe
                 ::motivo_status := hAutorizacao['mensagem']
             endif
         endif
+
     endif
 
 return !res['error']
@@ -296,11 +306,15 @@ method Cancelar() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível cancelar CTe na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
+
     else
+
         hRes := hb_jsonDecode(::response)
         ::ambiente := hRes['ambiente']
         ::status := hRes['status']
@@ -350,8 +364,10 @@ method BaixarPDFdoDACTE() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível baixar PDF do DACTE na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -381,8 +397,10 @@ method BaixarPDFdoCancelamento() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível baixar PDF do CTE CANCELADO na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -415,8 +433,10 @@ method BaixarXMLdoCTe() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível baixar XML do CTe na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -446,8 +466,10 @@ method BaixarXMLdoCancelamento() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível baixar XML do CTE CANCELADO na api Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -467,14 +489,17 @@ method ConsultarSefaz() class TApiCTe
 
     // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
     res := Broadcast(::connection, "GET", ::baseUrl, ::token, "CTe: Consultar Status Sefaz", nil, nil, "*/*")
+    ::response := res['response']
 
     if res["error"]
         log := {=>}
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível consultar status SEFAZ, parece que SEFAZ/API-NUVEM FISCAL esta fora do ar"
         log["content_type"] := res['ContentType']
-        log["response"] := res['response']
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -505,8 +530,10 @@ method Sincronizar() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível sincronizar CTe com a API Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -564,8 +591,10 @@ method ListarCTes() class TApiCTe
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | Não foi possível listar CTes por referencia_uuid na API Nuvem Fiscal"
         log["content_type"] := res['ContentType']
-        log["response"] := ::response
+        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+
         apiLog(log)
+
         ::status := "erro"
         ::mensagem := res["response"]
     else
@@ -578,6 +607,7 @@ method ListarCTes() class TApiCTe
             ::codigo_status := 0
             ::motivo_status := "CTe nao encontrado na Consulta por referencia_uuid"
             res["error"] := true
+            saveLog({"CTe nao encontrado na Consulta ListarCTes() por referencia_uuid", "referência: " + ::referencia_uuid})
         else
 
             // Por referencia, só retorna um elemento no array
@@ -594,7 +624,11 @@ method ListarCTes() class TApiCTe
             ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
             ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
 
-            if !(::status == "pendente")
+            if (::status == "pendente")
+                ::baseUrlID := ::baseUrl + "/" + ::nuvemfiscal_uuid
+                SysWait(7)
+                res['error'] := ::Consultar()
+            else
                 if hb_HGetRef(hAutorizacao, 'data_recebimento')
                     ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
                 endif
