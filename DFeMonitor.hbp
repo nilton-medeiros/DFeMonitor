@@ -52,5 +52,6 @@ src\utils\isTrue.prg
 src\utils\log.prg
 src\utils\msgDebugInfo.prg
 src\utils\msgNotify.prg
+src\utils\SQL2JSON.prg
 src\utils\SysWait.prg
 src\utils\timersForms.prg

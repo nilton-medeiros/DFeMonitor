@@ -521,6 +521,9 @@ method updateCTe(cId, aFields) class TDbCTes
     cte:Destroy()
     if !updated
         saveLog(sql:value, "Debug")
+        saveSQL(sql:value)
+        MsgStop("Banco de Dados sem conexão ou ocupado, esgotado todas as tentativas", "Erro de conexão: Tente mais tarde")
+        turnOFF()
     endif
 
 return updated
@@ -552,8 +555,12 @@ method insertEventos(aEvents) class TDbCTes
     ctes_eventos := TQuery():new(sql:value)
     inserted := ctes_eventos:executed
     ctes_eventos:Destroy()
+
     if !inserted
         saveLog(sql:value, "Debug")
+        saveSQL(sql:value)
+        MsgStop("Banco de Dados sem conexão ou ocupado, esgotado todas as tentativas", "Erro de conexão: Tente mais tarde")
+        turnOFF()
     endif
 
 return inserted

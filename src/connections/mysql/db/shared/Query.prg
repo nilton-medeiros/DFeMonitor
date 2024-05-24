@@ -9,7 +9,8 @@ class TQuery
     data count readonly
 
     method new(cSql) constructor
-    method runQuery(sql)
+    method tryRunQuery()
+    method runQuery()
     method serverBusy()
     method Skip() inline ::db:Skip()
     method GoTop() inline ::db:GoTop()
@@ -30,7 +31,7 @@ method new(cSql) class TQuery
     if appDataSource:connected .or. appDataSource:connect()
         SetProperty("main", "NotifyIcon", "serverWAIT")
         msgNotify({'notifyTooltip' => "Executando query..."})
-        if ::runQuery()
+        if ::tryRunQuery()
             ::count := ::db:LastRec()
             ::db:GoTop()
             msgNotify()
@@ -39,7 +40,7 @@ method new(cSql) class TQuery
             AAdd(aLog, "Conexão perdida com banco de dados. Reconectando...")
             if appDataSource:connect()
                 AAdd(aLog, "Conexão Restabelecida!")
-                if ::runQuery()
+                if ::tryRunQuery()
                     ::count := ::db:LastRec()
                     ::db:GoTop()
                     msgNotify()
@@ -63,27 +64,27 @@ method new(cSql) class TQuery
 
 return self
 
-method runQuery() class TQuery
-    local tenta as numeric
+method tryRunQuery() class TQuery
+    local tenta := 0
     local command, table, mode
 
-    ::executed := false
-    ::db := appDataSource:mysql:Query(::sql)
-
-    if (::db == nil)
-        if !appDataSource:connect()
-            msgNotify({"notifyTooltip" => "B.D. não conectado!"})
-            saveLog("Banco de Dados não conectado!", "Warning")
-            return false
-        endif
-        ::db := appDataSource:mysql:Query(::sql)
-        if (::db == nil)
-            msgNotify({'notifyTooltip' => "Erro de SQL!"})
-            saveLog("Erro ao executar Query! [Query is NIL]", "Error")
-            msgDebugInfo({'Erro ao executar ::db, avise ao suporte!', hb_eol() + hb_eol(), 'Ver Log do sistema', hb_eol(), 'Erro: Query is NIL'})
-            return false
-        endif
+    if !::runQuery()
+        return false
     endif
+
+    do while ::serverBusy()
+        appDataSource:disconnect()
+        if (++tenta > 10)
+            saveLog("Servidor DB ocupado, esgotado as 10 tentativas", "Error")
+            return false
+        endif
+        saveLog("Servidor DB ocupado, aguardando 7 segundos e nova tentativa " + hb_ntos(tenta) + "/10", "Warning")
+        SysWait(7)
+        appDataSource:connect()
+        if !::runQuery()
+            return false
+        endif
+    enddo
 
     command := hmg_upper(firstString(hb_utf8StrTran(::db:cQuery, ";")))
     command := AllTrim(command)
@@ -110,7 +111,7 @@ method runQuery() class TQuery
         table := Capitalize(table)
     endif
 
-    if ::db:NetErr() .and. !::serverBusy()
+    if ::db:NetErr()
         if ("DUPLICATE ENTRY" $ hmg_upper(::db:Error()))
             saveLog({"Erro de duplicidade ao " + mode + " " + table, ansi_to_unicode(::sql)}, "Error")
         elseif ("lost connection" $ hmg_lower(::db:Error()))
@@ -141,13 +142,32 @@ method runQuery() class TQuery
 
 return ::executed
 
+method runQuery class TQuery
+    ::executed := false
+    ::db := appDataSource:mysql:Query(::sql)
+
+    if (::db == nil)
+        if !appDataSource:connect()
+            msgNotify({"notifyTooltip" => "B.D. não conectado!"})
+            saveLog("Banco de Dados não conectado!", "Warning")
+            return false
+        endif
+        ::db := appDataSource:mysql:Query(::sql)
+        if (::db == nil)
+            msgNotify({'notifyTooltip' => "Erro de SQL!"})
+            saveLog("Erro ao executar Query! [Query is NIL]", "Error")
+            msgDebugInfo({'Erro ao executar ::db, avise ao suporte!', hb_eol() + hb_eol(), 'Ver Log do sistema', hb_eol(), 'Erro: Query is NIL'})
+            return false
+        endif
+    endif
+
+return true
+
 method serverBusy() class TQuery
     local ocupado := (::db:NetErr() .and. 'server has gone away' $ ::db:Error())
     if ocupado
         // Força a reconexão caso o servidor tenha "desaparecido" (ocupado)
         saveLog({"Servidor ocupado! Reconectando...", "Erro: " + ::db:Error()}, "Warning")
-        appDataSource:disconnect()
-        appDataSource:connect()
     endif
 return ocupado
 

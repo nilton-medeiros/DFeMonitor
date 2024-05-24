@@ -23,7 +23,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 Function Main
 
-    public appData := TAppData():new("4.1.17")
+    public appData := TAppData():new("4.1.18")
     public appDataSource
     public appFTP
     public appEmpresas
@@ -142,6 +142,7 @@ procedure main_form_oninit()
 
     SetProperty("main", "notifyIcon", "serverON")
     MessageBoxTimeout("O DFeMonitor ficará oculto na barra de tarefa", "DFeMonitor " + appData:version + ": Inicializado", MB_ICONEXCLAMATION, 3000)
+    recoverySQL()
     startTimer()
 
 return

@@ -144,6 +144,9 @@ method updateMDFe(cId, aFields) class TDbMDFes
 
     if !updated
         saveLog(sql:value, "Debug")
+        saveSQL(sql:value)
+        MsgStop("Banco de Dados sem conexão ou ocupado, esgotado todas as tentativas", "Erro de conexão: Tente mais tarde")
+        turnOFF()
     endif
 
 return updated
@@ -182,6 +185,9 @@ method insertEventos(aEvents) class TDbMDFes
 
     if !inserted
         saveLog(sql:value, "Debug")
+        saveSQL(sql:value)
+        MsgStop("Banco de Dados sem conexão ou ocupado, esgotado todas as tentativas", "Erro de conexão: Tente mais tarde")
+        turnOFF()
     endif
 
 return inserted
