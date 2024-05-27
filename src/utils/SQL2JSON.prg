@@ -13,10 +13,12 @@ procedure recoverySQL()
         if hb_HGetRef(hSQL, "sql")
             q := TQuery():new(hSQL["sql"])
             if !q:executed
-                saveLog({"DB: Erro ao executar o SQL recuperado", hSQL["sql"]}, "Debug")
+                saveLog({"DB: Erro ao executar o SQL recuperado", "SQL :" + hSQL["sql"]}, "Debug")
+                MsgStop("DB: Erro ao executar comandos no banco de dado!" + hb_eol() + "AVISE AO SUPORTE!", "Erro de banco de dados")
+                turnOFF()
             endif
             q:Destroy()
         endif
     endif
 
-return 
+return
