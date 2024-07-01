@@ -1078,7 +1078,7 @@ method defineBody() class TApiCTe
     if !Empty(::cte:comp_calc)
         Comp := {}
         for each hComp in ::cte:comp_calc
-            AAdd(Comp, {"xNome" => hComp["xNome"], "vComp" => hComp["vComp"]})
+            AAdd(Comp, {"xNome" => Left(AllTrim(hComp["xNome"]), 15), "vComp" => hComp["vComp"]})
         next
         vPrest["Comp"] := Comp
         Comp := nil
