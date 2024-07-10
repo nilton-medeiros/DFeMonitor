@@ -181,7 +181,12 @@ method Emitir() class TApiCTe
 
         ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
         ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
-        ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
+
+        if hb_HGetRef(hAutorizacao, 'data_recebimento')
+            ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
+        else
+            ::data_recebimento := ::data_evento
+        endif
 
         if hb_HGetRef(hAutorizacao, 'codigo_status')
             ::codigo_status := hAutorizacao['codigo_status']
