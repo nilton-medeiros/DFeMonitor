@@ -556,7 +556,40 @@ return ok
 
 method saveEventos() class TCTe
     local cte, ok := false
+    local REGISTRY_PATH := appData:winRegistryPath + "nuvemFiscal\Emp" + hb_ntos(::id) + "\"
+    local cCertDigExpiresIn := RegistryRead(REGISTRY_PATH + "certificado\expires_in")
+    local dCertDigExpiresIn
+    local difDays, msg := 'Certificado Digital '
+
     if !Empty(::updateEventos)
+
+        if (ValType(cCertDigExpiresIn) == "C")
+            // "yyyy-mm-dd HH:mm:ss"
+            dCertDigExpiresIn := hb_CToT(cCertDigExpiresIn)
+            difDays := (dCertDigExpiresIn - hb_DateTime())
+
+            if (difDays < 16)
+                // Registra nos eventos do CTE a validade do Certificado Digital
+                if (difDays = 0)
+                    msg += 'Expirou hoje '
+                elseif (difDays < 0)
+                    msg += 'Expirou em '
+                elseif (int(difDays) == 0) .and. (difDays > 0)
+                    msg += 'Expira hoje '
+                else
+                    msg += 'Expira em '
+                endif
+                msg += cCertDigExpiresIn
+
+                AAdd(::updateEventos, {"cte_id" => hb_ntos(::id), ;
+                    "cte_ev_protocolo" => 'CERT. DIGITAL', ;
+                    "cte_ev_data_hora" => date_as_DateTime(Date(), false, false), ;
+                    "cte_ev_evento" => 'Cert', ;
+                    "cte_ev_detalhe" => msg + " | DFeMonitor: " + appData:version})
+            endif
+
+        endif
+
         cte := TDbCTes():new()
         if (ok := cte:insertEventos(::updateEventos))
             ::updateEventos := {}
