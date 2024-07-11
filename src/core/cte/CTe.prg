@@ -189,6 +189,7 @@ end class
 
 method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     local clie, obs, nValFCP, percDIFAL, valorDIFAL
+    local REGISTRY_PATH, cCertDigExpiresIn, dCertDigExpiresIn, difDays
     // local msgLog
 
     ::id := cte["id"]
@@ -382,7 +383,20 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
         AAdd(::autXML, {"CNPJ" => ::emitente:cnpj_contabil})
     endif
 
-    // Adiciona o Emissor a tag ObsCont "Uso Exclusivo do Emissor de CT-e"
+    REGISTRY_PATH := appData:winRegistryPath + "nuvemFiscal\Emp" + hb_ntos(::id) + "\"
+    cCertDigExpiresIn := RegistryRead(REGISTRY_PATH + "certificado\expires_in")
+
+    if (ValType(cCertDigExpiresIn) == "C")
+        // "yyyy-mm-dd HH:mm:ss"
+        dCertDigExpiresIn := hb_CToT(cCertDigExpiresIn)
+        difDays := int(dCertDigExpiresIn - hb_DateTime())
+        if (difDays < 11)
+            // Poe aviso na DACTE para alertar emissor que o certificado vai expirar
+            ::xEmi += " | CERTIFICADO EXPIRA EM " + cCertDigExpiresIn
+        endif
+    endif
+
+    // Adiciona o Emissor à tag ObsCont "Uso Exclusivo do Emissor de CT-e"
     AAdd(::obs_contr, {"xCampo" => "Emissor", "xTexto" => ::xEmi})
 
     // Docs anexos ao CTe
@@ -397,7 +411,7 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     if !Empty(::vTotTrib)
         // msgLog := MsgDebug(Valtype(::vICMS), ::vICMS, Valtype(::vTotTrib), ::vTotTrib)
         AAdd(::obs_contr, {"xCampo" => "LEI DA TRANSPARENCIA",;
-                           "xTexto" => "12741/12 O valor aproximado de tributos incidentes sobre o preco deste servico é de R$ " + ;
+                           "xTexto" => "12741/12 O valor aproximado de tributos incidentes sobre o preco deste servico e de R$ " + ;
                             LTrim(Transform(::vTotTrib, "@E 99,999,999.99"))})
                             // " ICMS " + hb_ntos(::vICMS) +;
     endif
