@@ -75,7 +75,7 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
         if ("image" $ content_type)
             connection:WaitForResponse(70000)
         else
-            connection:WaitForResponse(5000)
+            connection:WaitForResponse(40000)
         endif
 
     catch oError
