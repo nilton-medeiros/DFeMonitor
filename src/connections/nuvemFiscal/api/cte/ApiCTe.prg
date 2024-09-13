@@ -108,7 +108,7 @@ method Emitir() class TApiCTe
     // Request Body
     ::defineBody()
 
-    // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
+    // Broadcast Parameters: connection, httpMethod, baseUrl, token, operation, body, content_type, accept
     res := Broadcast(::connection, "POST", ::baseUrl, ::token, "Emitir CTe", ::body, "application/json")
 
     ::httpStatus := res["http_status"]
@@ -237,7 +237,7 @@ method Consultar() class TApiCTe
         return false
     endif
 
-    // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
+    // Broadcast Parameters: connection, httpMethod, baseUrlID, token, operation, body, content_type, accept
     res := Broadcast(::connection, "GET", ::baseUrlID, ::token, "Consultar CTe")
 
     ::httpStatus := res["http_status"]

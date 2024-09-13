@@ -2,11 +2,11 @@
 
 // Criação do log do sistema em JSON
 
-procedure saveLog(text, cType)
+procedure saveLog(text, cLevel)
    local path := appData:systemPath + 'log\'
    local dateFormat := Set(_SET_DATEFORMAT, "yyyy.mm.dd")
    local logFile := 'dfeLog' + hb_ULeft(DToS(Date()),6) + '.json'
-   local hLog := {"log" => {}}, log := {=>}
+   local hLog := {"title" => '', "log" => {}}, log := {=>}
    local t, processos := ''
 
    if hb_FileExists(path + logFile)
@@ -15,17 +15,14 @@ procedure saveLog(text, cType)
       hLog["title"] := "Log de Sistema " + appData:displayName + " | " + GetMonthName(Month(Date())) + " DE " + hb_ntos(Year(Date()))
    endif
 
-   default cType := "Information"
+   default cLevel := "Information"
 
    log["version"] := appData:displayName
    log["date"] := DtoC(Date()) + ' ' + Time()
-   log["type"] := cType
+   log["level"] := cLevel
 
-   if !Empty(ProcName(4))
-      processos := ProcName(4) + '(' + hb_ntos(ProcLine(4)) + ')/'
-   endif
    if !Empty(ProcName(3))
-      processos += ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
+      processos := ProcName(3) + '(' + hb_ntos(ProcLine(3)) + ')/'
    endif
    if !Empty(ProcName(2))
       processos += ProcName(2) + '(' + hb_ntos(ProcLine(2)) + ')/'
@@ -50,7 +47,7 @@ procedure saveLog(text, cType)
          AAdd(log["messages"], StrTran(t, "\", "/"))
       next
    elseif ValType(text) == "H"
-      log["message"] := text 
+      log["message"] := text
    else
       log["message"] := StrTran(text, "\", "/")
    endif
