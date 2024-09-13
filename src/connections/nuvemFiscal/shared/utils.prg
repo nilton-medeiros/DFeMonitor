@@ -8,10 +8,10 @@ function GetMSXMLConnection()
     begin sequence
         connection := win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0")
         if Empty(connection)
-			AAdd(descr, win_oleErrorText())
-			AAdd(descr, "Erro na criação do serviço: MSXML2, win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection))
-			apiLog({"type" => "Error", "description" => descr})
-            Break
+					 AAdd(descr, win_oleErrorText())
+					 AAdd(descr, "Erro na criação do serviço: MSXML2, win_oleCreateObject('MSXML2.ServerXMLHTTP.6.0') retornou type: " + ValType(connection))
+					 apiLog({"type" => "Error", "description" => descr})
+           Break
         endif
     end sequence
 

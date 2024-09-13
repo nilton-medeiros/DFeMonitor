@@ -493,7 +493,7 @@ method ConsultarSefaz() class TApiCTe
     endif
 
     // Broadcast Parameters: connection, httpMethod, apiUrl, token, operation, body, content_type, accept
-    res := Broadcast(::connection, "GET", ::baseUrl, ::token, "CTe: Consultar Status Sefaz", nil, nil, "*/*")
+    res := Broadcast(::connection, "GET", apiUrl, ::token, "CTe: Consultar Status Sefaz", nil, nil, "*/*")
     ::response := res['response']
 
     if res["error"]
