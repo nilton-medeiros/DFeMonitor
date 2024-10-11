@@ -42,6 +42,7 @@ method getNewToken() class TAuthNuvemFiscal
     local client_secret := empresa:nuvemfiscal_client_secret
     local scope := "cte mdfe cnpj empresa cep conta"
     local hResp, objError, msgError, body, log := {=>}
+    local cError
 
     begin sequence
         connection := win_oleCreateObject("MSXML2.ServerXMLHTTP.6.0")   // usa msxml6.dll (esta funciona em Win10/11)
@@ -83,7 +84,8 @@ method getNewToken() class TAuthNuvemFiscal
         if (objError:genCode == 0)
             log["description"] := "Erro de conexão com o site"
         else
-            log["description"] := objError:description + " - Erro de conexão com o site"
+            cError := desacentuar(ansi_to_unicode(objError:description))
+            log["description"] := cError + " - Erro de conexão com o site"
         endif
         log["msgDebug"] := msgError
         apiLog(log)

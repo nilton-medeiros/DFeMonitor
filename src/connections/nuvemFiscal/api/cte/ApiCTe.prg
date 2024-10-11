@@ -1143,7 +1143,7 @@ method defineBody() class TApiCTe
     imp := ICMS := nil
 
     if (hb_ntos(::cte:tpCTe) $ "03")
-        // 0 - CT-e Normal e 3 - CT-e de Substituição
+        // 0 - CT-e Normal ou 3 - CT-e de Substituição
 
         infCarga := {=>}
         infCarga["vCarga"] := ::cte:vCarga

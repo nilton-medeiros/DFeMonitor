@@ -6,7 +6,7 @@
     (body) de acordo com o método http solicitado.
 */
 function Broadcast(connection, httpMethod, apiUrl, token, operation, body, content_type, accept)
-    local oError, log := {=>}
+    local cError, oError, log := {=>}
     local response := {"error" => false, "http_status" => 0, "ContentType" => "", "response" => "", "sefazOff" => {=>}, "error_code" => 0}
     local sefazOFF
 
@@ -38,12 +38,18 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                     Break
                 else
                     response["error_code"] := oError:genCode
-                    if ("O tempo limite da opera" $ oError:description)
-                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + oError:description + " ... Tentando mais uma vez..."})
+
+                    cError := desacentuar(ansi_to_unicode(oError:description))
+
+                    if ("o tempo limite da opera" $ Lower(cError))
+
+                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + cError + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
+
                         connection:Send()
+
                     else
-                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + oError:description})
+                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + cError})
                         Break
                     endif
                 endif
@@ -59,12 +65,15 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
                     Break
                 else
                     response["error_code"] := oError:genCode
-                    if ("o tempo limite da opera" $ Lower(oError:description))
-                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + oError:description + " ... Tentando mais uma vez..."})
+
+                    cError := desacentuar(ansi_to_unicode(oError:description))
+
+                    if ("o tempo limite da opera" $ Lower(cError))
+                        apiLog({"type" => "Error", "description" => "Error " + hb_ntos(oError:genCode) + ": " + cError + " ... Tentando mais uma vez..."})
                         SysWait(10)  // Aguarda 10 segundos e tenta novamente
                         connection:Send(body)
                     else
-                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + oError:description})
+                        apiLog({"type" => "Error", "description" => "Erro em Send() para API Nuvem Fiscal: " + cError})
                         Break
                     endif
                 endif
@@ -93,9 +102,12 @@ function Broadcast(connection, httpMethod, apiUrl, token, operation, body, conte
             response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation
         else
             response["error_code"] := oError:genCode
-            log["description"] := "Error " + hb_ntos(oError:genCode) + ": " + oError:description
+
+            cError := desacentuar(ansi_to_unicode(oError:description))
+
+            log["description"] := "Error " + hb_ntos(oError:genCode) + ": " + cError
             log["response"] := "Erro de conexão com API Nuvem Fiscal em " + operation
-            response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation + " | " + oError:description
+            response["response"] := "Erro de conexão com a API Nuvem Fiscal em " + operation + " | " + cError
         endif
         apiLog(log)
         log := nil

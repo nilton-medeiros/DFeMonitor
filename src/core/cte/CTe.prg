@@ -458,7 +458,7 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
         saveLog("DIFAL CALCULADO")
 
         // DIFAL - Diferença de Alíquota | FCP - Fundo de Combate a Pobreza | Arquivo SeFaz: CTe_Nota_Tecnica_2015_004.pdf (Pagina 4)
-        if (::UFFim $ "'AC|AL|AM|BA|CE|DF|ES|GO|MA|MG|MS|MT|PB|PE|PI|PR|RJ|RN|RO|RR|RS|SE|SP|TO")
+        if (::UFFim $ "AC|AL|AM|BA|CE|DF|ES|GO|MA|MG|MS|MT|PB|PE|PI|PR|RJ|RN|RO|RR|RS|SE|SP|TO")
             dbIcms := TDbIcms():new(::UFIni, ::UFFim)
             if (dbIcms:count == 2)
                 ::calc_difal := {'pFCPUFFim' => 0.00, 'pICMSUFFim' => 0.00, 'pICMSInter' => 0.00, 'vFCPUFFim' => 0.00, 'vICMSUFFim' => 0.00, 'vICMSUFIni' => 0.00, 'pDIFAL' => 0, 'vDIFAL' => 0}
