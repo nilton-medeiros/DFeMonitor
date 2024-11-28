@@ -673,7 +673,7 @@ return !res['error']
 
 // Request Body
 method defineBody() class TApiCTe
-    local hBody, infCte,ide, toma, cod_sit_trib
+    local hBody, infCte,ide, toma, cod_sit_trib, occ
     local compl, fluxo, entrega, ObsContFisco
     local emite, remet, exped, receb, desti, ender
     local vPrest, Comp, imp, ICMS
@@ -1245,6 +1245,12 @@ method defineBody() class TApiCTe
                     rodo := {=>}
                     rodo["RNTRC"] := ::emitente:RNTRC
 
+                    // Debug
+                    saveLog('Qtde Elementos Array cte:rodoOcc: ' + hb_ntos(hmg_len(::cte:rodoOcc)))
+                    /*
+                    ********************************
+                    * Rotina com error
+                    ********************************
                     if !Empty(::cte:rodoOcc)
                         // Ordens de Coletas
                         rodo["occ"] := {}
@@ -1265,6 +1271,7 @@ method defineBody() class TApiCTe
                             endif
                         next
                     endif
+                    */
                     infModal["rodo"] := rodo
 
                 else

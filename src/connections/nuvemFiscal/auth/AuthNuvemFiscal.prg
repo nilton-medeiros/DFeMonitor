@@ -75,9 +75,6 @@ method getNewToken() class TAuthNuvemFiscal
         body += chr(38) + "client_secret=" + client_secret
         body += chr(38) + "scope=" + scope
 
-        connection:Send(body)
-        connection:WaitForResponse(5000)
-
     recover using objError
         msgError := MsgDebug(connection)
         log["type"] := "Error"
@@ -92,6 +89,31 @@ method getNewToken() class TAuthNuvemFiscal
         lError := true
         Break
     end sequence
+
+    if lError
+        return false
+    endif
+
+    try
+
+        // Refatorao send e wait: Tratando erro de tempo de limite atingido
+        connection:Send(body)
+        connection:WaitForResponse(5000)
+
+    catch objError
+
+        log["type"] := "Error"
+        if (objError:genCode == 0)
+            log["description"] := "Erro de conexão com o site"
+        else
+            cError := desacentuar(ansi_to_unicode(objError:description))
+            log["description"] := cError + " - Erro de conexão"
+        endif
+        apiLog(log)
+        lError := true
+        Break
+
+    end
 
     if lError
         return false
