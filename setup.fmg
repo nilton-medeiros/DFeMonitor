@@ -936,9 +936,9 @@ DEFINE WINDOW TEMPLATE AT 210 , 380 WIDTH 853 HEIGHT 533 VIRTUAL WIDTH Nil VIRTU
             DEFINE LABEL Label_SenhaPFX
                 ROW    280
                 COL    20
-                WIDTH  50
+                WIDTH  130
                 HEIGHT 18
-                VALUE "Senha"
+                VALUE "Senha Arquivo PFX"
                 FONTNAME "Arial"
                 FONTSIZE 9
                 TOOLTIP ""
