@@ -438,9 +438,6 @@ method getRodoOCC(id) class TDbCTes
     s:add("ORDER BY oca_data_emissao")
     coletas := TQuery():new(s:value)
 
-    // Debug
-    saveLog({'sql' => s:value, 'sql_executado' => if(coletas:executed, 'SIM', 'NAO'), 'coletas_eof' => if(coletas:eof(), 'EOF True', 'EOF False')})
-
     if coletas:executed
         do while !coletas:eof()
 
