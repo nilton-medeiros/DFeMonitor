@@ -23,7 +23,7 @@ method new(ufOrigem, ufDestino) class TDbIcms
     icms := TQuery():new(sql:value)
 
     if icms:executed
-        ::count := icms:LastRec()
+        ::count := icms:count
         if (::count == 2)
             if (icms:FieldGet('uf_origem') == ufOrigem)
                 ::pIni := icms:FieldGet("uf_" + ufDestino)

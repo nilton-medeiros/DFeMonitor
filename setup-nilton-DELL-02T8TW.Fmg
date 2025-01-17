@@ -1,0 +1,1376 @@
+* HMG-IDE UNICODE Form Designer Generated Code
+* (c) Roberto Lopez - http://sites.google.com/site/hmgweb
+
+DEFINE WINDOW TEMPLATE AT 210 , 380 WIDTH 853 HEIGHT 533 VIRTUAL WIDTH Nil VIRTUAL HEIGHT Nil TITLE "DFe Monitor" ICON "icoSetup" CHILD NOSIZE CURSOR NIL ON INIT setup_form_oninit() ON RELEASE setup_form_onrelease() ON INTERACTIVECLOSE Nil ON MOUSECLICK Nil ON MOUSEDRAG Nil ON MOUSEMOVE Nil ON SIZE Nil ON MAXIMIZE Nil ON MINIMIZE Nil ON PAINT Nil BACKCOLOR Nil NOTIFYICON NIL NOTIFYTOOLTIP NIL ON NOTIFYCLICK Nil ON GOTFOCUS Nil ON LOSTFOCUS Nil ON SCROLLUP Nil ON SCROLLDOWN Nil ON SCROLLLEFT Nil ON SCROLLRIGHT Nil ON HSCROLLBOX Nil ON VSCROLLBOX Nil
+
+    DEFINE STATUSBAR FONT "Arial" SIZE 9
+        STATUSITEM "Status" WIDTH 500 RAISED
+        STATUSITEM "BD" WIDTH 270 RAISED
+    END STATUSBAR
+
+    DEFINE TAB Tab_Setup AT 20 , 20 WIDTH 800 HEIGHT 400 VALUE 1 FONT "Arial" SIZE 9 TOOLTIP "" ON CHANGE Nil
+
+        PAGE "Configurações"
+
+            DEFINE FRAME Frame_1
+                ROW    40
+                COL    10
+                WIDTH  770
+                HEIGHT 130
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Configuração de Empresa(s)"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE GRID Grid_Empresas
+                ROW    65
+                COL    20
+                WIDTH  750
+                HEIGHT 90
+                ITEMS Nil
+                VALUE Nil
+                WIDTHS {100,510,125}
+                HEADERS {'id#','Empresa','Ambiente'}
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Selecionar Empresa para monitorar DFe"
+                ONCHANGE setup_Grid_Empresas_onChange()
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONDBLCLICK Nil
+                ONHEADCLICK Nil
+                ONQUERYDATA Nil
+                MULTISELECT .F.
+                ALLOWEDIT .F.
+                VIRTUAL .F.
+                DYNAMICBACKCOLOR Nil
+                DYNAMICFORECOLOR Nil
+                COLUMNWHEN Nil
+                COLUMNVALID Nil
+                COLUMNCONTROLS {{"TEXTBOX","CHARACTER"},{"TEXTBOX","CHARACTER"},{"TEXTBOX","CHARACTER"}}
+                SHOWHEADERS .T.
+                CELLNAVIGATION .F.
+                NOLINES .F.
+                HELPID Nil
+                IMAGE Nil
+                JUSTIFY {GRID_JTFY_RIGHT, GRID_JTFY_LEFT, GRID_JTFY_LEFT}
+                ITEMCOUNT Nil
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                HEADERIMAGES Nil
+                ROWSOURCE Nil
+                COLUMNFIELDS Nil
+                ALLOWAPPEND .F.
+                ALLOWDELETE .F.
+                BUFFERED .F.
+                DYNAMICDISPLAY Nil
+                ONSAVE Nil
+                LOCKCOLUMNS 0
+            END GRID
+
+            DEFINE FRAME Frame_2
+                ROW    180
+                COL    10
+                WIDTH  500
+                HEIGHT 90
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Para salvar as alterações entre com usuário e senha"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE COMBOBOX Combo_Users
+                ROW    220
+                COL    20
+                WIDTH  200
+                HEIGHT 120
+                ITEMS {""}
+                VALUE 0
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                SORT .F.
+                ONENTER Nil
+                ONDISPLAYCHANGE Nil
+                DISPLAYEDIT .F.
+                IMAGE Nil
+                DROPPEDWIDTH Nil
+                ONDROPDOWN Nil
+                ONCLOSEUP Nil
+            END COMBOBOX
+
+            DEFINE LABEL Label_1
+                ROW    200
+                COL    20
+                WIDTH  60
+                HEIGHT 15
+                VALUE "Usuário"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE LABEL Label_2
+                ROW    200
+                COL    240
+                WIDTH  60
+                HEIGHT 15
+                VALUE "Senha"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_password
+                ROW    220
+                COL    240
+                WIDTH  220
+                HEIGHT 30
+                FONTNAME "Arial"
+                FONTSIZE 10
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS TextBox_onGoToFocus("setup", "Text_password")
+                ONLOSTFOCUS TextBox_onLostFocus("setup", "Text_password")
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                PASSWORD .T.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE BUTTON Button_showPassword
+                ROW    220
+                COL    470
+                WIDTH  30
+                HEIGHT 30
+                ACTION showPassword_action()
+                CAPTION Nil
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Click aqui para conferir a senha"
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .T.
+                MULTILINE .F.
+                PICTURE "spy"
+                PICTALIGNMENT TOP
+            END BUTTON
+
+            DEFINE LABEL Label_showPassword
+                ROW    223
+                COL    245
+                WIDTH  210
+                HEIGHT 22
+                VALUE ""
+                FONTNAME "Arial"
+                FONTSIZE 10
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .F.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR {255,255,255}
+                FONTCOLOR {0,0,0}
+            END LABEL
+
+            DEFINE FRAME Frame_4
+                ROW    280
+                COL    10
+                WIDTH  500
+                HEIGHT 97
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Monitoramento de DFEs"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE LABEL Label_3
+                ROW    305
+                COL    25
+                WIDTH  95
+                HEIGHT 17
+                VALUE "Monitorar a cada"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .T.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_seconds
+                ROW    303
+                COL    125
+                WIDTH  65
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Mínimo de 5 segundos"
+                ONCHANGE Nil
+                ONGOTFOCUS TextBox_onGoToFocus("setup", "Text_seconds")
+                ONLOSTFOCUS setup_text_seconds_onLostFocus()
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK "9,999"
+                FORMAT "E"
+                NUMERIC .T. 
+                VALUE 300
+            END TEXTBOX
+
+            DEFINE LABEL Label_4
+                ROW    305
+                COL    195
+                WIDTH  60
+                HEIGHT 30
+                VALUE "segundos"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE LABEL Label_6
+                ROW    305
+                COL    300
+                WIDTH  26
+                HEIGHT 17
+                VALUE "Das:"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_das
+                ROW    303
+                COL    333
+                WIDTH  60
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Entre com horário válido das 00:00 às 23:59"
+                ONCHANGE Nil
+                ONGOTFOCUS TextBox_onGoToFocus("setup", "Text_das")
+                ONLOSTFOCUS setup_text_das_onLostFocus()
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK "99:99"
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_7
+                ROW    305
+                COL    405
+                WIDTH  18
+                HEIGHT 17
+                VALUE "às"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                CENTERALIGN .T. 
+            END LABEL
+
+            DEFINE TEXTBOX Text_as
+                ROW    303
+                COL    430
+                WIDTH  60
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Entre com horário válido das 00:00 às 23:59"
+                ONCHANGE Nil
+                ONGOTFOCUS TextBox_onGoToFocus("setup", "Text_as")
+                ONLOSTFOCUS setup_text_as_onLostFocus()
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK "99:99"
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE FRAME Frame_5
+                ROW    283
+                COL    20
+                WIDTH  250
+                HEIGHT 60
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION NIL
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE FRAME Frame_6
+                ROW    280
+                COL    275
+                WIDTH  225
+                HEIGHT 60
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Período de inatividade (emissão DFE)"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE FRAME Frame_3
+                ROW    180
+                COL    520
+                WIDTH  260
+                HEIGHT 90
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Pasta destino de XMLs e PDFs:"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE TEXTBOX Text_path_xml_pdf
+                ROW    220
+                COL    540
+                WIDTH  230
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP "Digite o caminho completo da pasta onde serão salvos os XMLs e PDFs"
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+        END PAGE 
+
+        PAGE "Certificado Digital"
+
+            DEFINE LABEL Label_RazaoSocial
+                ROW    40
+                COL    20
+                WIDTH  100
+                HEIGHT 18
+                VALUE "Razão Social"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE LABEL Label_CNPJ
+                ROW    40
+                COL    580
+                WIDTH  100
+                HEIGHT 18
+                VALUE "CNPJ"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_RazaoSocial
+                ROW    60
+                COL    20
+                WIDTH  530
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE TEXTBOX Text_CNPJ
+                ROW    60
+                COL    580
+                WIDTH  200
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_Assunto
+                ROW    100
+                COL    20
+                WIDTH  100
+                HEIGHT 18
+                VALUE "Assunto"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_Assunto
+                ROW    120
+                COL    20
+                WIDTH  370
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_Emissor
+                ROW    100
+                COL    410
+                WIDTH  100
+                HEIGHT 18
+                VALUE "Emissor"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_Emissor
+                ROW    120
+                COL    410
+                WIDTH  370
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_Serie
+                ROW    160
+                COL    20
+                WIDTH  100
+                HEIGHT 24
+                VALUE "Número de série:"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_Serie
+                ROW    180
+                COL    20
+                WIDTH  370
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_Validade
+                ROW    160
+                COL    410
+                WIDTH  120
+                HEIGHT 18
+                VALUE "Período de Validade"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_Validade
+                ROW    180
+                COL    410
+                WIDTH  370
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE LABEL Label_ArquivoPFX
+                ROW    220
+                COL    20
+                WIDTH  200
+                HEIGHT 18
+                VALUE "Arquivo PFX (Certificado A1)"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_ArquivoPFX
+                ROW    240
+                COL    20
+                WIDTH  715
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE BUTTON Button_ArquivoPFX
+                ROW    237
+                COL    750
+                WIDTH  30
+                HEIGHT 30
+                ACTION setup_button_arquivopfx_action()
+                CAPTION Nil
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .F.
+                MULTILINE .F.
+                PICTURE "folderOpen"
+                PICTALIGNMENT TOP
+            END BUTTON
+
+            DEFINE LABEL Label_SenhaPFX
+                ROW    280
+                COL    20
+                WIDTH  50
+                HEIGHT 18
+                VALUE "Senha"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_SenhaPFX
+                ROW    300
+                COL    20
+                WIDTH  530
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .F.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE BUTTON Button_Submit_Certificado
+                ROW    295
+                COL    580
+                WIDTH  200
+                HEIGHT 34
+                ACTION setup_Button_Submit_Certificado_action()
+                CAPTION "Enviar"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .T.
+                MULTILINE .F.
+                PICTURE Nil
+                PICTALIGNMENT TOP
+            END BUTTON
+
+            DEFINE LABEL Label_StatusPFX
+                ROW    350
+                COL    20
+                WIDTH  200
+                HEIGHT 25
+                VALUE "Transmitindo..."
+                FONTNAME "Arial"
+                FONTSIZE 14
+                TOOLTIP ""
+                FONTBOLD .T.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .F.
+                TRANSPARENT .T.
+                ACTION Nil
+                AUTOSIZE .T.
+                BACKCOLOR NIL
+                FONTCOLOR {0,128,128}
+            END LABEL
+
+            DEFINE PROGRESSBAR ProgressBar_Transmitindo
+                ROW    350
+                COL    260
+                WIDTH  520
+                HEIGHT 25
+                RANGEMIN 0
+                RANGEMAX 100
+                VALUE 0
+                TOOLTIP ""
+                HELPID Nil
+                VISIBLE .F.
+                SMOOTH .T.
+                VERTICAL .F. 
+                BACKCOLOR NIL
+                FORECOLOR NIL
+            END PROGRESSBAR
+
+        END PAGE 
+
+        PAGE "Logotipo DACTE (PDF)"
+
+            DEFINE LABEL Label_RazaoSocial_logotipo
+                ROW    40
+                COL    20
+                WIDTH  100
+                HEIGHT 18
+                VALUE "Razão Social"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE LABEL Label_CNPJ_logotipo
+                ROW    40
+                COL    580
+                WIDTH  100
+                HEIGHT 18
+                VALUE "CNPJ"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .F.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+            END LABEL
+
+            DEFINE TEXTBOX Text_RazaoSocial_logotipo
+                ROW    60
+                COL    20
+                WIDTH  530
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE TEXTBOX Text_CNPJ_logotipo
+                ROW    60
+                COL    580
+                WIDTH  200
+                HEIGHT 24
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                ONCHANGE Nil
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONENTER Nil
+                HELPID Nil
+                TABSTOP .T.
+                VISIBLE .T.
+                READONLY .T.
+                RIGHTALIGN .F.
+                DISABLEDBACKCOLOR Nil
+                DISABLEDFONTCOLOR Nil
+                CASECONVERT NONE
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                INPUTMASK Nil
+                FORMAT Nil
+                VALUE ""
+            END TEXTBOX
+
+            DEFINE FRAME Frame_logotipo
+                ROW    105
+                COL    20
+                WIDTH  380
+                HEIGHT 270
+                FONTNAME "Arial"
+                FONTSIZE 9
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                CAPTION "Logotipo"
+                BACKCOLOR NIL
+                FONTCOLOR NIL
+                OPAQUE .T.
+            END FRAME
+
+            DEFINE IMAGE Image_logotipo
+                ROW    130
+                COL    30
+                WIDTH  360
+                HEIGHT 230
+                PICTURE ""
+                HELPID Nil
+                VISIBLE .T.
+                STRETCH .F.
+                ACTION Nil
+            END IMAGE
+
+            DEFINE BUTTON Button_Logotipo
+                ROW    120
+                COL    470
+                WIDTH  80
+                HEIGHT 75
+                ACTION setup_button_logotipo_action()
+                CAPTION Nil
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .F.
+                MULTILINE .F.
+                PICTURE "folderOpen"
+                PICTALIGNMENT TOP
+            END BUTTON
+
+            DEFINE LABEL Label_StatusLogotipo
+                ROW    350
+                COL    420
+                WIDTH  360
+                HEIGHT 25
+                VALUE "Enviando..."
+                FONTNAME "Arial"
+                FONTSIZE 14
+                TOOLTIP ""
+                FONTBOLD .T.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                HELPID Nil
+                VISIBLE .T.
+                TRANSPARENT .T.
+                ACTION Nil
+                AUTOSIZE .F.
+                BACKCOLOR NIL
+                FONTCOLOR {0,128,128}
+            END LABEL
+
+            DEFINE BUTTON Button_Submit_Logotipo
+                ROW    120
+                COL    580
+                WIDTH  200
+                HEIGHT 34
+                ACTION setup_Button_Submit_Logotipo_action()
+                CAPTION "Enviar p/ DACTE"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .T.
+                MULTILINE .F.
+                PICTURE Nil
+                PICTALIGNMENT TOP
+            END BUTTON
+
+            DEFINE BUTTON Button_Delete_Logotipo
+                ROW    160
+                COL    580
+                WIDTH  200
+                HEIGHT 34
+                ACTION setup_button_delete_logotipo_action()
+                CAPTION "Deletar da DACTE"
+                FONTNAME "Arial"
+                FONTSIZE 9
+                TOOLTIP ""
+                FONTBOLD .F.
+                FONTITALIC .F.
+                FONTUNDERLINE .F.
+                FONTSTRIKEOUT .F.
+                ONGOTFOCUS Nil
+                ONLOSTFOCUS Nil
+                HELPID Nil
+                FLAT .F.
+                TABSTOP .T.
+                VISIBLE .T.
+                TRANSPARENT .F.
+                MULTILINE .F.
+                PICTURE Nil
+                PICTALIGNMENT TOP
+            END BUTTON
+
+        END PAGE 
+
+    END TAB 
+
+    DEFINE BUTTON Button_Save
+        ROW    440
+        COL    355
+        WIDTH  100
+        HEIGHT 30
+        ACTION setup_button_save_action()
+        CAPTION "&Salvar"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP "Salvar configurações e voltar a monitorar"
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        ONGOTFOCUS Nil
+        ONLOSTFOCUS Nil
+        HELPID Nil
+        FLAT .F.
+        TABSTOP .T.
+        VISIBLE .T.
+        TRANSPARENT .F.
+        MULTILINE .F.
+        PICTURE Nil
+        PICTALIGNMENT TOP
+    END BUTTON
+
+    DEFINE BUTTON Button_Cancel
+        ROW    440
+        COL    475
+        WIDTH  100
+        HEIGHT 30
+        ACTION setup_button_cancel_action()
+        CAPTION "&Cancelar"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP "Sair sem salvar e voltar a monitorar"
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        ONGOTFOCUS Nil
+        ONLOSTFOCUS Nil
+        HELPID Nil
+        FLAT .F.
+        TABSTOP .T.
+        VISIBLE .T.
+        TRANSPARENT .F.
+        MULTILINE .F.
+        PICTURE Nil
+        PICTALIGNMENT TOP
+    END BUTTON
+
+    DEFINE BUTTON Button_turnOFF
+        ROW    440
+        COL    597
+        WIDTH  222
+        HEIGHT 30
+        ACTION setup_button_turnOFF_action()
+        CAPTION "&Desligar o DFeMonitor"
+        FONTNAME "Arial"
+        FONTSIZE 9
+        TOOLTIP ""
+        FONTBOLD .F.
+        FONTITALIC .F.
+        FONTUNDERLINE .F.
+        FONTSTRIKEOUT .F.
+        ONGOTFOCUS Nil
+        ONLOSTFOCUS Nil
+        HELPID Nil
+        FLAT .F.
+        TABSTOP .T.
+        VISIBLE .T.
+        TRANSPARENT .F.
+        MULTILINE .F.
+        PICTURE "btDesligar"
+        PICTALIGNMENT LEFT
+    END BUTTON
+
+END WINDOW
+
