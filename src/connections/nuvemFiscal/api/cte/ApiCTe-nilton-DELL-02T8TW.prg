@@ -892,8 +892,8 @@ method defineBody() class TApiCTe
         1 - Simples Nacional;
         2 - Simples Nacional, excesso sublimite de receita bruta;
         3 - Regime Normal;
-        4 - Simples Naciona - Microempreendedor Individual (MEI);
-        AP = 1 e LW =3
+        4 - Simples Nacional - Microempreendedor Individual (MEI);
+        AP era 1, agora é 2 e LW=3
         ** Versão 3.00: Deveria ter entrado em 01/07 mas não entrou, Sefaz não seguiu data prevista no manual!
         ** Versão 4.00: Testar se aceita ou retorna erro como na versão 3.00 do CTe
     */

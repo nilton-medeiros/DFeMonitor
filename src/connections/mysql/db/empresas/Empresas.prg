@@ -41,7 +41,7 @@ method new() class TDbEmpresas
     sql:add("emp_email_comercial AS email, ")
     sql:add("emp_seguradora AS seguradora, ")
     sql:add("emp_apolice AS apolice, ")
-    sql:add("IF(emp_simples_nacional, 1, 3) AS CRT, ")
+    sql:add("IF(emp_simples_nacional, 2, 3) AS CRT, ")
     sql:add("IF(emp_dacte_layout='RETRATO', 1, 2) AS tpImp, ")
     sql:add("1 AS tpEmit, ")
     sql:add("emp_cnpj_contabil as cnpj_contabil, ")
