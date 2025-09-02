@@ -8,10 +8,25 @@ procedure saveLog(text, cLevel)
    local logFile := 'dfeLog' + hb_ULeft(DToS(Date()),6) + '.json'
    local hLog := {"title" => '', "log" => {}}, log := {=>}
    local t, processos := ''
+   local cFileContent := ""
 
+   // Validação robusta do arquivo JSON existente
    if hb_FileExists(path + logFile)
-      hLog := hb_jsonDecode(hb_MemoRead(path + logFile))
-   else
+      cFileContent := hb_MemoRead(path + logFile)
+      if !Empty(cFileContent)
+         hLog := hb_jsonDecode(cFileContent)
+         // Verifica se o decode foi bem-sucedido e se tem a estrutura esperada
+         if hLog == NIL .or. ValType(hLog) != "H"
+            hLog := {"title" => '', "log" => {}}
+         elseif !hb_HHasKey(hLog, "log") .or. ValType(hLog["log"]) != "A"
+            // Se não tem a chave "log" ou não é array, recria
+            hLog["log"] := {}
+         endif
+      endif
+   endif
+
+   // Garante que sempre temos a estrutura básica
+   if !hb_HHasKey(hLog, "title") .or. Empty(hLog["title"])
       hLog["title"] := "Log de Sistema " + appData:displayName + " | " + GetMonthName(Month(Date())) + " DE " + hb_ntos(Year(Date()))
    endif
 
@@ -52,8 +67,16 @@ procedure saveLog(text, cLevel)
       log["message"] := StrTran(text, "\", "/")
    endif
 
-   AAdd(hLog["log"], log)
-   hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
+   // Validação final antes de adicionar
+   if ValType(hLog["log"]) == "A"
+      AAdd(hLog["log"], log)
+      hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
+   else
+      // Em caso de erro crítico, recria completamente
+      hLog := {"title" => "Log de Sistema " + appData:displayName + " | " + GetMonthName(Month(Date())) + " DE " + hb_ntos(Year(Date())), "log" => {log}}
+      hb_MemoWrit(path + logFile, hb_jsonEncode(hLog, 4))
+   endif
+
    SET(_SET_DATEFORMAT, dateFormat)
 
 return
