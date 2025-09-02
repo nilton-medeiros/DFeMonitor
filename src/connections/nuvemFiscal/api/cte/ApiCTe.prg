@@ -182,43 +182,51 @@ method Emitir() class TApiCTe
         ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
         ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
 
-        if hb_HGetRef(hAutorizacao, 'data_recebimento')
-            ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
-        else
+        if ::status == "erro"
             ::data_recebimento := ::data_evento
-        endif
-
-        if hb_HGetRef(hAutorizacao, 'codigo_status')
-            ::codigo_status := hAutorizacao['codigo_status']
+            ::codigo_status := hAutorizacao['status']
             ::motivo_status := hAutorizacao['motivo_status']
+            ::status := "ERRO"
+            ::nuvemfiscal_uuid := ""
+            lEmitido := false
         else
-            if hb_HGetRef(hAutorizacao, 'codigo_mensagem')
+            if hb_HGetRef(hAutorizacao, 'data_recebimento')
+                ::data_recebimento := ConvertUTCdataStampToLocal(hAutorizacao['data_recebimento'])
+            else
+                ::data_recebimento := ::data_evento
+            endif
+
+            if hb_HGetRef(hAutorizacao, 'codigo_status')
+                ::codigo_status := hAutorizacao['codigo_status']
+                ::motivo_status := hAutorizacao['motivo_status']
+            elseif hb_HGetRef(hAutorizacao, 'codigo_mensagem')
                 ::codigo_status := hAutorizacao['codigo_mensagem']
                 ::motivo_status := hAutorizacao['mensagem']
             endif
+            if hb_HGetRef(hAutorizacao, "digest_value")
+                ::digest_value := hAutorizacao['digest_value']
+            endif
+                switch ::codigo_status
+                    case 100
+                        ::status := "AUTORIZADO"
+                        lEmitido := true
+                        exit
+                    case 135
+                        ::status := "CANCELADO"
+                        lEmitido := true
+                        exit
+                    otherwise
+                        lEmitido := !res['error']
+                        motivo := Lower(Left(desacentuar(::motivo_status), 8))
+                        if (motivo == "rejeicao") .or. (Lower(::status) == "rejeitado")
+                            ::status := "REJEITADO"
+                            ::nuvemfiscal_uuid := ""
+                            lEmitido := false
+                        endif
+                endswitch
         endif
 
         ::tipo_evento := hAutorizacao['tipo_evento']
-        ::digest_value := hAutorizacao['digest_value']
-
-        switch ::codigo_status
-            case 100
-                ::status := "AUTORIZADO"
-                lEmitido := true
-                exit
-            case 135
-                ::status := "CANCELADO"
-                lEmitido := true
-                exit
-            otherwise
-                lEmitido := !res['error']
-                motivo := Lower(Left(desacentuar(::motivo_status), 8))
-                if (motivo == "rejeicao") .or. (Lower(::status) == "rejeitado")
-                    ::status := "REJEITADO"
-                    ::nuvemfiscal_uuid := ""
-                    lEmitido := false
-                endif
-        endswitch
 
     endif
 
