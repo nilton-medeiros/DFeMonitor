@@ -52,7 +52,11 @@ function getMessageApiError(api, lAsText)
 				next
 			endif
 		elseif hb_HGetRef(response, "status")
-			AAdd(aError, {"code" => response["codigo_status"], "message" => response["motivo_status"]})
+			if Lower(api:status) == "erro"
+				AAdd(aError, {"code" => api:codigo_status, "message" => api:motivo_status})
+			else
+				AAdd(aError, {"code" => response["codigo_status"], "message" => response["motivo_status"]})
+			endif
 		else
 			apiLog({"type" => "Error", "description" => "Nao encontrado a chave 'error' no objeto response, json desconhecido!", "response" => response})
 			AAdd(aError, {"code" => "sem código", "message" => "Chaves do json desconhecidas, avisar suporte (ver log do sitema)"})
