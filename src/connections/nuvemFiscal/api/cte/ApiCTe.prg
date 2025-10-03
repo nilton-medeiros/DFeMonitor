@@ -1167,7 +1167,7 @@ method defineBody() class TApiCTe
             "gIBSUF" => {"pIBSUF" => "$$0.1000$$", "vIBSUF" => "$$" + LTrim(Transform(vIBSUF, "9999999999.99")) + "$$" }, ;
             "gIBSMun" => {"pIBSMun" => "$$0.0000$$", "vIBSMun" => "$$0.0000$$"}, ;
             "vIBS" => "$$" + LTrim(Transform(vIBS, "9999999999.99")) + "$$", ;
-            "gCBS" => {"pCBS" => "$$0.9000$$", "vCBS" => "$$" + LTrim(Transform(vCBS, "9999999999.99")) + "$$"}
+            "gCBS" => {"pCBS" => "$$0.9000$$", "vCBS" => "$$" + LTrim(Transform(vCBS, "9999999999.99")) + "$$"} ;
         }
 
         imp["IBSCBS"] := IBSCBS
