@@ -684,9 +684,10 @@ method defineBody() class TApiCTe
     local hBody, infCte,ide, toma, cod_sit_trib, occ
     local compl, fluxo, entrega, ObsContFisco
     local emite, remet, exped, receb, desti, ender
-    local vPrest, Comp, imp, ICMS
+    local vPrest, Comp, imp, ICMS, IBSCBS
     local infCteNorm, infCarga, infDoc, docAnexos, infModal, rodo, aereo, tarifa, tpTar, CL
     local clieEMail, pos, obs, hComp, hDoc, tag, ambiente
+    local vIBSUF, vIBSMun, vIBS
     // Doc: https://dev.nuvemfiscal.com.br/docs/api#tag/Cte/operation/EmitirCte
 
     // Tag ide
@@ -1145,7 +1146,35 @@ method defineBody() class TApiCTe
                                  "vFCPUFFim" => ::cte:calc_difal["vFCPUFFim"], ;
                                  "vICMSUFFim" => ::cte:calc_difal["vICMSUFFim"], ;
                                  "vICMSUFIni" => ::cte:calc_difal["vICMSUFIni"]}
-     endif
+    endif
+
+    vIBS := vCBS := 0
+
+    if (::emitente:CRT == 3)
+        // 3 - Regime Normal
+        // Tag 'IBSCBS': Produção disponível: 06/10/2025, Validação obrigatória em produção: A partir de 05/01/2026
+        IBSCBS := {=>}
+        IBSCBS["CST"] := "000"
+        IBSCBS["cClassTrib"] := "000001"
+
+        vIBSUF := ::cte:vBC * 0.10
+        vCBS := ::cte:vBC * 0.90
+        vIBSMun := 0
+        vIBS := vIBSUF + vIBSMun
+
+        IBSCBS["gIBSCBS"] := { ;
+            "vBC" => ::cte:vBC, ;
+            "gIBSUF" => {"pIBSUF" => "$$0.1000$$", "vIBSUF" => "$$" + LTrim(Transform(vIBSUF, "9999999999.99")) + "$$" }, ;
+            "gIBSMun" => {"pIBSMun" => "$$0.0000$$", "vIBSMun" => "$$0.0000$$"}, ;
+            "vIBS" => "$$" + LTrim(Transform(vIBS, "9999999999.99")) + "$$", ;
+            "gCBS" => {"pCBS" => "$$0.9000$$", "vCBS" => "$$" + LTrim(Transform(vCBS, "9999999999.99")) + "$$"}
+        }
+
+        imp["IBSCBS"] := IBSCBS
+        IBSCBS := nil
+    endif
+
+    imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
 
     infCte["imp"] := imp
     imp := ICMS := nil
