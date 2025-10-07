@@ -1133,7 +1133,6 @@ method defineBody() class TApiCTe
 
     imp := {=>}
     imp["ICMS"] := ICMS
-    imp["vTotTrib"] := ::cte:vTotTrib
 
     if !Empty(::cte:infAdFisco)
         imp["infAdFisco"] := ::cte:infAdFisco
@@ -1172,9 +1171,15 @@ method defineBody() class TApiCTe
 
         imp["IBSCBS"] := IBSCBS
         IBSCBS := nil
-    endif
+        imp["vTotTrib"] := ::cte:vTotTrib + vIBS + vCBS
 
-    imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
+        if Year(Date()) < 2026
+            imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
+        endif
+    else
+        imp["vTotTrib"] := ::cte:vTotTrib
+        imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest, "9999999999.99")) + "$$"
+    endif
 
     infCte["imp"] := imp
     imp := ICMS := nil
