@@ -1178,7 +1178,7 @@ method defineBody() class TApiCTe
         endif
     else
         imp["vTotTrib"] := ::cte:vTotTrib
-        imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
+        // imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
     endif
 
     infCte["imp"] := imp
