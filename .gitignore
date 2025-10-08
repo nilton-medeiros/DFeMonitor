@@ -18,3 +18,4 @@ certificados
 *.pfx
 *.p12
 desktop.ini
+dbFake
