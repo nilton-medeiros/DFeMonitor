@@ -1174,11 +1174,11 @@ method defineBody() class TApiCTe
         imp["vTotTrib"] := ::cte:vTotTrib + vIBS + vCBS
 
         if Year(Date()) < 2026
-            imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
+            imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
         endif
     else
         imp["vTotTrib"] := ::cte:vTotTrib
-        imp["vTotDFe"] := "$$" + LTrim(Transform(vTPrest, "9999999999.99")) + "$$"
+        imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
     endif
 
     infCte["imp"] := imp
