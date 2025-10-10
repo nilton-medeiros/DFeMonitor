@@ -1148,8 +1148,10 @@ method defineBody() class TApiCTe
     endif
 
     vIBS := vCBS := 0
+    cDisponivelDTs = "20251020"  // NT v1.10 06/10/2025
+    curDateString = DToS(Date())
 
-    if (::emitente:CRT == 3)
+    if (::emitente:CRT == 3) .and. curDateString > cDisponivelDTs
         // 3 - Regime Normal
         // Tag 'IBSCBS': Produção disponível: 06/10/2025, Validação obrigatória em produção: A partir de 05/01/2026
         IBSCBS := {=>}
@@ -1178,7 +1180,10 @@ method defineBody() class TApiCTe
         endif
     else
         imp["vTotTrib"] := ::cte:vTotTrib
-        // imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
+        if curDateString > cDisponivelDTs
+            // NT v1.10 adiando para 06/10/2025
+            imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
+        endif
     endif
 
     infCte["imp"] := imp
