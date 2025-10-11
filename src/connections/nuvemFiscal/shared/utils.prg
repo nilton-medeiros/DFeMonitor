@@ -36,7 +36,7 @@ return connection
 
 // Função utilizada para obter resposta de erros retornados, deve ser refatorada para ler o array de errors
 function getMessageApiError(api, lAsText)
-	local response, textError := "", aError := {}, error, n := 0
+	local response, textError := "", autorizacao, aData, aError := {}, error, n := 0
 
 	default lAsText := true
 
@@ -56,6 +56,16 @@ function getMessageApiError(api, lAsText)
 				AAdd(aError, {"code" => api:codigo_status, "message" => api:motivo_status})
 			else
 				AAdd(aError, {"code" => response["codigo_status"], "message" => response["motivo_status"]})
+			endif
+		elseif hb_HGetRef(response, "data")
+			aData := response["data"]
+			if Empty(aData) .or. !hb_HGetRef(aData[1], "autorizacao")
+				apiLog({"type" => "Error", "description" => "A chave 'data' do json retornou vazia!", "response" => response})
+				AAdd(aError, {"code" => "sem código", "message" => "A chave do json 'data' retornou vazia, avisar suporte (ver log do sitema)"})
+			else
+				response := aData[1]
+				autorizacao = response["autorizacao"]
+				AAdd(aError, {"code" => autorizacao["codigo_status"], "message" => autorizacao["motivo_status"]})
 			endif
 		else
 			apiLog({"type" => "Error", "description" => "Nao encontrado a chave 'error' no objeto response, json desconhecido!", "response" => response})

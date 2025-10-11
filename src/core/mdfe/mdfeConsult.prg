@@ -24,7 +24,9 @@ procedure mdfeConsult(mdfe)
             if !Empty(apiMDFe:mensagem)
                 mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_mensagem, apiMDFe:mensagem)
             endif
-            mdfeGetFiles(apiMDFe)
+            if Lower(apiMDFe:status) $ "autorizado|encerrado|cancelado"
+                mdfeGetFiles(apiMDFe)
+            endif
         else
             saveLog({"Erro ao consultar MDFe", "Referência: " + mdfe:referencia_uuid}, "Warning")
             lError := true

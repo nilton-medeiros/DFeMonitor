@@ -30,6 +30,7 @@ class TMDFe
     data aVerb
     data prodPred
     data autXML
+    data frete
     data qCTe
     data vCarga
     data cUnid
@@ -82,6 +83,7 @@ method new(hMDFe) class TMDFe
     ::aVerb := hMDFe["aVerb"]
     ::prodPred := hMDFe["prodPred"]
     ::autXML := hMDFe["autXML"]
+    ::frete := hb_HGetDef(hMDFe, "frete", 0)
 
     // Obrigatoriedade CNPJ ANTT - Tag autXML | MDF-e
     // Adiciona o CNPJ da ANTT na tag autXML, artigo 22 da  Resolução ANTT nº 4.799/2015
@@ -111,7 +113,7 @@ return self
 method setSituacao(mdfeStatus) class TMDFe
     local lSet := false
     mdfeStatus := hmg_lower(mdfeStatus)
-    if !Empty(mdfeStatus) .and. mdfeStatus $ "pendente,autorizado,rejeitado,denegado,encerrado,cancelado,erro"
+    if !Empty(mdfeStatus) .and. mdfeStatus $ "autorizado|encerrado|rejeitado|cancelado|erro|pendente"
         ::situacao := hmg_upper(mdfeStatus)
         lSet := true
         ::setUpdateMDFe("situacao", ::situacao)

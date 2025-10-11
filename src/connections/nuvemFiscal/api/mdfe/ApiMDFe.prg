@@ -347,8 +347,16 @@ method ListarMDFes() class TApiMDFe
             res["error"] := true
         else
 
+            res["error"] := false
             // Por referencia, só retorna um elemento no array
             mdfe := aRes[1]
+
+            log := {=>}
+            log["type"] := "Error"
+            log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível listar MDF-e's na API Nuvem Fiscal"
+            log["content_type"] := ::ContentType
+            log["response"] := mdfe
+            apiLog(log)
 
             ::nuvemfiscal_uuid := mdfe['id']
             ::ambiente := mdfe['ambiente']
@@ -389,7 +397,6 @@ method ListarMDFes() class TApiMDFe
                 ::mdfe:setUpdateMDFe('cMDF', ::chave)
             endif
             ::mdfe:setUpdateMDFe('nuvemfiscal_uuid', ::nuvemfiscal_uuid)
-
         endif
 
     endif
@@ -566,8 +573,8 @@ method ConsultarSVRS() class TApiMDFe
 return sefaz
 
 method defineBody() class TApiMDFe
-    loca ender
-    local infMDFe, ide, emit, infModal, rodo, infANTT, veicTracao, infDoc, infResp, infSeg, seg
+    local ender, cFrete, comp
+    local infMDFe, ide, emit, infModal, rodo, infANTT, infPag, veicTracao, infDoc, infResp, infSeg, seg
     local hBody, contratante, target, prodPred, ambiente
 
     // Tag ide
@@ -643,10 +650,31 @@ method defineBody() class TApiMDFe
         // infANTT["valePed"] Não usado
 
         if !Empty(::mdfe:infContratante)
+
             infANTT["infContratante"] := {}
+            infANTT["infPag"] := {}
+
             for each contratante in ::mdfe:infContratante
+
                 if hb_HGetRef(contratante, "CNPJ")
+
                     AAdd(infANTT["infContratante"], {"xNome" => contratante["xNome"], "CNPJ" => contratante["CNPJ"]})
+                    if (::mdfe:frete > 0)
+                        cFrete := "$$" + LTrim(Transform(::mdfe:frete, "9999999999.99")) + "$$"
+                        comp := {"tpComp" => "04", "vComp" => cFrete}
+                        AAdd(infANTT["infPag"], ;
+                            { ;
+                                "xNome" => contratante["xNome"], ;
+                                "CNPJ" => contratante["CNPJ"], ;
+                                "Comp" => {comp}, ;
+                                "vContrato" => cFrete, ;
+                                "indPag" => 0, ;
+                                "infBanc" => {"codBanco" => "237", "codAgencia" => "0047"};
+                            };
+                        )
+
+                    endif
+
                 elseif hb_HGetRef(contratante, "CPF")
                     AAdd(infANTT["infContratante"], {"xNome" => contratante["xNome"], "CPF" => contratante["CPF"]})
                 endif
@@ -802,8 +830,11 @@ method defineBody() class TApiMDFe
         }
     endif
 
+
     // Cria o Body Hash Table
     hBody := {"infMDFe" => infMDFe, "ambiente" => ::ambiente, "referencia" => ::referencia_uuid}
     ::body := hb_jsonEncode(hBody, 4)
+    ::body := StrTran(::body, '"$$')
+    ::body := StrTran(::body, '$$"')
 
 return nil

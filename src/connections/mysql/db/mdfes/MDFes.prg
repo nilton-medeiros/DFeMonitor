@@ -16,6 +16,7 @@ class TDbMDFes
     method getSegMDFe(cId, cMDF)
     method getprodPred(cId)
     method getAutXML(listaCTes)
+    method getFrete(mdfe)
     method getDoc(clieId)
     method updateMDFe(cId, aFields)
     method insertEventos(hEvent)
@@ -79,7 +80,7 @@ method getListMDFes() class TDbMDFes
         sql:add(")")
     endif
 
-    sql:add(" AND cte_monitor_action IN ('SUBMIT','CANCEL','GETFILES','CLOSE') AND ")
+    sql:add(" AND cte_monitor_action IN ('SUBMIT','CANCEL','GETFILES', 'CONSULT','CLOSE') AND ")
     sql:add("cte_versao_xml > 3.00 ")
     sql:add("ORDER BY monitor_action, emp_id, nMDF")
 
@@ -100,6 +101,7 @@ method getListMDFes() class TDbMDFes
             hMDFe["aVerb"] := ::getSegMDFe(mdfeId, PadL(hDbMDFe["nMDF"], 9, "0"))
             hMDFe["prodPred"] := ::getprodPred(mdfeId)
             hMDFe["autXML"] := ::getAutXML(hDbMDFe["lista_ctes"])
+            hMDFe["frete"] := ::getFrete(hDbMDFe)
             hMDFe["sql"] := sql:value
             AAdd(::mdfes, TMDFe():new(hMDFe))
             dbMDFes:Skip()
@@ -531,6 +533,26 @@ method getAutXML(listaCTes) class TDbMDFes
     autorizados:Destroy()
 
 return autXML
+
+method getFrete(mdfe) class TDbMDFes
+    local cte_data, frete := 0
+    local sql := "SELECT cte_valor_total AS frete FROM ctes WHERE cte_id="
+    local qCTe := mdfe["qCTe"]
+    local lista_ctes := AllTrim(mdfe["lista_ctes"])
+
+    if (qCTe == 1)
+        sql += lista_ctes
+    else
+        sql += Left(lista_ctes, hb_At(",", lista_ctes))
+    endif
+
+    cte_data := TQuery():new(sql)
+
+    if cte_data:executed
+        frete := cte_data:FieldGet("frete")
+    endif
+
+return frete
 
 method getDoc(clieId) class TDbMDFes
     local clie := TQuery():new("SELECT clie_cnpj AS cnpj, clie_cpf as cpf FROM clientes WHERE clie_id=" + clieId)
