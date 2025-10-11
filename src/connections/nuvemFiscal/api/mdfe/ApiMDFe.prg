@@ -669,7 +669,7 @@ method defineBody() class TApiMDFe
                                 "Comp" => {comp}, ;
                                 "vContrato" => cFrete, ;
                                 "indPag" => 0, ;
-                                "infBanc" => {"codBanco" => "237", "codAgencia" => "0047"};
+                                "infBanc" => {"codBanco" => "341", "codAgencia" => "7457"};
                             };
                         )
 
