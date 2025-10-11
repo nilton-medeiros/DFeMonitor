@@ -23,7 +23,7 @@ REQUEST HB_CODEPAGE_UTF8
 */
 Function Main
 
-    public appData := TAppData():new("4.1.43")
+    public appData := TAppData():new("4.1.54")
     public appDataSource
     public appFTP
     public appEmpresas
@@ -172,8 +172,7 @@ procedure main_Timer_dfe_action()
     endif
 
     // timerStart e timerEnd são período de inatividade definido pelos usuários admins em setup form
-    saveLog("Inatividade: type(timerStart)=" + ValType(timerStart) + " - type(timerEnd)=" + ValType(timerEnd))
-    saveLog("Inatividade: " + timerStart + " - " + timerEnd)
+    // saveLog("Inatividade: " + timerStart + " - " + timerEnd)
 
     if (timerStart < timerEnd)
         // Inatividade dentro do mesmo dia
