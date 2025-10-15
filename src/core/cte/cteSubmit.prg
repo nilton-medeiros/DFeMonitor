@@ -4,7 +4,7 @@ procedure cteSubmit(cte)
     local sefaz, apiCTe := TApiCTe():new(cte)
 
     // Refatorado, na versão CTe 4.00 a transmissão é sincrono, já é retornado a autorização ou rejeição
-
+    
     if appData:cte_sefaz_offline
 
         saveLog("SEFAZ OFFLINE! Verificando se Sefaz está disponível...")

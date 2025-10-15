@@ -25,6 +25,8 @@ procedure cteMonitoring()
 
         idAnterior := cte:id
 
+        saveLog({"cte_id" => cte:id, "referencia_uid" => cte:referencia_uuid, "action" => cte:monitor_action, "situacao" => cte:situacao})
+
         switch cte:monitor_action
             case "GETFILES"
                 cteGetFiles(TApiCTe():new(cte))
