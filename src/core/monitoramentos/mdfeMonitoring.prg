@@ -25,31 +25,28 @@ procedure mdfeMonitoring()
 
         idAnterior := mdfe:id
 
-        if Empty(mdfe:nuvemfiscal_uuid)
-            mdfeSubmit(mdfe)
-        else
-            switch mdfe:monitor_action
-                case "GETFILES"     // Obter arquivos PDF & XML
-                    mdfeGetFiles(TApiMDFe():new(mdfe))
-                    exit
-                case "CANCEL"       // Cancelar
-                    mdfeCancel(mdfe)
-                    exit
-                case "CLOSE"        // Encerrar
-                    mdfeClose(mdfe)
-                    exit
-                case "CONSULT"
+        // 'CANCEL','CLOSE', 'CONSULT','GETFILES','SUBMIT'
+        switch mdfe:monitor_action
+            case "CANCEL"       // Cancelar
+                mdfeCancel(mdfe)
+                exit
+            case "CLOSE"        // Encerrar
+                mdfeClose(mdfe)
+                exit
+            case "CONSULT"
+                mdfeConsult(mdfe)
+                exit
+            case "GETFILES"     // Obter arquivos PDF & XML
+                mdfeGetFiles(TApiMDFe():new(mdfe))
+                exit
+            case "SUBMIT"       // Consultar, pois já existe o id na nuvem fiscal
+                if (mdfe:situacao == "REJEITADO") .or. Empty(mdfe:nuvemfiscal_uuid)
+                    mdfeSubmit(mdfe)
+                else
                     mdfeConsult(mdfe)
-                    exit
-                case "SUBMIT"       // Consultar, pois já existe o id na nuvem fiscal
-                    if (mdfe:situacao == "REJEITADO")
-                        mdfeSubmit(mdfe)
-                    else
-                        mdfeConsult(mdfe)
-                    endif
-                    exit
-                endswitch
-        endif
+                endif
+                exit
+        endswitch
         // cte_monitor_action: Mesmo nome de campo nas tabelas ctes e mdfes
         mdfe:setUpdateMDFe('cte_monitor_action', "EXECUTED")
         mdfe:save()

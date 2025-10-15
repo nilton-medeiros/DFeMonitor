@@ -25,28 +25,24 @@ procedure cteMonitoring()
 
         idAnterior := cte:id
 
-        if Empty(cte:nuvemfiscal_uuid)
-            cteSubmit(cte)
-        else
-            switch cte:monitor_action
-                case "GETFILES"
-                    cteGetFiles(TApiCTe():new(cte))
-                    exit
-                case "CANCEL"
-                    cteCancel(cte)
-                    exit
-                case "CONSULT"
+        switch cte:monitor_action
+            case "GETFILES"
+                cteGetFiles(TApiCTe():new(cte))
+                exit
+            case "CANCEL"
+                cteCancel(cte)
+                exit
+            case "CONSULT"
+                cteConsult(cte)
+                exit
+            case "SUBMIT"   // Consultar, pois já existe o id da nuvem fiscal
+                if (Upper(cte:situacao) == "REJEITADO") .or. Empty(cte:nuvemfiscal_uuid)
+                    cteSubmit(cte)  // Tem nuvemfiscal_uuid, mas foi rejeitado anteriormente, submete novamente para autorizar
+                else
                     cteConsult(cte)
-                    exit
-                case "SUBMIT"   // Consultar, pois já existe o id da nuvem fiscal
-                    if (Upper(cte:situacao) == "REJEITADO")
-                        cteSubmit(cte)  // Tem nuvemfiscal_uuid, mas foi rejeitado anteriormente, submete novamente para autorizar
-                    else
-                        cteConsult(cte)
-                    endif
-                    exit
-            endswitch
-        endif
+                endif
+                exit
+        endswitch
 
         cte:setUpdateCte('cte_monitor_action', "EXECUTED")
         cte:save()
