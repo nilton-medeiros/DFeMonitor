@@ -662,17 +662,31 @@ method defineBody() class TApiMDFe
                     if (::mdfe:frete > 0)
                         cFrete := "$$" + LTrim(Transform(::mdfe:frete, "9999999999.99")) + "$$"
                         comp := {"tpComp" => "04", "vComp" => cFrete}
-                        AAdd(infANTT["infPag"], ;
-                            { ;
-                                "xNome" => contratante["xNome"], ;
-                                "CNPJ" => contratante["CNPJ"], ;
-                                "Comp" => {comp}, ;
-                                "vContrato" => cFrete, ;
-                                "indPag" => 0, ;
-                                "infBanc" => {"codBanco" => "341", "codAgencia" => "7457"};
-                            };
-                        )
-
+                        if  Lower(::mdfe:sigla_cia) == "ap"  // Somente para Alexpress
+                            AAdd(;
+                                infANTT["infPag"],;
+                                    {;
+                                        "xNome" => contratante["xNome"],;
+                                        "CNPJ" => contratante["CNPJ"],;
+                                        "Comp" => {comp},;
+                                        "vContrato" => cFrete,;
+                                        "indPag" => 0,;
+                                        "infBanc" => {"codBanco" => "341", "codAgencia" => "7457"};
+                                    };
+                            )
+                        else
+                            AAdd(;
+                                infANTT["infPag"],;
+                                    {;
+                                        "xNome" => contratante["xNome"],;
+                                        "CNPJ" => contratante["CNPJ"],;
+                                        "Comp" => {comp},;
+                                        "vContrato" => cFrete,;
+                                        "indPag" => 0,;
+                                        "infBanc" => {"codBanco" => "000", "codAgencia" => "0000"};
+                                    };
+                            )
+                        endif
                     endif
 
                 elseif hb_HGetRef(contratante, "CPF")
