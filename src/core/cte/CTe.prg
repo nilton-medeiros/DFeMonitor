@@ -551,6 +551,7 @@ return lSet
 
 method setUpdateEventos(cte_ev_protocolo, cte_ev_data_hora, cte_ev_evento, cte_ev_detalhe) class TCTe
     local ambiente := iif((::tpAmb == 1), "Produção", "Homologação")
+
     AAdd(::updateEventos, {"cte_id" => hb_ntos(::id), ;
                            "cte_ev_protocolo" => cte_ev_protocolo, ;
                            "cte_ev_data_hora" => cte_ev_data_hora, ;
