@@ -679,6 +679,9 @@ method ListarCTes() class TApiCTe
 
 return !res['error']
 
+method CalculaIBSUF(vBC, pIBSUF) class TApiCTe
+return Round(vBC * (pIBSUF/100), 2)
+
 // Request Body
 method defineBody() class TApiCTe
     local hBody, infCte,ide, toma, cod_sit_trib, occ
@@ -687,7 +690,7 @@ method defineBody() class TApiCTe
     local vPrest, Comp, imp, ICMS, IBSCBS
     local infCteNorm, infCarga, infDoc, docAnexos, infModal, rodo, aereo, tarifa, tpTar, CL
     local clieEMail, pos, obs, hComp, hDoc, tag, ambiente
-    local vIBSUF, vIBSMun, vIBS
+    local vBC, vIBSUF, vIBSMun, vIBS, nAliquotaIBSUF, nAliquotaBCDif
     // Doc: https://dev.nuvemfiscal.com.br/docs/api#tag/Cte/operation/EmitirCte
 
     // Tag ide
@@ -1149,6 +1152,7 @@ method defineBody() class TApiCTe
 
     vIBS := vCBS := 0
     cDisponivelDTs = "20251020"  // NT v1.10 06/10/2025
+    // cDisponivelDTs = "20260104"  // NT v1.10 06/10/2025
     curDateString = DToS(Date())
 
     if (::emitente:CRT == 3) .and. curDateString > cDisponivelDTs
@@ -1158,17 +1162,24 @@ method defineBody() class TApiCTe
         IBSCBS["CST"] := "000"
         IBSCBS["cClassTrib"] := "000001"
 
-        vIBSUF := ::cte:vBC * 0.10
-        vCBS := ::cte:vBC * 0.90
+        // nAliquotaIBSUF := 0.0875 // Aliquota Válida a partir de 05/01/2026 para estado de SP
+        nAliquotaIBSUF := 0.1    // Aliquota Válida até 2025 para estado de SP
+        nAliquotaBCDif := (1 - nAliquotaIBSUF)
+        // O IBS/CBS é um tributo sobre valor líquido, ICMS, PIS e COFINS Não entram na vBC!
+        vBC := ::cte:vBC - ::cte:vTotTrib
+        vIBSUF := ::CalculaIBSUF(vBC, nAliquotaIBSUF)
+        vCBS := ::CalculaIBSUF(vBC, nAliquotaBCDif)
         vIBSMun := 0
         vIBS := vIBSUF + vIBSMun
 
         IBSCBS["gIBSCBS"] := { ;
-            "vBC" => ::cte:vBC, ;
-            "gIBSUF" => {"pIBSUF" => "$$0.1000$$", "vIBSUF" => "$$" + LTrim(Transform(vIBSUF, "9999999999.99")) + "$$" }, ;
-            "gIBSMun" => {"pIBSMun" => "$$0.0000$$", "vIBSMun" => "$$0.0000$$"}, ;
-            "vIBS" => "$$" + LTrim(Transform(vIBS, "9999999999.99")) + "$$", ;
-            "gCBS" => {"pCBS" => "$$0.9000$$", "vCBS" => "$$" + LTrim(Transform(vCBS, "9999999999.99")) + "$$"} ;
+            "vBC" => vBC, ;
+            "gIBSUF" => {"pIBSUF" => "$$" + LTrim(Transform(nAliquotaIBSUF, "9999.9999")) + "$$",;
+            "vIBSUF" => "$$" + LTrim(Transform(vIBSUF, "9999999999.99")) + "$$" },;
+            "gIBSMun" => {"pIBSMun" => "$$0.0000$$", "vIBSMun" => "$$0.0000$$"},;
+            "vIBS" => "$$" + LTrim(Transform(vIBS, "9999999999.99")) + "$$",;
+            "gCBS" => {"pCBS" => "$$" + LTrim(Transform(nAliquotaBCDif, "9999.9999")) + "$$",;
+            "vCBS" => "$$" + LTrim(Transform(vCBS, "9999999999.99")) + "$$"};
         }
 
         imp["IBSCBS"] := IBSCBS
