@@ -652,7 +652,7 @@ method defineBody() class TApiMDFe
         if !Empty(::mdfe:infContratante)
 
             infANTT["infContratante"] := {}
-            infANTT["infPag"] := {}
+            infANTT["infPag"] := {} // NT 2025.001 v1.03 - Nova tag a partir de out/2025
 
             for each contratante in ::mdfe:infContratante
 
