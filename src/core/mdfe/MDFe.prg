@@ -3,6 +3,7 @@
 
 class TMDFe
     data versao
+    data sigla_cia
     data id         // id do MDFe no sistema TMS.Cloud
     data emp_id
     data emitente
@@ -57,6 +58,7 @@ method new(hMDFe) class TMDFe
     local mdfe := hMDFe["hDbMDFe"]
 
     ::id := mdfe["id"]
+    ::sigla_cia := mdfe["sigla_cia"]
     ::emp_id := mdfe["emp_id"]
     ::emitente := appEmpresas:getEmpresa(::emp_id)
     ::versao := ::emitente:mdfe_versao_xml
