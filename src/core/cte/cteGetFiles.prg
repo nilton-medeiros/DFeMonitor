@@ -55,7 +55,7 @@ function cteGetFiles(apiCTe)
         if apiCTe:BaixarPDFdoDACTE()
             if hb_MemoWrit(directory + filePDF, apiCTe:pdf_dacte)
                 upload["pdf"] := directory + filePDF
-                saveLog({"Arquivo PDF do DACTE salvo com sucesso", directory + filePDF})
+                // saveLog({"Arquivo PDF do DACTE salvo com sucesso", directory + filePDF})
             else
                 cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Erro ao escrever PDF em arquivo. Ver log servidor local")
                 saveLog("Erro ao escrever pdf binary em arquivo " + filePDF + " na pasta " + directory, "Warning")
@@ -70,7 +70,7 @@ function cteGetFiles(apiCTe)
         if apiCTe:BaixarXMLdoCTe()
             if hb_MemoWrit(directory + fileXML, apiCTe:xml_cte)
                 upload["xml"] := directory + fileXML
-                saveLog({"Arquivo XML do CTe salvo com sucesso", directory + fileXML})
+                // saveLog({"Arquivo XML do CTe salvo com sucesso", directory + fileXML})
             else
                 cte:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "BINARY XML", "Erro ao escrever XML em arquivo. Ver log servidor local")
                 AAdd(aLog, "Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory)
@@ -98,7 +98,7 @@ function cteGetFiles(apiCTe)
         if apiCTe:BaixarPDFdoCancelamento()
             if hb_MemoWrit(directory + cancelPDF, apiCTe:pdf_cancel)
                 upload["pdfCancel"] := directory + cancelPDF
-                saveLog({"Arquivo PDF do CTE CANCELADO salvo com sucesso", directory + cancelPDF})
+                // saveLog({"Arquivo PDF do CTE CANCELADO salvo com sucesso", directory + cancelPDF})
             else
                 cte:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "BINARY PDF", "Erro ao escrever PDF do CTe CANCELADO em arquivo. Ver log servidor local")
                 saveLog("Erro ao escrever pdf binary em arquivo " + cancelPDF + " na pasta " + directory, "Warning")

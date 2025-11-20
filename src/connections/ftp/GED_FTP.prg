@@ -29,7 +29,7 @@ return self
 method upload() class TGED_FTP
    local url, ftp, error := 'UPLOAD - Erro de FTP: '
 
-   saveLog('Iniciando upload de arquivo: ' + ::hostFile)
+   // saveLog('Iniciando upload de arquivo: ' + ::hostFile)
 
    ::isUpload := false
 
@@ -46,7 +46,7 @@ method upload() class TGED_FTP
          ftp:cwd(url:cPath)
          if ftp:uploadFile(::hostFile, ::remoteFile)
             ::isUpload := true
-            saveLog('Upload de arquivo concluído com sucesso')
+            // saveLog('Upload de arquivo concluído com sucesso')
          else
             saveLog({'Falha no upload de arquivo', 'host file: ' + ::hostFile, 'remote file: ' + ::remoteFile}, "Error")
          endif

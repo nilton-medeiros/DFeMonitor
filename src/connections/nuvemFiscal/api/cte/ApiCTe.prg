@@ -1303,8 +1303,7 @@ method defineBody() class TApiCTe
                     rodo := {=>}
                     rodo["RNTRC"] := ::emitente:RNTRC
 
-                    // Debug
-                    saveLog('Qtde Elementos Array cte:rodoOcc: ' + hb_ntos(hmg_len(::cte:rodoOcc)))
+                    // saveLog('Qtde Elementos Array cte:rodoOcc: ' + hb_ntos(hmg_len(::cte:rodoOcc)), "Debug")
                     /*
                     ********************************
                     * Rotina com error
