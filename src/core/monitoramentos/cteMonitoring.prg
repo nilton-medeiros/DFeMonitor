@@ -49,6 +49,9 @@ procedure cteMonitoring()
         cte:setUpdateCte('cte_monitor_action', "EXECUTED")
         cte:save()
         cte:saveEventos()
+
+        saveLog({"cte_id" => cte:id, "referencia_uid" => cte:referencia_uuid, "action" => cte:monitor_action, "situacao" => cte:situacao})
+
         DO EVENTS
 
     next
