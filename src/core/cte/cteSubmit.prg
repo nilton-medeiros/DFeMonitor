@@ -4,7 +4,7 @@ procedure cteSubmit(cte)
     local sefaz, apiCTe := TApiCTe():new(cte)
 
     // Refatorado, na versão CTe 4.00 a transmissão é sincrono, já é retornado a autorização ou rejeição
-    
+
     if appData:cte_sefaz_offline
 
         saveLog("SEFAZ OFFLINE! Verificando se Sefaz está disponível...")
@@ -137,6 +137,8 @@ procedure posEmissao(api)
         endif
         api:cte:setUpdateEventos(api:numero_protocolo, cDate, api:codigo_status, api:mensagem)
     endif
+
+    saveLog({"Type (api:codigo_status): " + ValType(api:codigo_status), "Type (api:status): " + ValType(api:status)}, "Debug")
 
     if (api:codigo_status == 100) .and. (Lower(api:status) == "autorizado")
         cteGetFiles(api)
