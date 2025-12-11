@@ -85,6 +85,8 @@ method getListMDFes() class TDbMDFes
     sql:add("cte_versao_xml > 3.00 ")
     sql:add("ORDER BY emp_id, nMDF")
 
+    saveLog(sql:value, "Debug")
+
     ::mdfes := {}
     dbMDFes := TQuery():new(sql:value)
 
@@ -547,10 +549,16 @@ method getFrete(mdfe) class TDbMDFes
         sql += Left(lista_ctes, hb_At(",", lista_ctes))
     endif
 
+    saveLog(sql, "Debug")
+
     cte_data := TQuery():new(sql)
 
     if cte_data:executed
         frete := cte_data:FieldGet("frete")
+    endif
+
+    if !(ValType(frete) == "N")
+        frete := 0
     endif
 
 return frete
