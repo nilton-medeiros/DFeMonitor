@@ -659,7 +659,10 @@ method defineBody() class TApiMDFe
                 if hb_HGetRef(contratante, "CNPJ")
 
                     AAdd(infANTT["infContratante"], {"xNome" => contratante["xNome"], "CNPJ" => contratante["CNPJ"]})
-                    if (::mdfe:frete > 0)
+
+                    apiLog({"type" => "Debug", "description" => "Type mdfe.frete: " + ValType(::mdfe:frete)})
+
+                    if (ValType(::mdfe:frete) == "N") .and. (::mdfe:frete > 0)
                         cFrete := "$$" + LTrim(Transform(::mdfe:frete, "9999999999.99")) + "$$"
                         comp := {"tpComp" => "04", "vComp" => cFrete}
                         if  Lower(::mdfe:sigla_cia) == "ap"  // Somente para Alexpress
