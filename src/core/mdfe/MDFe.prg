@@ -8,6 +8,7 @@ class TMDFe
     data emp_id
     data emitente
     data tpAmb
+    data ambiente
     data tpEmit
     data mod
     data serie
@@ -43,12 +44,12 @@ class TMDFe
     data referencia_uuid
     data nuvemfiscal_uuid
     data updateMDFe
-    data updateEvents
+    data aUpdateEvents
 
     method new(hMDFe) constructor
     method setSituacao(mdfeStatus)
     method setUpdateMDFe(key, value)
-    method setUpdateEventos(protocolo, data_hora, evento, detalhe)
+    method setUpdateEventos(hEvent)
     method save()
     method saveEventos()
 
@@ -63,6 +64,7 @@ method new(hMDFe) class TMDFe
     ::emitente := appEmpresas:getEmpresa(::emp_id)
     ::versao := ::emitente:mdfe_versao_xml
     ::tpAmb := ::emitente:tpAmb
+    ::ambiente := iif(::tpAmb == 1, "producao", "homologacao")
     ::tpEmit := mdfe["tpEmit"]
     ::mod := mdfe["modelo"]         // Modelo do MDFe
     ::serie := mdfe["serie"]
@@ -108,14 +110,14 @@ method new(hMDFe) class TMDFe
     ::referencia_uuid := mdfe["referencia_uuid"]
     ::nuvemfiscal_uuid := mdfe["nuvemfiscal_uuid"]
     ::updateMDFe := {}
-    ::updateEvents := {}
+    ::aUpdateEvents := {}
 
 return self
 
 method setSituacao(mdfeStatus) class TMDFe
     local lSet := false
     mdfeStatus := hmg_lower(mdfeStatus)
-    if !Empty(mdfeStatus) .and. mdfeStatus $ "autorizado|encerrado|rejeitado|cancelado|erro|pendente"
+    if !Empty(mdfeStatus) .and. mdfeStatus $ "pendente|autorizado|rejeitado|denegado|encerrado|cancelado|erro"
         ::situacao := hmg_upper(mdfeStatus)
         lSet := true
         ::setUpdateMDFe("situacao", ::situacao)
@@ -139,14 +141,64 @@ method setUpdateMDFe(key, value) class TMDFe
 
 return lSet
 
-method setUpdateEventos(protocolo, data_hora, evento, detalhe) class TMDFe
-    local ambiente := iif((::tpAmb == 1), "Produção", "Homologação")
-    AAdd(::updateEvents, {"mdfe_id" => hb_ntos(::id), ;
-                           "protocolo" => protocolo, ;
-                           "data_hora" => data_hora, ;
-                           "evento" => evento, ;
-                           "motivo" => "Ambiente: " + ambiente, ;
-                           "detalhe" => detalhe + " | DFeMonitor: " + appData:version})
+method setUpdateEventos(hEvent) class TMDFe
+    local event_id := hb_HGetDef(hEvent, 'event_id', "")
+    local ambiente := hb_HGetDef(hEvent, 'ambiente', ::ambiente)
+    local status_evento := hb_HGetDef(hEvent, 'status_evento', "registrado")
+    local chave_acesso := hb_HGetDef(hEvent, 'chave_acesso', "")
+    local data_evento := hb_HGetDef(hEvent, 'data_evento', "")
+    local data_recebimento := hb_HGetDef(hEvent, 'data_recebimento', "")
+    local codigo_status := hb_HGetDef(hEvent, 'codigo_status', 0)
+    local motivo := hb_HGetDef(hEvent, 'motivo_status', "NAO INFORMADO")
+    local motivo_status := hb_HGetDef(hEvent, 'motivo_status', "")
+    local detalhe := hb_HGetDef(hEvent, 'detalhe', motivo)
+    local evento := "---"
+    local protocolo := hb_HGetDef(hEvent, 'numero_protocolo', "---")
+    local data_hora := hb_HGetDef(hEvent, 'data_hora', iif(Empty(data_evento), date_as_DateTime(Date(), false, false), data_evento))
+    local numero_protocolo := hb_HGetDef(hEvent, 'numero_protocolo', "")
+    local tipo_evento := hb_HGetDef(hEvent, 'tipo_evento', "")
+    local justificativa := hb_HGetDef(hEvent, 'justificativa', "")
+    local digest_value := hb_HGetDef(hEvent, 'digest_value', "")
+
+    // Se for uma string numérica (ex:"123") válido, converte em número ou 0 se não for válido
+    if (ValType(codigo_status) == "C")
+        codigo_status := val(codigo_status)
+    endif
+    if !(ValType(codigo_status) == "N")
+        codigo_status := 0
+    endif
+
+    // No SQL o número é passado para string
+    if Empty(codigo_status)
+        codigo_status := ""  // Será atribuido NULL no SQL
+    else
+        codigo_status := hb_ntos(codigo_status)
+        evento := codigo_status
+    endif
+
+    AAdd(::aUpdateEvents, ;
+        { ;
+            "mdfe_id" => hb_ntos(::id), ;
+            "protocolo" => protocolo, ;
+            "data_hora" => data_hora, ;
+            "evento" => evento, ;
+            "motivo" => motivo, ;
+            "detalhe" => detalhe + " | DFeMonitor: " + appData:version, ;
+            "event_id" => event_id, ;
+            "ambiente" => ambiente, ;
+            "status_evento" => status_evento, ;
+            "chave_acesso" => chave_acesso, ;
+            "data_evento" => data_evento, ;
+            "data_recebimento" => data_recebimento, ;
+            "codigo_status" => codigo_status, ;
+            "motivo_status" => motivo_status, ;
+            "numero_protocolo" => numero_protocolo, ;
+            "tipo_evento" => tipo_evento, ;
+            "justificativa" => justificativa, ;
+            "digest_value" => digest_value ;
+        } ;
+    )
+
 return nil
 
 method save() class TMDFe
@@ -161,10 +213,10 @@ return nil
 
 method saveEventos() class TMDFe
     local db
-    if !Empty(::updateEvents)
+    if !Empty(::aUpdateEvents)
         db := TDbMDFes():new()
-        if db:insertEventos(::updateEvents)
-            ::updateEvents := {}
+        if db:insertEventos(::aUpdateEvents)
+            ::aUpdateEvents := {}
         endif
     endif
 return nil

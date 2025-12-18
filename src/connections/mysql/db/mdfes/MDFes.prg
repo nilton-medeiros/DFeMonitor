@@ -158,31 +158,72 @@ return updated
 
 method insertEventos(aEvents) class TDbMDFes
     local inserted, ctes_eventos, sql := TSQLString():new()
-    local hEvent, n := 0, codEvent
+    local hEvent, n := 0, codEvent, codStatus, detalhe, motivo_status, justificativa
 
-    sql:setValue("INSERT INTO mdfes_eventos (mdfe_id, protocolo, data_hora, evento, motivo, detalhe) VALUES ")
+    sql:setValue("INSERT INTO mdfes_eventos ")
+    sql:add("(mdfe_id, ")
+    sql:add("protocolo, ")
+    sql:add("data_hora, ")
+    sql:add("evento, ")
+    sql:add("motivo, ")
+    sql:add("detalhe, ")
+    sql:add("event_id, ")
+    sql:add("ambiente, ")
+    sql:add("status_evento, ")
+    sql:add("chave_acesso, ")
+    sql:add("data_evento, ")
+    sql:add("data_recebimento, ")
+    sql:add("codigo_status, ")
+    sql:add("motivo_status, ")
+    sql:add("numero_protocolo, ")
+    sql:add("tipo_evento, ")
+    sql:add("justificativa, ")
+    sql:add("digest_value) VALUES ")
 
     for each hEvent in aEvents
 
         n++
         sql:add(iif((n==1), "(", ", ("))
         sql:add(hEvent["mdfe_id"] + ", ")
-        sql:add("'" + string_hb_to_mysql(hEvent["protocolo"]) + "', ")
-        sql:add("'" + hEvent["data_hora"] + "', ")
+        sql:add(string_or_null(hEvent["protocolo"]) + ", ")
+        sql:add(string_or_null(hEvent["data_hora"]) + ", ")
 
         codEvent := hEvent["evento"]
         if (ValType(codEvent) == "N")
             codEvent := hb_ntos(codEvent)
         elseif !(ValType(codEvent) == "C")
-            codEvent := ""
+            codEvent := "---"
             saveLog("Código do Evento não definido para tag evento", "Warning")
         endif
 
-        sql:add("'" + string_hb_to_mysql(codEvent) + "', ")
-        sql:add("'" + string_hb_to_mysql(hEvent["motivo"]) + "', ")
-        sql:add("'" + string_hb_to_mysql(hEvent["detalhe"]) + "')")
+        codStatus := hEvent["codigo_status"]
+        if Empty(codStatus)
+            codStatus := 'NULL'
+        endif
+
+        detalhes := desacentuar(hEvent["detalhe"])
+        motivo_status := desacentuar(hEvent["motivo_status"])
+        justificativa := desacentuar(hEvent["justificativa"])
+
+        sql:add(string_or_null(codEvent) + ", ")
+        sql:add(string_or_null(hEvent["motivo"]) + ", ")
+        sql:add(string_or_null(detalhes) + ", ")
+        sql:add(string_or_null(hEvent["event_id"]) + ", ")
+        sql:add(string_or_null(hEvent["ambiente"]) + ", ")
+        sql:add(string_or_null(hEvent["status_evento"]) + ", ")
+        sql:add(string_or_null(hEvent["chave_acesso"]) + ", ")
+        sql:add(string_or_null(hEvent["data_evento"]) + ", ")
+        sql:add(string_or_null(hEvent["data_recebimento"]) + ", ")
+        sql:add(codStatus + ", ")
+        sql:add(string_or_null(motivo_status) + ", ")
+        sql:add(string_or_null(hEvent["numero_protocolo"]) + ", ")
+        sql:add(string_or_null(hEvent["tipo_evento"]) + ", ")
+        sql:add(string_or_null(justificativa) + ", ")
+        sql:add(string_or_null(hEvent["digest_value"]) + ")")
 
     next
+
+    saveLog(sql:value, "Debug")
 
     ctes_eventos := TQuery():new(sql:value)
     inserted := ctes_eventos:executed
@@ -538,28 +579,41 @@ method getAutXML(listaCTes) class TDbMDFes
 return autXML
 
 method getFrete(mdfe) class TDbMDFes
-    local cte_data, frete := 0
-    local sql := "SELECT cte_valor_total AS frete FROM ctes WHERE cte_id="
-    local qCTe := mdfe["qCTe"]
+    /*
+     * Considera apenas o primeiro CTe da lista do MDFe para o frete
+     */
+    local ctes_data, frete := 0
+    local sql := "SELECT cte_valor_total AS frete FROM ctes WHERE cte_id IN ("
     local lista_ctes := AllTrim(mdfe["lista_ctes"])
 
-    if (qCTe == 1)
-        sql += lista_ctes
-    else
-        sql += Left(lista_ctes, hb_At(",", lista_ctes))
-    endif
+    // Remove vírgula no final, se houver
+    do while Right(lista_ctes, 1) == ","
+        lista_ctes := Left(lista_ctes, Len(lista_ctes) - 1)
+    enddo
+
+    sql += lista_ctes + ")"
 
     saveLog(sql, "Debug")
 
-    cte_data := TQuery():new(sql)
+    ctes_data := TQuery():new(sql)
 
-    if cte_data:executed
-        frete := cte_data:FieldGet("frete")
+    if !ctes_data:executed
+        saveLog("Erro ao executar SQL: " + sql, "Debug")
+        return 0
     endif
 
-    if !(ValType(frete) == "N")
-        frete := 0
+    // Frete não encontrado
+    if (ctes_data:count == 0)
+        saveLog("Frete não encontrado", "Debug")
+        return 0
     endif
+
+    // Soma os fretes dos CTEs
+    frete := 0
+    do while !ctes_data:eof()
+        frete += ctes_data:FieldGet("frete")
+        ctes_data:Skip()
+    enddo
 
 return frete
 

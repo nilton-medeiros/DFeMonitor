@@ -30,6 +30,7 @@ class TApiMDFe
     data digest_value readonly
     data baseUrl readonly
     data baseUrlID readonly
+    data hEvent
 
     method new(mdfe) constructor
     method Emitir()
@@ -41,6 +42,8 @@ class TApiMDFe
     method Sincronizar()
     method ConsultarSVRS()
     method defineBody()
+    method setEvent(hEventAuth)
+    method setErrorEvent(msg)
 
 end class
 
@@ -63,6 +66,7 @@ method new(mdfe) class TApiMDFe
     ::mensagem := ""
     ::tipo_evento := ""
     ::digest_value := ""
+    ::hEvent := {=>}
 
     if Empty(::token)
         apiLog({"type" => "Warning", "description" => "Token não definido para conexão com a Nuvem Fiscal"})
@@ -182,19 +186,7 @@ method Emitir() class TApiMDFe
             ::digest_value := hAutorizacao['digest_value']
         endif
 
-        switch ::codigo_status
-            case 100
-                ::status := "AUTORIZADO"
-                exit
-            case 135
-                ::status := "CANCELADO"
-                exit
-            otherwise
-                motivo := Lower(Left(desacentuar(::motivo_status), 8))
-                if (motivo == "rejeicao") .or. (::status == "rejeitado")
-                    ::status := "REJEITADO"
-                endif
-        endswitch
+        ::setEvent(hAutorizacao)
 
     endif
 
@@ -409,9 +401,9 @@ return !res['error']
 
 method BaixarPDFdoDAMDFE() class TApiMDFe
     local log, res, apiUrl := ::baseUrlID
-
     if !::connected
-        ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível baixar PDF, API Nuvem Fiscal não conectado")
+        ::setErrorEvent("Não é possível baixar PDF, API Nuvem Fiscal não conectado")
+        ::mdfe:setUpdateEventos(::hEvent)
         apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
@@ -454,7 +446,8 @@ method BaixarXMLdoMDFe() class TApiMDFe
     local log, res, apiUrl := ::baseUrlID
 
     if !::connected
-        ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível baixar XML, API Nuvem Fiscal não conectado")
+        ::setErrorEvent("Não é possível baixar XML, API Nuvem Fiscal não conectado")
+        ::mdfe:setUpdateEventos(::hEvent)
         apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
@@ -495,7 +488,8 @@ method Sincronizar() class TApiMDFe
     local log, res, hRes, motivo, apiUrl := ::baseUrlID + "/sincronizar"
 
     if !::connected
-        ::mdfe:setUpdateEventos(::numero_protocolo, date_as_DateTime(Date(), false, false), ::codigo_status, "Não é possível sincroinizar MDFe, API Nuvem Fiscal não conectado")
+        ::setErrorEvent("Não é possível sincroinizar MDFe, API Nuvem Fiscal não conectado")
+        ::mdfe:setUpdateEventos(::hEvent)
         apiLog({"type" => "Warning", "description" => "Sem conexão com a API Nuvem Fiscal"})
         return false
     endif
@@ -571,6 +565,32 @@ method ConsultarSVRS() class TApiMDFe
     endif
 
 return sefaz
+
+method setEvent(hEventAuth) class TApiMDFe
+    ::hEvent := {=>}
+    ::hEvent["event_id"] := hEventAuth["id"]
+    ::hEvent["ambiente"] := hEventAuth["ambiente"]
+    ::hEvent["status_evento"] := hEventAuth["status"]
+    ::hEvent["chave_acesso"] := hb_HGetDef(hEventAuth, "chave_acesso", "")
+    ::hEvent["data_evento"] := hb_HGetDef(hEventAuth, "data_evento", "")
+    ::hEvent["data_recebimento"] := hb_HGetDef(hEventAuth, "data_recebimento", "")
+    ::hEvent["codigo_status"] := hb_HGetDef(hEventAuth, "codigo_status", hb_HGetDef(hEventAuth, "codigo_mensagem", ""))
+    ::hEvent["motivo_status"] := hb_HGetDef(hEventAuth, "motivo_status", hb_HGetDef(hEventAuth, "mensagem", ""))
+    ::hEvent["numero_protocolo"] := hb_HGetDef(hEventAuth, "numero_protocolo", "")
+    ::hEvent["tipo_evento"] := hb_HGetDef(hEventAuth, "tipo_evento", "")
+    ::hEvent["justificativa"] := hb_HGetDef(hEventAuth, "justificativa", "")
+    ::hEvent["digest_value"] := hb_HGetDef(hEventAuth, "digest_value", "")
+
+return
+
+method setErrorEvent(msg) class TApiMDFe
+    ::hEvent := {=>}
+    ::hEvent["numero_protocolo"] := ::numero_protocolo
+    ::hEvent["data_hora"] := date_as_DateTime(Date(), false, false)
+    ::hEvent["codigo_status"] := ::codigo_status
+    ::hEvent["motivo_status"] := msg
+    ::hEvent["status_evento"] := 'erro'
+return
 
 method defineBody() class TApiMDFe
     local ender, cFrete, comp

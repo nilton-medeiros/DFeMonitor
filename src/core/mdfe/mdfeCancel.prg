@@ -2,7 +2,7 @@
 
 procedure mdfeCancel(mdfe)
     local apiMDFe := TApiMDFe():new(mdfe)
-    local aError, error
+    local aError, error, hEvent
 
     if apiMDFe:Cancelar()
 
@@ -17,22 +17,28 @@ procedure mdfeCancel(mdfe)
 
         // Prepara os campos da tabela mdfes_eventos para receber os updates
         if !Empty(apiMDFe:motivo_status)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_evento, apiMDFe:codigo_status, apiMDFe:motivo_status)
+            mdfe:setUpdateEventos(apiMDFe:hEvent)
             if !Empty(apiMDFe:tipo_evento)
-                mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_evento, apiMDFe:codigo_status, "Tipo Evento: " + apiMDFe:tipo_evento)
+                mdfe:setUpdateEventos(apiMDFe:hEvent)
             endif
         endif
         if !Empty(apiMDFe:mensagem)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_status, apiMDFe:mensagem)
+            mdfe:setUpdateEventos(apiMDFe:hEvent)
             if !Empty(apiMDFe:tipo_evento)
-                mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_status, "Tipo Evento: " + apiMDFe:tipo_evento)
+                mdfe:setUpdateEventos(apiMDFe:hEvent)
             endif
         endif
 
     else
         aError := getMessageApiError(apiMDFe, false)
         for each error in aError
-            mdfe:setUpdateEventos("Erro", date_as_DateTime(date(), false, false), error["code"], error["message"])
+            hEvent := {=>}
+            hEvent["codigo_status"] := error["code"]
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := error["message"]
+            mdfe:setUpdateEventos(hEvent)
         next
         mdfe:setSituacao(apiMDFe:status)
         apiLog({"type" => "Warning", "description" => "Erro ao cancelar: MDFe", "response" => apiMDFe:response})

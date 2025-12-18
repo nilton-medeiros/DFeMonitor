@@ -9,9 +9,21 @@ procedure mdfeUploadFiles(upload)
         upFTP := TGED_FTP():new(upload["pdf"], remotePath)
         if upFTP:upload()
             mdfe:setUpdateMdfe('pdf', upFTP:getURL())
-            mdfe:setUpdateEventos("UPLOAD PDF", date_as_DateTime(date(), false, false), "PDF", "Arquivo PDF do DAMDFE carregado com sucesso!")
+            hEvent := {=>}
+            hEvent["evento"] := "PDF"
+            hEvent["status_evento"] := "UPLOAD PDF"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Arquivo PDF do DAMDFE carregado com sucesso!"
+            mdfe:setUpdateEventos(hEvent)
         else
-            mdfe:setUpdateEventos("UPLOAD PDF", date_as_DateTime(date(), false, false), "PDF", "Falha ao carregar Arquivo PDF do DAMDFE, ver log servidor local!")
+            hEvent := {=>}
+            hEvent["evento"] := "PDF"
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Falha ao carregar Arquivo PDF do DAMDFE, ver log servidor local!"
+            mdfe:setUpdateEventos(hEvent)
         endif
     endif
 
@@ -19,9 +31,20 @@ procedure mdfeUploadFiles(upload)
         upFTP := TGED_FTP():new(upload["xml"], remotePath)
         if upFTP:upload()
             mdfe:setUpdateMdfe('xml', upFTP:getURL())
-            mdfe:setUpdateEventos("UPLOAD XML", date_as_DateTime(date(), false, false), "XML", "Arquivo XML do MDFe carregado com sucesso!")
+            hEvent := {=>}
+            hEvent["evento"] := "XML"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Arquivo XML do MDFe carregado com sucesso!"
+            mdfe:setUpdateEventos(hEvent)
         else
-            mdfe:setUpdateEventos("UPLOAD XML", date_as_DateTime(date(), false, false), "XML", "Falha ao carregar Arquivo XML do MDFe, ver log servidor local!")
+            hEvent := {=>}
+            hEvent["evento"] := "XML"
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Falha ao carregar Arquivo XML do MDFe, ver log servidor local!"
+            mdfe:setUpdateEventos(hEvent)
         endif
     endif
 

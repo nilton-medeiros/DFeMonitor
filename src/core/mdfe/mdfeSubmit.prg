@@ -2,7 +2,7 @@
 
 procedure mdfeSubmit(mdfe)
     local svrs, apiMDFe := TApiMDFe():new(mdfe)
-    local aError, error
+    local aError, error, hEvent
 
     // Refatorado, na versão CTe 4.00 e MDFe 3.00 a transmissão é sincrono, já é retornado a autorização ou rejeição
 
@@ -13,15 +13,29 @@ procedure mdfeSubmit(mdfe)
             // SVRS voltou a ficar disponível
             appData:mdfe_sefaz_offline := false
         elseif (svrs["codigo_status"] == -1)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_mensagem, apiMDFe:mensagem)
+            mdfe:setUpdateEventos(apiMDFe:hEvent)
             aError := getMessageApiError(apiMDFe, false)
             for each error in aError
-                mdfe:setUpdateEventos("Erro", date_as_DateTime(date(), false, false), error["code"], error["message"])
+                hEvent := {=>}
+                hEvent["codigo_status"] := error["code"]
+                hEvent["status_evento"] := "erro"
+                hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+                hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+                hEvent["motivo_status"] := error["message"]
+                mdfe:setUpdateEventos(hEvent)
             next
             mdfe:setSituacao("ERRO")
             return
         else
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_evento, "SVRS", "SEFAZ MDFe:RS INDISPONÍVEL, TENTE MAIS TARDE!")
+            hEvent := {=>}
+            hEvent["protocolo"] := apiMDFe:numero_protocolo
+            hEvent["numero_protocolo"] := apiMDFe:numero_protocolo
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := apiMDFe:data_evento
+            hEvent["data_hora"] := apiMDFe:data_evento
+            hEvent["evento"] := "SVRS"
+            hEvent["motivo_status"] := "SEFAZ MDFe:RS INDISPONÍVEL, TENTE MAIS TARDE!"
+            mdfe:setUpdateEventos(hEvent)
             mdfe:setSituacao("ERRO")
             return
         endif
@@ -37,11 +51,8 @@ procedure mdfeSubmit(mdfe)
         mdfe:setUpdateMDFe('nuvemfiscal_uuid', apiMDFe:nuvemfiscal_uuid)
 
         // Prepara os campos da tabela mdfes_eventos para receber os updates
-        if !Empty(apiMDFe:motivo_status)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_evento, apiMDFe:codigo_status, apiMDFe:motivo_status)
-        endif
-        if !Empty(apiMDFe:mensagem)
-            mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_recebimento, apiMDFe:codigo_mensagem, apiMDFe:mensagem)
+        if !Empty(apiMDFe:hEvent)
+            mdfe:setUpdateEventos(apiMDFe:hEvent)
         endif
 
         if (apiMDFe:codigo_status == 100)
@@ -49,13 +60,27 @@ procedure mdfeSubmit(mdfe)
         endif
 
     elseif appData:mdfe_sefaz_offline
-        mdfe:setUpdateEventos(apiMDFe:numero_protocolo, apiMDFe:data_evento, "SVRS", "SEFAZ MDFe:RS INDISPONÍVEL, TENTE MAIS TARDE!")
+        hEvent := {=>}
+        hEvent["protocolo"] := apiMDFe:numero_protocolo
+        hEvent["numero_protocolo"] := apiMDFe:numero_protocolo
+        hEvent["status_evento"] := "erro"
+        hEvent["data_evento"] := apiMDFe:data_evento
+        hEvent["data_hora"] := apiMDFe:data_evento
+        hEvent["evento"] := "SVRS"
+        hEvent["motivo_status"] := "SEFAZ MDFe:RS INDISPONÍVEL, TENTE MAIS TARDE!"
+        mdfe:setUpdateEventos(hEvent)
         mdfe:setSituacao("ERRO")
     else
 
         aError := getMessageApiError(apiMDFe, false)
         for each error in aError
-            mdfe:setUpdateEventos("Erro", date_as_DateTime(date(), false, false), error["code"], error["message"])
+            hEvent := {=>}
+            hEvent["codigo_status"] := error["code"]
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := error["message"]
+            mdfe:setUpdateEventos(hEvent)
         next
         mdfe:setSituacao("ERRO")
 

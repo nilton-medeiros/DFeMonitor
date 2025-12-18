@@ -5,7 +5,7 @@ function mdfeGetFiles(apiMDFe)
     local upload := {=>}
     local directory, filePDF, fileXML, status := ""
     local empresa, anoMes, printPDF, printPath
-    local mdfe := apiMDFe:mdfe, chave
+    local mdfe := apiMDFe:mdfe, chave, hEvent
 
     // As vars que começam com "app" são de nível global (Public) definidas no main.prg
     empresa := appEmpresas:getEmpresa(mdfe:emp_id)
@@ -52,11 +52,23 @@ function mdfeGetFiles(apiMDFe)
                 upload["pdf"] := directory + filePDF
                 saveLog({"Arquivo PDF do DAMDFE salvo com sucesso", directory + filePDF})
             else
-                mdfe:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "PDF", "Erro ao escrever PDF em arquivo. Ver log servidor local")
+                hEvent := {=>}
+                hEvent["evento"] := "PDF"
+                hEvent["status_evento"] := "erro"
+                hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+                hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+                hEvent["motivo_status"] := "Erro ao escrever PDF em arquivo. Ver log servidor local"
+                mdfe:setUpdateEventos(hEvent)
                 saveLog("Erro ao escrever pdf binary em arquivo " + filePDF + " na pasta " + directory, "Warning")
             endif
         else
-            mdfe:setUpdateEventos("OBTER PDF", date_as_DateTime(date(), false, false), "PDF", "Arquivo PDF do DAMDFE não retornado. Ver log servidor local")
+            hEvent := {=>}
+            hEvent["evento"] := "PDF"
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Arquivo PDF do DAMDFE não retornado. Ver log servidor local"
+            mdfe:setUpdateEventos(hEvent)
             saveLog({"Arquivo PDF do DAMDFE não retornado", "Chave MDFe: " + apiMDFe:chave}, "Warning")
         endif
 
@@ -65,11 +77,23 @@ function mdfeGetFiles(apiMDFe)
                 upload["xml"] := directory + fileXML
                 saveLog({"Arquivo XML do MDFe salvo com sucesso", directory + fileXML})
             else
-                mdfe:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "XML", "Erro ao escrever XML em arquivo. Ver log servidor local")
+                hEvent := {=>}
+                hEvent["evento"] := "XML"
+                hEvent["status_evento"] := "erro"
+                hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+                hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+                hEvent["motivo_status"] := "Erro ao escrever XML em arquivo. Ver log servidor local"
+                mdfe:setUpdateEventos(hEvent)
                 saveLog("Erro ao escrever xml binary em arquivo " + fileXML + " na pasta " + directory, "Warning")
             endif
         else
-            mdfe:setUpdateEventos("OBTER XML", date_as_DateTime(date(), false, false), "XML", "Arquivo XML do MDFe não retornado. Ver log servidor local")
+            hEvent := {=>}
+            hEvent["evento"] := "XML"
+            hEvent["status_evento"] := "erro"
+            hEvent["data_evento"] := date_as_DateTime(date(), false, false)
+            hEvent["data_hora"] := date_as_DateTime(date(), false, false)
+            hEvent["motivo_status"] := "Arquivo XML do MDFe não retornado. Ver log servidor local"
+            mdfe:setUpdateEventos(hEvent)
             saveLog({"Arquivo XML do MDFe não retornado", "Chave MDFe: " + apiMDFe:chave}, "Warning")
         endif
 
