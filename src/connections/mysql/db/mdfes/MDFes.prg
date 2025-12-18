@@ -85,7 +85,7 @@ method getListMDFes() class TDbMDFes
     sql:add("cte_versao_xml > 3.00 ")
     sql:add("ORDER BY emp_id, nMDF")
 
-    saveLog(sql:value, "Debug")
+    // saveLog(sql:value, "Debug")
 
     ::mdfes := {}
     dbMDFes := TQuery():new(sql:value)
@@ -173,6 +173,7 @@ method insertEventos(aEvents) class TDbMDFes
     sql:add("chave_acesso, ")
     sql:add("data_evento, ")
     sql:add("data_recebimento, ")
+    sql:add("data_encerramento, ")
     sql:add("codigo_status, ")
     sql:add("motivo_status, ")
     sql:add("numero_protocolo, ")
@@ -214,6 +215,7 @@ method insertEventos(aEvents) class TDbMDFes
         sql:add(string_or_null(hEvent["chave_acesso"]) + ", ")
         sql:add(string_or_null(hEvent["data_evento"]) + ", ")
         sql:add(string_or_null(hEvent["data_recebimento"]) + ", ")
+        sql:add(string_or_null(hEvent["data_encerramento"]) + ", ")
         sql:add(codStatus + ", ")
         sql:add(string_or_null(motivo_status) + ", ")
         sql:add(string_or_null(hEvent["numero_protocolo"]) + ", ")
