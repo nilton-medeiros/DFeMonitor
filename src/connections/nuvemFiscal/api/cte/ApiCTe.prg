@@ -1151,11 +1151,8 @@ method defineBody() class TApiCTe
     endif
 
     vIBS := vCBS := 0
-    cDisponivelDTs = "20251020"  // NT v1.10 06/10/2025
-    // cDisponivelDTs = "20260104"  // NT v1.10 06/10/2025
-    curDateString = DToS(Date())
 
-    if (::emitente:CRT == 3) .and. curDateString > cDisponivelDTs
+    if (::emitente:CRT == 3)
         // 3 - Regime Normal
         // Tag 'IBSCBS': Produção disponível: 06/10/2025, Validação obrigatória em produção: A partir de 05/01/2026
         IBSCBS := {=>}
@@ -1186,15 +1183,21 @@ method defineBody() class TApiCTe
         IBSCBS := nil
         imp["vTotTrib"] := ::cte:vTotTrib + vIBS + vCBS
 
-        if Year(Date()) < 2026
+        if Year(Date()) == 2026
+            /*
+                NT 2025-001 v1.10
+                O total geral do DFe deverá ser a soma do total da prestação + IBS + CBS
+                vTotDFe = vPrest/vTPrest + gIBSCBS/vIBS + gCBS/vCBS
+                Exceção: Em 2026 não somar IBS e CBS
+            */
+            imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
+        else
             imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest + vIBS + vCBS, "9999999999.99")) + "$$"
         endif
     else
         imp["vTotTrib"] := ::cte:vTotTrib
-        if curDateString > cDisponivelDTs
-            // NT v1.10 adiando para 06/10/2025
-            imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
-        endif
+        // NT 2025-001 v1.10 adiando para 06/10/2025
+        imp["vTotDFe"] := "$$" + LTrim(Transform(::cte:vTPrest, "9999999999.99")) + "$$"
     endif
 
     infCte["imp"] := imp
