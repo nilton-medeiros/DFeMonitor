@@ -21,4 +21,13 @@ function DateTime_to_mysql(stringDateTime)
 return dateTime
 
 function string_hb_to_mysql(stringSQL)
-Return HMG_UNICODE_TO_ANSI(mysql_escape_string(AllTrim(stringSQL)))
+return HMG_UNICODE_TO_ANSI(mysql_escape_string(AllTrim(stringSQL)))
+
+function string_or_null(stringSQL)
+    if !(ValType(stringSQL)=="C")
+        stringSQL := ""
+    endif
+    if Empty(stringSQL)
+        return "NULL"
+    endif
+return "'" + string_hb_to_mysql(stringSQL) + "'"
