@@ -35,6 +35,30 @@ return connection
 */
 
 // Função utilizada para obter resposta de erros retornados, deve ser refatorada para ler o array de errors
+/*
+	Tipos de erros em json retornados
+	Um erro:
+		"response": {
+			"error": {
+				"code": "ValidationFailed",
+				"message": "Operação não permitida para a situação atual do documento."
+			}
+		},
+
+	Array de erros:
+		"response": {
+			"error": {
+				"code": "ValidationFailed",
+				"message": "Validation failed: O campo 'infCte.infCTeNorm.infDoc.infNFe[0].chave' não corresponde ao formato esperado ^([0-9]{6}[A-Z0-9]{12}[0-9]{26})$",
+				"errors": [
+					{
+						"code": "InvalidFormat",
+						"message": "O campo 'infCte.infCTeNorm.infDoc.infNFe[0].chave' não corresponde ao formato esperado ^([0-9]{6}[A-Z0-9]{12}[0-9]{26})$"
+					}
+				]
+			}
+		},
+*/
 function getMessageApiError(api, lAsText)
 	local response, textError := "", autorizacao, aData, aError := {}, error, n := 0
 
