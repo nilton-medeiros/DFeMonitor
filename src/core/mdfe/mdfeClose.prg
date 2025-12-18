@@ -5,8 +5,6 @@ procedure mdfeClose(mdfe)
     local aError, error, hEvent
 
     if apiMDFe:Encerrar()
-
-        // Prepara os campos da tabela mdfes para receber os updates
         if (apiMDFe:codigo_status == 135)
             mdfe:setSituacao("ENCERRADO")
             mdfeGetFiles(apiMDFe)
@@ -24,10 +22,10 @@ procedure mdfeClose(mdfe)
         aError := getMessageApiError(apiMDFe, false)
         for each error in aError
             hEvent := {=>}
-            hEvent["codigo_status"] := error["code"]
+            hEvent["motivo"] := error["code"]
+            hEvent["detalhe"] := error["message"]
             hEvent["data_evento"] := date_as_DateTime(date(), false, false)
             hEvent["data_hora"] := date_as_DateTime(date(), false, false)
-            hEvent["motivo_status"] := error["message"]
             mdfe:setUpdateEventos(hEvent)
         next
         mdfe:setSituacao(apiMDFe:status)

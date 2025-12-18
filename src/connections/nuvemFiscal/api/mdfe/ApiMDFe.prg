@@ -198,6 +198,7 @@ return !res['error']
 
 method Encerrar() class TApiMDFe
     local log, res, hRes, apiUrl := ::baseUrlID + "/encerramento"
+    local hEvent
 
     if !::connected
         return false
@@ -214,15 +215,17 @@ method Encerrar() class TApiMDFe
 
     if res['error']
         log := {=>}
+        hEvent := {=>}
         log["type"] := "Warning"
         log["description"] := "Http Status: " + hb_ntos(::httpStatus) + " | Não foi possível encerrar MDF-e na API Nuvem Fiscal"
         log["content_type"] := ::ContentType
-        log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
+        log["response"] := iif(::ContentType == "json", hb_jsonDecode(::response), ::response)
 
         apiLog(log)
 
         ::status := "erro"
         ::mensagem := res["response"]
+
     else
         hRes := hb_jsonDecode(::response)
         ::ambiente := hRes['ambiente']
@@ -243,6 +246,9 @@ method Encerrar() class TApiMDFe
         if hb_HGetRef(hRes, 'tipo_evento')
             ::tipo_evento := hRes['tipo_evento']
         endif
+
+        ::setEvent(hRes)
+
     endif
 
 return !res['error']
@@ -294,6 +300,7 @@ method Cancelar() class TApiMDFe
         if hb_HGetRef(hRes, 'tipo_evento')
             ::tipo_evento := res['tipo_evento']
         endif
+        ::setEvent(hRes)
     endif
 
 return !res['error']
@@ -358,6 +365,7 @@ method ListarMDFes() class TApiMDFe
             ::chave := mdfe['chave']
 
             hAutorizacao := mdfe['autorizacao']
+            ::setEvent(hAutorizacao)
 
             ::numero_protocolo := hb_HGetDef(hAutorizacao, 'numero_protocolo', hAutorizacao['id'])
             ::data_evento := ConvertUTCdataStampToLocal(hAutorizacao['data_evento'])
@@ -401,6 +409,7 @@ return !res['error']
 
 method BaixarPDFdoDAMDFE() class TApiMDFe
     local log, res, apiUrl := ::baseUrlID
+
     if !::connected
         ::setErrorEvent("Não é possível baixar PDF, API Nuvem Fiscal não conectado")
         ::mdfe:setUpdateEventos(::hEvent)
@@ -523,6 +532,8 @@ method Sincronizar() class TApiMDFe
             ::chave := hRes["chave"]
         endif
 
+        ::setEvent(hRes)
+
         switch ::codigo_status
             case 135
                 ::status := "CANCELADO"
@@ -555,31 +566,36 @@ method ConsultarSVRS() class TApiMDFe
         log["description"] := "Http Status: " + hb_ntos(res["http_status"]) + " | MDF-e: Não foi possível consultar status SEFAZ, parece que SEFAZ/API NUVEM FISCAL estão fora do ar"
         log["content_type"] := res['ContentType']
         log["response"] := iif(res['ContentType'] == "json", hb_jsonDecode(::response), ::response)
-
         apiLog(log)
-
         ::status := "erro"
         ::mensagem := res["response"]
     else
         sefaz := hb_jsonDecode(res["response"])
+        ::setEvent(sefaz)
     endif
 
 return sefaz
 
-method setEvent(hEventAuth) class TApiMDFe
+method setEvent(hResponse) class TApiMDFe
     ::hEvent := {=>}
-    ::hEvent["event_id"] := hEventAuth["id"]
-    ::hEvent["ambiente"] := hEventAuth["ambiente"]
-    ::hEvent["status_evento"] := hEventAuth["status"]
-    ::hEvent["chave_acesso"] := hb_HGetDef(hEventAuth, "chave_acesso", "")
-    ::hEvent["data_evento"] := hb_HGetDef(hEventAuth, "data_evento", "")
-    ::hEvent["data_recebimento"] := hb_HGetDef(hEventAuth, "data_recebimento", "")
-    ::hEvent["codigo_status"] := hb_HGetDef(hEventAuth, "codigo_status", hb_HGetDef(hEventAuth, "codigo_mensagem", ""))
-    ::hEvent["motivo_status"] := hb_HGetDef(hEventAuth, "motivo_status", hb_HGetDef(hEventAuth, "mensagem", ""))
-    ::hEvent["numero_protocolo"] := hb_HGetDef(hEventAuth, "numero_protocolo", "")
-    ::hEvent["tipo_evento"] := hb_HGetDef(hEventAuth, "tipo_evento", "")
-    ::hEvent["justificativa"] := hb_HGetDef(hEventAuth, "justificativa", "")
-    ::hEvent["digest_value"] := hb_HGetDef(hEventAuth, "digest_value", "")
+    ::hEvent["event_id"] := hb_HGetDef(hResponse, "id", hb_HGetDef(hResponse, "status", hb_HGetDef(hResponse, "autorizador", "")))
+    ::hEvent["ambiente"] := hb_HGetDef(hResponse, "ambiente", "producao")
+    ::hEvent["status_evento"] := hb_HGetDef(hResponse, "status", hb_HGetDef(hResponse, "autorizador", "---"))
+    ::hEvent["chave_acesso"] := hb_HGetDef(hResponse, "chave_acesso", hb_HGetDef(hResponse, "chave", ""))
+    ::hEvent["data_evento"] := hb_HGetDef(hResponse, "data_evento", hb_HGetDef(hResponse, "data_hora_consulta", ""))
+    ::hEvent["data_recebimento"] := hb_HGetDef(hResponse, "data_recebimento", "")
+    ::hEvent["codigo_status"] := hb_HGetDef(hResponse, "codigo_status", hb_HGetDef(hResponse, "codigo_mensagem", ""))
+    ::hEvent["motivo_status"] := hb_HGetDef(hResponse, "motivo_status", hb_HGetDef(hResponse, "mensagem", ""))
+    ::hEvent["numero_protocolo"] := hb_HGetDef(hResponse, "numero_protocolo", "")
+    ::hEvent["tipo_evento"] := hb_HGetDef(hResponse, "tipo_evento", "")
+
+    if hb_HgetRef(hResponse, "data_hora_retorno")
+        ::hEvent["justificativa"] := "Sefaz - Data e hora de retorno: " + hResponse["data_hora_retorno"]
+    else
+        ::hEvent["justificativa"] := hb_HGetDef(hResponse, "justificativa", "")
+    endif
+    ::hEvent["data_encerramento"] := hb_HgetDef(hResponse, "data_encerramento", hb_HgetDef(hResponse, "data_hora_retorno", ""))
+    ::hEvent["digest_value"] := hb_HGetDef(hResponse, "digest_value", "")
 
 return
 

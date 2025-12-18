@@ -148,6 +148,7 @@ method setUpdateEventos(hEvent) class TMDFe
     local chave_acesso := hb_HGetDef(hEvent, 'chave_acesso', "")
     local data_evento := hb_HGetDef(hEvent, 'data_evento', "")
     local data_recebimento := hb_HGetDef(hEvent, 'data_recebimento', "")
+    local data_encerramento := hb_HgetDef(hEvent, 'data_encerramento', "")
     local codigo_status := hb_HGetDef(hEvent, 'codigo_status', 0)
     local motivo := hb_HGetDef(hEvent, 'motivo_status', "NAO INFORMADO")
     local motivo_status := hb_HGetDef(hEvent, 'motivo_status', "")
@@ -176,6 +177,10 @@ method setUpdateEventos(hEvent) class TMDFe
         evento := codigo_status
     endif
 
+    if !Empty(data_encerramento)
+        detalhe := "Data encerramento: " + data_encerramento + " | " + detalhe
+    endif
+
     AAdd(::aUpdateEvents, ;
         { ;
             "mdfe_id" => hb_ntos(::id), ;
@@ -190,6 +195,7 @@ method setUpdateEventos(hEvent) class TMDFe
             "chave_acesso" => chave_acesso, ;
             "data_evento" => data_evento, ;
             "data_recebimento" => data_recebimento, ;
+            "data_encerramento" => data_encerramento, ;
             "codigo_status" => codigo_status, ;
             "motivo_status" => motivo_status, ;
             "numero_protocolo" => numero_protocolo, ;
