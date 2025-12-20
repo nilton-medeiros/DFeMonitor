@@ -1,0 +1,17 @@
+{
+  "id": "cte_3a1e2599e0964c199e87a694b8586a1d",
+  "correcoes": [
+    {
+      "grupo_alterado": "ide",
+      "campo_alterado": "indIEToma",
+      "valor_alterado": "9",
+      "numero_item_alterado": 1
+    },
+    {
+      "grupo_alterado": "toma3",
+      "campo_alterado": "toma",
+      "valor_alterado": "0",
+      "numero_item_alterado": 2
+    }
+  ]
+}
