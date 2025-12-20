@@ -36,6 +36,8 @@ method getListCTes() class TDbCTes
     sql:add("cte_minuta AS cCT, ")
     sql:add("cte_situacao AS situacao, ")
     sql:add("cte_chave AS chCTe, ")
+    sql:add("cte_chave_referenciado AS chave_referenciado, ")
+    sql:add("cte_ind_altera_toma AS indAlteraToma, ")
     sql:add("cte_protocolo_autorizacao AS nProt, ")
     sql:add("cte_cfop AS CFOP, ")
     sql:add("cte_natureza_operacao AS natOp, ")

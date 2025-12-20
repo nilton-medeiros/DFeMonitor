@@ -16,6 +16,8 @@ class TCTe
     data cCT readonly
     data situacao readonly
     data chCTe
+    data chave_referenciado readonly
+    data indAlteraToma readonly
     data nProt readonly
     data CFOP readonly
     data natOp readonly
@@ -207,6 +209,8 @@ method new(cte, hAnexos, clie_emails, emiDocAnt, modalidade) class TCTe
     ::cCT := PadL(cte["cCT"], 8, "0") // Numero da Minuta
     ::situacao := hmg_upper(cte["situacao"])
     ::chCTe := cte["chCTe"]
+    ::chave_referenciado := cte["chave_referenciado"]
+    ::indAlteraToma := cte["indAlteraToma"]
     ::nProt := cte["nProt"]
     ::CFOP := hb_ntos(cte["CFOP"])
     ::natOp := cte["natOp"]

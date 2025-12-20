@@ -1296,91 +1296,94 @@ method defineBody() class TApiCTe
         infModal := {=>}
         infModal["versaoModal"] := ::cte:versao_xml
 
-        if (::cte:tpCTe == 0)
-            // tp::cte: 0 - Normal
-            if (::cte:tpServ == 0)
-                // tpServ: 0 - Normal
-                if (::cte:modal == "01")
-                    // Rodo: Informação do modal rodoviário
+        if (::cte:tpServ == 0)
+            // tpServ: 0 - Normal
+            if (::cte:modal == "01")
+                // Rodo: Informação do modal rodoviário
 
-                    rodo := {=>}
-                    rodo["RNTRC"] := ::emitente:RNTRC
+                rodo := {=>}
+                rodo["RNTRC"] := ::emitente:RNTRC
 
-                    // saveLog('Qtde Elementos Array cte:rodoOcc: ' + hb_ntos(hmg_len(::cte:rodoOcc)), "Debug")
-                    /*
-                    ********************************
-                    * Rotina com error
-                    ********************************
-                    if !Empty(::cte:rodoOcc)
-                        // Ordens de Coletas
-                        rodo["occ"] := {}
-                        for each occ in ::cte:rodoOcc
-                            if Empty(occ["serie"])
-                                AAdd(rodo["occ"], ;
-                                    {"nOcc" => occ["nOcc"], ;
-                                     "dEmi" => occ["dEmi"], ;
-                                     "emiOcc" => {"CNPJ" => occ["CNPJ"], "IE" => occ["IE"], "UF" => occ["UF"]} ;
-                                    })
-                            else
-                                AAdd(rodo["occ"], ;
-                                    {"serie" => occ["serie"], ;
-                                     "nOcc" => occ["nOcc"], ;
-                                     "dEmi" => occ["dEmi"], ;
-                                     "emiOcc" => {"CNPJ" => occ["CNPJ"], "IE" => occ["IE"], "UF" => occ["UF"]} ;
-                                    })
-                            endif
-                        next
-                    endif
-                    */
-                    infModal["rodo"] := rodo
-
-                else
-                    // Aéreo: Informação do modal Aéreo
-                    aereo := {=>}
-                    // nMinu omitido, Nuvem fiscal gera automático
-                    // aereo["nMinu"] := ::cte:cCT
-
-                    if !Empty(::cte:nOCA)
-                        aereo["nOCA"] := ::cte:nOCA
-                    endif
-                    aereo["dPrevAereo"] := ::cte:dPrevAereo
-                    aereo["natCarga"] := ::cte:aereo
-
-                    tarifa := ::cte:comp_calc[1]
-                    tpTar := Upper(desacentuar(tarifa["CL"]))
-                    CL := Left(tpTar, 1)    // Testando, Nuvem fiscal fez as correções - Forçando tarifa Mínima, até descobrir pq a sefaz/nuvem fiscal só aceita M
-
-                    if !(CL $ "MGE")
-                        do case
-                            case "MINIM" $ tpTar
-                                CL := "M"
-                            case "GERAL" $ tpTar
-                                CL := "G"
-                            case "ESPECIFIC" $ tpTar
-                                CL := "E"
-                            otherwise
-                                CL := "G"
-                        endcase
-                    endif
-
-                    aereo["tarifa"] := {"CL" => CL, ;
-                                        "cTar" => ::cte:cTar, ;
-                                        "vTar" => "$$" + LTrim(Transform(tarifa["vTar"], "9999999999.99")) + "$$"  ;
-                                        }
-                    infModal["aereo"] := aereo
+                // saveLog('Qtde Elementos Array cte:rodoOcc: ' + hb_ntos(hmg_len(::cte:rodoOcc)), "Debug")
+                /*
+                ********************************
+                * Rotina com error
+                ********************************
+                if !Empty(::cte:rodoOcc)
+                    // Ordens de Coletas
+                    rodo["occ"] := {}
+                    for each occ in ::cte:rodoOcc
+                        if Empty(occ["serie"])
+                            AAdd(rodo["occ"], ;
+                                {"nOcc" => occ["nOcc"], ;
+                                    "dEmi" => occ["dEmi"], ;
+                                    "emiOcc" => {"CNPJ" => occ["CNPJ"], "IE" => occ["IE"], "UF" => occ["UF"]} ;
+                                })
+                        else
+                            AAdd(rodo["occ"], ;
+                                {"serie" => occ["serie"], ;
+                                    "nOcc" => occ["nOcc"], ;
+                                    "dEmi" => occ["dEmi"], ;
+                                    "emiOcc" => {"CNPJ" => occ["CNPJ"], "IE" => occ["IE"], "UF" => occ["UF"]} ;
+                                })
+                        endif
+                    next
                 endif
+                */
+                infModal["rodo"] := rodo
 
-                infCteNorm["infModal"] := infModal
-                infModal := rodo := aereo := nil
-
-                // veicNovos, cobr, infCteSub: Não utilizados
-                if (::cte:indGlobalizado == 1)
-                    infCteNorm["infGlobalizado"] := {"xObs" => "Procedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017"}
-                endif
             else
-                // tpServ: 1 - Subcontratação; 2 – Redespacho; 3 – Redespacho Intermediário; 4 – Serviço Vinculado à Multimodal
-                // infServVinc: Não utilizado
+                // Aéreo: Informação do modal Aéreo
+                aereo := {=>}
+                // nMinu omitido, Nuvem fiscal gera automático
+                // aereo["nMinu"] := ::cte:cCT
+
+                if !Empty(::cte:nOCA)
+                    aereo["nOCA"] := ::cte:nOCA
+                endif
+                aereo["dPrevAereo"] := ::cte:dPrevAereo
+                aereo["natCarga"] := ::cte:aereo
+
+                tarifa := ::cte:comp_calc[1]
+                tpTar := Upper(desacentuar(tarifa["CL"]))
+                CL := Left(tpTar, 1)    // Testando, Nuvem fiscal fez as correções - Forçando tarifa Mínima, até descobrir pq a sefaz/nuvem fiscal só aceita M
+
+                if !(CL $ "MGE")
+                    do case
+                        case "MINIM" $ tpTar
+                            CL := "M"
+                        case "GERAL" $ tpTar
+                            CL := "G"
+                        case "ESPECIFIC" $ tpTar
+                            CL := "E"
+                        otherwise
+                            CL := "G"
+                    endcase
+                endif
+
+                aereo["tarifa"] := {"CL" => CL, ;
+                                    "cTar" => ::cte:cTar, ;
+                                    "vTar" => "$$" + LTrim(Transform(tarifa["vTar"], "9999999999.99")) + "$$"  ;
+                                    }
+                infModal["aereo"] := aereo
             endif
+
+            infCteNorm["infModal"] := infModal
+            infModal := rodo := aereo := nil
+
+            // veicNovos, cobr: Não utilizados
+
+            if (::cte:tpCTe == 3) .and. !Empty(::cte:chave_referenciado)
+                // 3 - CT-e de Substituição
+                infCteNorm["infCteSub"] := {"chCte" => ::cte:chave_referenciado, "indAlteraToma" => ::cte:indAlteraToma}
+            endif
+
+            if (::cte:indGlobalizado == 1)
+                infCteNorm["infGlobalizado"] := {"xObs" => "Procedimento efetuado conforme Resolução/SEFAZ n. 2.833/2017"}
+            endif
+        else
+            // tpServ: 1 - Subcontratação; 2 – Redespacho; 3 – Redespacho Intermediário; 4 – Serviço Vinculado à Multimodal
+            // infServVinc: Não utilizado
         endif
         infCte["infCTeNorm"] := infCteNorm
         infCteNorm := nil
