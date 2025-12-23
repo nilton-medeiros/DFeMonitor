@@ -595,7 +595,7 @@ method getFrete(mdfe) class TDbMDFes
 
     sql += lista_ctes + ")"
 
-    saveLog(sql, "Debug")
+    // saveLog(sql, "Debug")
 
     ctes_data := TQuery():new(sql)
 
