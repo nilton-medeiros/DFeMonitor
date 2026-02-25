@@ -485,6 +485,7 @@ return prodPred
 method getAutXML(listaCTes) class TDbMDFes
     local autorizados, hRow, autXML := {}, sql := TSQLString():new("SELECT ")
     local id, aClieIds := {}, hDoc
+    local qtdeAutXML := 0
 
     sql:add("clie_remetente_id AS remId, ")
     sql:add("clie_coleta_id AS colId, ")
@@ -501,16 +502,16 @@ method getAutXML(listaCTes) class TDbMDFes
 
     if !(autorizados:count == 0)
 
-        do while !autorizados:eof()
-
+        do while !autorizados:eof() .and. qtdeAutXML <= 10
             hRow := convertFieldsDb(autorizados:GetRow())
 
             id := hRow["remId"]
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -518,8 +519,9 @@ method getAutXML(listaCTes) class TDbMDFes
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -527,8 +529,9 @@ method getAutXML(listaCTes) class TDbMDFes
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -536,8 +539,9 @@ method getAutXML(listaCTes) class TDbMDFes
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -545,8 +549,9 @@ method getAutXML(listaCTes) class TDbMDFes
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -554,8 +559,9 @@ method getAutXML(listaCTes) class TDbMDFes
             if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                 AAdd(aClieIds, id)
                 hDoc := ::getDoc(hb_ntos(id))
-                if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                     AAdd(autXML, hDoc)
+                    qtdeAutXML++
                 endif
             endif
 
@@ -564,8 +570,9 @@ method getAutXML(listaCTes) class TDbMDFes
                 if !Empty(id) .and. (hb_AScan(aClieIds, id) == 0)
                     AAdd(aClieIds, id)
                     hDoc := ::getDoc(hb_ntos(id))
-                    if !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
+                    if  qtdeAutXML <= 10 .and. !Empty(hDoc) .and. (hb_AScan(autXML, {|hVal| hb_HGetDef(hVal, "CNPJ", "CPF") == hb_HGetDef(hDoc, "CNPJ", "CPF")}) == 0)
                         AAdd(autXML, hDoc)
+                        qtdeAutXML++
                     endif
                 endif
             endif

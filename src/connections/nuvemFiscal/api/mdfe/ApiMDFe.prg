@@ -612,6 +612,8 @@ method defineBody() class TApiMDFe
     local ender, cFrete, comp
     local infMDFe, ide, emit, infModal, rodo, infANTT, infPag, veicTracao, infDoc, infResp, infSeg, seg
     local hBody, contratante, target, prodPred, ambiente
+    local aAut := {}
+    local x
 
     // Tag ide
     ide := {=>}
@@ -857,8 +859,20 @@ method defineBody() class TApiMDFe
     // lacres: Não usado, opcional
 
     // autXML
-    if !Empty(::mdfe:autXML)
-        infMDFe["autXML"] := ::mdfe:autXML
+    if !Empty( ::mdfe:autXML )
+        // Remove duplicados
+   	 for each x in ::mdfe:autXML
+            if AScan( aAut, x ) == 0
+                AAdd( aAut, x )
+            endif
+        next
+
+        // Limita a 10 itens
+        if Len( aAut ) > 10
+            ASize( aAut, 10 )
+        endif
+
+        infMDFe["autXML"] := aAut
     endif
 
     target := {=>}
